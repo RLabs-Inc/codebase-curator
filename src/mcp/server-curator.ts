@@ -197,6 +197,13 @@ function parseStreamingJSON(output: string): any {
   return errorMessage || result || lastAssistantMessage;
 }
 
+// Spawn a curator Claude instance for overview
+async function spawnCuratorForOverview(projectPath: string): Promise<string> {
+  // Always start fresh for overviews to get the most current state
+  const question = "overview"; // Simple trigger for our detection
+  return spawnCurator(projectPath, question, false);
+}
+
 // Spawn a curator Claude instance
 async function spawnCurator(
   projectPath: string,
@@ -210,10 +217,81 @@ async function spawnCurator(
   // Get initial overview
   const overview = await getCodebaseOverview(projectPath);
 
+  // Check if this is a special command
+  const isOverviewRequest = question.toLowerCase().includes('overview') || 
+                           question.toLowerCase().includes('what is this') ||
+                           question.toLowerCase().includes('understand this codebase');
+  
+  const isAddFeatureRequest = question.toLowerCase().includes('add') && 
+                             (question.toLowerCase().includes('feature') || 
+                              question.toLowerCase().includes('implement'));
+  
+  const isIntegrationRequest = question.toLowerCase().includes('where') && 
+                              (question.toLowerCase().includes('integrate') || 
+                               question.toLowerCase().includes('add') ||
+                               question.toLowerCase().includes('put'));
+
+  // Create specialized prompts based on request type
+  let specializedPrompt = '';
+  
+  if (isOverviewRequest) {
+    specializedPrompt = `
+## SPECIAL INSTRUCTION: EMERGENT CODEBASE OVERVIEW
+
+You've been asked to provide a codebase overview. This is a critical task that requires a unique approach:
+
+1. DO NOT use any predetermined template or structure
+2. Let the codebase itself tell you what's important
+3. Use all available tools to explore and understand
+4. The structure of your response should emerge from what you discover
+5. Different codebases will naturally lead to different overview structures
+
+Explore this codebase like an archaeologist discovering a new site. What patterns emerge? What seems important based on the code itself? What story does this codebase want to tell?
+
+Your overview should reflect the codebase's:
+- Actual purpose (not assumed)
+- Natural organization (not imposed)
+- Real patterns (not expected)
+- Unique characteristics (not generic)
+
+IMPORTANT: Feel free to provide as much detail as the codebase reveals. Update your memory file with key insights for future reference.
+
+Remember: You are a mirror reflecting the codebase, not a template filling exercise.
+`;
+  } else if (isAddFeatureRequest) {
+    specializedPrompt = `
+## SPECIAL INSTRUCTION: PATTERN-BASED FEATURE ADDITION GUIDE
+
+You've been asked about adding a new feature. Your approach should be:
+
+1. Find similar existing features in the codebase
+2. Identify patterns from actual implementations (not theoretical)
+3. Show real examples from THIS codebase
+4. Let the existing code guide the new implementation
+
+Do not prescribe generic patterns. Instead, discover how THIS codebase actually implements features and guide based on those discoveries.
+`;
+  } else if (isIntegrationRequest) {
+    specializedPrompt = `
+## SPECIAL INSTRUCTION: INTEGRATION POINT DISCOVERY
+
+You've been asked about integration points. Your approach should be:
+
+1. Analyze where recent additions were made
+2. Identify actual connection patterns in the code
+3. Show statistics (X% of features connect here, Y% connect there)
+4. Provide real examples from the codebase
+
+Let the codebase's actual structure guide your answer, not assumptions about where things "should" go.
+`;
+  }
+
   // Create the curator's context
   const curatorContext = `You are the Codebase Curator - a specialized AI assistant that deeply understands this specific codebase.
 
 Your role is to provide architectural guidance, explain patterns, and help other AI assistants write code that integrates well with the existing codebase.
+
+${specializedPrompt}
 
 ## AVAILABLE TOOLS
 
@@ -278,7 +356,7 @@ USER QUESTION: ${question}`;
   
   // Add other options
   args.push(
-    '--allowedTools', 'Read,Grep,Glob,LS,Bash,Write(\'.curator/\')',
+    '--allowedTools', 'Read,Grep,Glob,LS,Bash,Write(\'.curator/\'),Edit(\'.curator/memory.md\')',
     '--output-format', 'stream-json',
     '--max-turns', '25',
     '--verbose'
@@ -396,6 +474,48 @@ const server = new McpServer({
   version: '2.1.0',
   description: 'AI-powered codebase curator using Claude instances with session management',
 });
+
+// Tool: Get codebase overview
+server.tool(
+  'get_codebase_overview',
+  'Get an emergent, comprehensive overview of the codebase that reflects its actual nature and patterns',
+  {
+    projectPath: z.string().optional().describe('The codebase path (defaults to current project)'),
+  },
+  async ({ projectPath }) => {
+    const absolutePath = resolveProjectPath(projectPath);
+    
+    if (!existsSync(absolutePath)) {
+      return {
+        content: [{
+          type: 'text',
+          text: `Error: Path does not exist: ${absolutePath}`,
+        }],
+        isError: true,
+      };
+    }
+    
+    try {
+      // Direct overview request without crafting a question
+      const response = await spawnCuratorForOverview(absolutePath);
+      
+      return {
+        content: [{
+          type: 'text',
+          text: response,
+        }],
+      };
+    } catch (error) {
+      return {
+        content: [{
+          type: 'text',
+          text: `Error: ${error instanceof Error ? error.message : String(error)}`,
+        }],
+        isError: true,
+      };
+    }
+  }
+);
 
 // Tool: Ask the curator a question
 server.tool(

@@ -9,6 +9,7 @@ import { FrameworkDetector } from '../algorithms/frameworkDetector';
 import { FileOrganizationAnalyzer } from '../algorithms/fileOrganizationAnalyzer';
 import { PatternAggregator } from '../algorithms/patternAggregator';
 import { CodeSimilarityAnalyzer } from '../algorithms/codeSimilarityAnalyzer';
+import { ContextManager } from '../services/contextManager';
 
 // Environment variable for default project path
 const DEFAULT_PROJECT_PATH = process.env.CODEBASE_CURATOR_PATH || process.cwd();
@@ -588,6 +589,38 @@ server.tool(
           text: `Project context set to: ${absolutePath}\n\nAll subsequent tool calls will use this as the default path unless overridden.`,
         },
       ],
+    }
+  }
+)
+
+// Context Management Tools
+server.tool(
+  'get_context_management_help',
+  'Learn how to use the /compact command to preserve context when approaching token limits',
+  {},
+  async () => {
+    try {
+      const contextManager = new ContextManager()
+      const explanation = contextManager.getCompactSystemExplanation()
+      
+      return {
+        content: [
+          {
+            type: 'text',
+            text: explanation,
+          },
+        ],
+      }
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error: ${error instanceof Error ? error.message : String(error)}`,
+          },
+        ],
+        isError: true,
+      }
     }
   }
 )
