@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+
+# Bun
+bun.lockb
+
+# Environment files
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build outputs
+dist/
+build/
+out/
+
+# Logs
+*.log
+logs/
+
+# Curator files (user-specific)
+.curator/session.txt
+.curator/imports-*.json
+.curator/frameworks-*.json
+.curator/organization-*.json
+.curator/patterns-*.json
+.curator/similarity-*.json
+.curator/all-*.json
+
+# Documentation
+docs/libraries
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Curator configurations
+.curatorconfig.json

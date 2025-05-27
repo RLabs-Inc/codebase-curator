@@ -1,0 +1,22 @@
+{
+  "exclude": ["docs/libraries", "examples", "vendor"],
+  "include": ["test"],
+  "analysis": {
+    "imports": {
+      "includeDevDependencies": true,
+      "trackDynamicImports": true
+    },
+    "frameworks": {
+      "detectTestFrameworks": true
+    },
+    "patterns": {
+      "minPatternFrequency": 2
+    },
+    "similarity": {
+      "minSimilarityThreshold": 0.8
+    }
+  },
+  "output": {
+    "curatorDir": ".curator"
+  }
+}

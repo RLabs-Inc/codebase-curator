@@ -1,0 +1,38 @@
+{
+  "name": "codebase-curator",
+  "version": "1.0.0",
+  "description": "AI-powered codebase analysis and curator system that helps AI assistants understand and work with codebases",
+  "author": "RLabs Inc. and Claude",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RLabsInc/codebase-curator.git"
+  },
+  "keywords": [
+    "codebase-analysis",
+    "ai-tools",
+    "mcp",
+    "claude",
+    "code-curator",
+    "developer-tools"
+  ],
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/cli.ts",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "mcp": "bun run src/mcp/server-curator.ts",
+    "mcp:direct": "bun run src/mcp/server.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
