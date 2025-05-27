@@ -2,6 +2,17 @@
 
 An innovative AI-powered codebase analysis system that enables AI assistants to deeply understand and work with any codebase. Built by RLabs Inc. and Claude.
 
+## 🎉 What's New in v2.2
+
+- **🚀 Specialized Tools**: Three new MCP tools designed for common development tasks
+  - `get_codebase_overview` - No more guessing what a codebase does
+  - `add_new_feature` - Stop creating tomorrow's tech debt
+  - `implement_change` - Focused fixes without breaking everything
+- **⚡ Performance**: Intelligent caching with hierarchical hash trees (3-5x faster)
+- **🤝 Claude-to-Claude**: Prompts rewritten for natural AI-to-AI communication
+- **🎯 Better Prompts**: Claude-to-Claude communication focusing on practical guidance
+- **🛡️ Stability**: Fixed MaxListenersExceeded warnings and MCP environment compatibility
+
 ## 🌟 What is Codebase Curator?
 
 Codebase Curator solves a fundamental problem in AI-assisted development: **How can AI write code that truly fits into an existing codebase?**
@@ -25,9 +36,15 @@ By analyzing your codebase's patterns, conventions, and architecture, then provi
 
 ### MCP Server Integration
 
+#### Specialized Curator Tools (v2.2+)
+- **Get Codebase Overview** - Instant practical overview of any codebase
+- **Add New Feature** - Comprehensive guidance for implementing new features
+- **Implement Change** - Focused action plans for changes and fixes
+
+#### Core Tools  
 - **Ask Curator** - Natural language questions about your codebase
 - **Run Analysis** - Execute specific analysis algorithms
-- **Session Management** - Maintains context across conversations
+- **Get Cache Stats** - Monitor caching performance
 - **Memory System** - Persists insights for future reference
 
 ## 📦 Installation
@@ -105,10 +122,18 @@ bun run src/cli.ts all /path/to/project
 2. Restart Claude Desktop
 
 3. Use the curator tools:
-   - `ask_curator` - Ask questions about any codebase
-   - `run_analysis` - Run specific analysis on a project
+   
+   **New Specialized Tools (v2.2+):**
+   - `get_codebase_overview` - Get instant practical overview (no params needed!)
+   - `add_new_feature` - Get comprehensive feature implementation guidance
+   - `implement_change` - Get focused action plans for changes/fixes
+   
+   **Core Tools:**
+   - `ask_curator` - Ask any question about the codebase
+   - `run_analysis` - Run specific analysis algorithms
    - `get_curator_memory` - Retrieve accumulated insights
    - `clear_curator_session` - Start fresh
+   - `get_cache_stats` - Check caching performance
 
 ## ⚙️ Configuration
 
@@ -134,6 +159,33 @@ Create a `.curatorconfig.json` in your project root:
   }
 }
 ```
+
+## 🗣️ Language Support
+
+### Currently Supported
+- ✅ **TypeScript/JavaScript** - Full support with AST analysis
+- ✅ **JSX/TSX** - React and other JSX-based frameworks
+- ✅ **JSON** - Configuration and data files
+
+### Roadmap
+1. **Phase 1: Multi-Language Support** (Coming Soon)
+   - Python
+   - Go
+   - Rust
+   - Java/Kotlin
+   - C/C++
+   
+2. **Phase 2: Extended Language Coverage**
+   - Ruby
+   - PHP
+   - Swift
+   - C#/.NET
+   - And more based on community needs
+
+3. **Phase 3: Universal Data/Event Flow Analysis**
+   - Language-agnostic pattern recognition
+   - Cross-language project understanding
+   - The ultimate vision from our project_summary.md
 
 ## 🏗️ Architecture
 
@@ -162,19 +214,47 @@ codebase-curator/
 - **Architecture Understanding**: "Where should I add this new module?"
 - **Code Consistency**: "What error handling pattern should I follow?"
 
-## 📝 Example
+## 📝 Examples
 
+### Get Instant Overview
 ```typescript
-// Ask the curator about implementing a new feature
-const response = await curator.ask(
-  "I need to add a payment processing feature. How should I integrate it?"
+// No parameters needed - just get the overview!
+const overview = await curator.getCodebaseOverview();
+
+// Returns practical info like:
+// - What the codebase actually does
+// - Where things live
+// - Key patterns and conventions
+// - Tech debt and gotchas
+```
+
+### Add New Feature
+```typescript
+// Get comprehensive guidance for new features
+const guidance = await curator.addNewFeature(
+  "Add user notification system with email and in-app alerts"
 );
 
-// Response includes:
-// - Suggested file locations
-// - Existing patterns to follow
-// - Integration points
-// - Code examples matching your style
+// Returns:
+// - Exact file structure to create
+// - Integration points with existing code
+// - Code examples from THIS codebase
+// - Pattern-matching implementation plan
+```
+
+### Implement Change
+```typescript
+// Get focused action plan for changes
+const plan = await curator.implementChange(
+  "Fix memory leak in WebSocket connection handler"
+);
+
+// Returns:
+// - What's actually broken (specific lines)
+// - Files to modify (just what changes)
+// - Before/after code snippets
+// - Impact analysis
+// - Test updates needed
 ```
 
 ## 🙏 Acknowledgments
