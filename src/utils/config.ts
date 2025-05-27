@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
-import { CuratorConfig, DEFAULT_EXCLUSIONS } from '../types/config';
+import type { CuratorConfig } from '../types/config';
+import { DEFAULT_EXCLUSIONS } from '../types/config';
 
 export function loadConfig(projectPath: string): CuratorConfig {
   // Look for config file in project root and parent directories

@@ -35,6 +35,7 @@ logs/
 .curator/patterns-*.json
 .curator/similarity-*.json
 .curator/all-*.json
+.curator/cache/
 
 # Documentation
 docs/libraries

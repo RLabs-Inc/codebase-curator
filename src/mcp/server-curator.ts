@@ -10,6 +10,7 @@ import { FrameworkDetector } from '../algorithms/frameworkDetector';
 import { FileOrganizationAnalyzer } from '../algorithms/fileOrganizationAnalyzer';
 import { PatternAggregator } from '../algorithms/patternAggregator';
 import { CodeSimilarityAnalyzer } from '../algorithms/codeSimilarityAnalyzer';
+import { ContextManager } from '../services/contextManager';
 
 // Environment variable for default project path
 const DEFAULT_PROJECT_PATH = process.env.CODEBASE_CURATOR_PATH || process.cwd();
@@ -85,6 +86,13 @@ for (const nodePath of nodePaths) {
 
 // Store session IDs per project path
 const curatorSessions: Map<string, string> = new Map();
+
+// Global context manager instance for caching
+const contextManager = new ContextManager({
+  ttl: 3600000, // 1 hour cache
+  maxSize: 200, // 200MB max cache
+  compressionEnabled: true
+});
 
 // Check if claude CLI is available
 function checkClaudeCLI(): boolean {
@@ -257,6 +265,12 @@ Your overview should reflect the codebase's:
 IMPORTANT: Feel free to provide as much detail as the codebase reveals. Update your memory file with key insights for future reference.
 
 Remember: You are a mirror reflecting the codebase, not a template filling exercise.
+
+**OVERVIEW TIP**: Use multi-file reads to understand the codebase holistically:
+- Read package.json + README.md + main entry files together
+- Read all type definitions in one call to understand the domain model
+- Read all algorithm implementations together to see patterns
+- Read configuration files + their implementations together
 `;
   } else if (isAddFeatureRequest) {
     specializedPrompt = `
@@ -270,6 +284,12 @@ You've been asked about adding a new feature. Your approach should be:
 4. Let the existing code guide the new implementation
 
 Do not prescribe generic patterns. Instead, discover how THIS codebase actually implements features and guide based on those discoveries.
+
+**FEATURE ANALYSIS TIP**: Use multi-file reads to understand feature patterns:
+- Read all similar feature implementations together
+- Read interface/type definitions + implementations in one call
+- Read test files + source files together to understand expected behavior
+- Read all files that would need modification together
 `;
   } else if (isIntegrationRequest) {
     specializedPrompt = `
@@ -283,6 +303,12 @@ You've been asked about integration points. Your approach should be:
 4. Provide real examples from the codebase
 
 Let the codebase's actual structure guide your answer, not assumptions about where things "should" go.
+
+**INTEGRATION TIP**: Use multi-file reads to see the full picture:
+- Read all entry points/routers together to see connection patterns
+- Read all service registrations or plugin systems together
+- Read recent feature additions + their integration points together
+- Read configuration files + main files to understand initialization patterns
 `;
   }
 
@@ -327,6 +353,38 @@ You have powerful analysis tools at your disposal. Use them liberally! The more 
 - Run ALL analyses if you're unsure which one is most relevant
 
 **NEVER** answer based on assumptions or by just reading algorithm source files. **ALWAYS** run the actual analysis tools and base your answers on real data.
+
+## PERFORMANCE TIP: Multi-File Reads
+
+The Read tool supports reading MULTIPLE files in ONE call - this is 3-5x faster and gives better context!
+
+**ALWAYS batch related files together:**
+- Read types + implementations together
+- Read tests + source files together  
+- Read all files in a pattern analysis together
+- Read all related components/services together
+
+**Example:** When analyzing the import mapper, don't do separate reads. Instead, combine them:
+Read multiple files: ['src/types/index.ts', 'src/algorithms/importMapper.ts', 'tests/importMapper.test.ts']
+
+This gives you complete context in one operation!
+
+## POWER TIP: Task Agents for Complex Analysis
+
+The Task tool lets you launch autonomous agents for parallel analysis! Use it when:
+- You need to explore multiple hypotheses simultaneously
+- Searching for patterns across many files
+- Analyzing different aspects of the codebase in parallel
+- You're not sure what you're looking for
+
+**Example**: Analyzing a feature implementation:
+```
+Task: "Find all authentication implementations" 
+Task: "Analyze error handling patterns"
+Task: "Search for similar feature patterns"
+```
+
+All three agents work in parallel and report back comprehensive findings!
 
 ## MANDATORY WORKFLOW
 
@@ -621,6 +679,25 @@ server.tool(
   }
 );
 
+// Tool: Get cache statistics
+server.tool(
+  'get_cache_stats',
+  'Get cache statistics including hit rates and memory usage',
+  {},
+  async () => {
+    const stats = contextManager.getCacheStats();
+    return {
+      content: [{
+        type: 'text',
+        text: `Cache Statistics:
+- Cached Projects: ${stats.projects}
+- Total Cache Size: ${stats.totalSize.toFixed(2)} MB
+- Cached Analysis Types: ${JSON.stringify(stats.analysisTypes, null, 2)}`,
+      }],
+    };
+  }
+);
+
 // Tool: Get curator memory/insights
 server.tool(
   'get_curator_memory',
@@ -683,31 +760,44 @@ server.tool(
     }
 
     try {
-      let result;
-      switch (analysisType) {
-        case 'imports':
-          result = await new ImportMapper(absolutePath).analyze();
-          break;
-        case 'frameworks':
-          result = await new FrameworkDetector(absolutePath).detect();
-          break;
-        case 'organization':
-          result = await new FileOrganizationAnalyzer(absolutePath).analyze();
-          break;
-        case 'patterns':
-          result = await new PatternAggregator(absolutePath).analyze();
+      // Check cache first
+      let result = await contextManager.getCachedAnalysis(absolutePath, analysisType);
+      
+      if (!result) {
+        // Cache miss - run the analysis
+        console.error(`[Curator] Cache miss for ${analysisType} at ${absolutePath}`);
+        
+        switch (analysisType) {
+          case 'imports':
+            result = await new ImportMapper(absolutePath).analyze();
+            break;
+          case 'frameworks':
+            result = await new FrameworkDetector(absolutePath).detect();
+            break;
+          case 'organization':
+            result = await new FileOrganizationAnalyzer(absolutePath).analyze();
+            break;
+          case 'patterns':
+            result = await new PatternAggregator(absolutePath).analyze();
           break;
         case 'similarity':
           result = await new CodeSimilarityAnalyzer(absolutePath).analyze();
           break;
       }
+      
+      // Cache the result
+      await contextManager.setCachedAnalysis(absolutePath, analysisType, result);
+      console.error(`[Curator] Cached ${analysisType} results for ${absolutePath}`);
+    } else {
+      console.error(`[Curator] Cache hit for ${analysisType} at ${absolutePath}`);
+    }
 
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify(result, null, 2),
-        }],
-      };
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify(result, null, 2),
+      }],
+    };
     } catch (error) {
       return {
         content: [{
