@@ -24,10 +24,23 @@ export class ContextManager {
       compressionEnabled: options.compressionEnabled ?? true
     };
     
-    // Set cache directory relative to project root
-    this.cacheDir = resolve(process.cwd(), '.curator', 'cache');
-    if (!existsSync(this.cacheDir)) {
-      mkdirSync(this.cacheDir, { recursive: true });
+    // Set cache directory to a writable location
+    // Use temp directory when running in restricted environments (like MCP)
+    const homeDir = process.env.HOME || process.env.USERPROFILE || '';
+    const tempDir = process.env.TMPDIR || process.env.TEMP || '/tmp';
+    
+    // Try to use home directory first, fallback to temp
+    const baseDir = existsSync(homeDir) && homeDir !== '/' ? homeDir : tempDir;
+    this.cacheDir = resolve(baseDir, '.codebase-curator-cache');
+    
+    try {
+      if (!existsSync(this.cacheDir)) {
+        mkdirSync(this.cacheDir, { recursive: true });
+      }
+    } catch (error) {
+      console.error(`[ContextManager] Failed to create cache directory at ${this.cacheDir}:`, error);
+      console.error(`[ContextManager] Caching will be disabled for this session`);
+      this.options.ttl = 0; // Disable caching if we can't write
     }
     
     // Load existing cache from disk

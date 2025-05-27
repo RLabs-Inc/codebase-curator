@@ -1,5 +1,6 @@
 #!/usr/bin/env bun
 
+// Codebase Curator CLI - Version 2.2 with caching
 import { ImportMapper } from './algorithms/importMapper';
 import { FrameworkDetector } from './algorithms/frameworkDetector';
 import { FileOrganizationAnalyzer } from './algorithms/fileOrganizationAnalyzer';
