@@ -38,3 +38,4 @@ export * from './organization';
 export * from './patterns';
 export * from './similarity';
 export * from './config';
+export * from './language';

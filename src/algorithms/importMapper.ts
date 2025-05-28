@@ -1,24 +1,31 @@
 import { Glob } from 'bun';
-import { dirname, relative, resolve } from 'path';
+import { dirname, relative, resolve, extname } from 'path';
 import type { ImportStatement, DependencyNode, DependencyGraph, ImportMapResult, CuratorConfig } from '../types';
 import { loadConfig, mergeExclusions, shouldExclude } from '../utils/config';
+import { LanguageRegistry } from '../languages/base/LanguageRegistry';
+import { initializeLanguages } from '../languages';
 
 export class ImportMapper {
   private graph: DependencyGraph;
   private rootPath: string;
-  private transpiler: any;
   private filePattern: string;
   private exclusions: string[];
   private inclusions: string[];
+  private registry: LanguageRegistry;
 
   constructor(
     rootPath: string, 
-    filePattern: string = '**/*.{ts,tsx,js,jsx,mjs}',
+    filePattern?: string,
     customExclusions?: string[]
   ) {
     this.rootPath = rootPath;
-    this.filePattern = filePattern;
-    this.transpiler = new Bun.Transpiler({ loader: 'tsx' });
+    
+    // Initialize language registry with project root
+    initializeLanguages(rootPath);
+    this.registry = LanguageRegistry.getInstance();
+    
+    // Use provided pattern or get from registered languages
+    this.filePattern = filePattern || this.registry.getCombinedFilePattern();
     
     // Load config and merge exclusions
     const config = loadConfig(rootPath);
@@ -75,10 +82,18 @@ export class ImportMapper {
 
   private async analyzeFile(filePath: string): Promise<void> {
     try {
+      // Get the appropriate language plugin
+      const plugin = this.registry.getPluginForFile(filePath);
+      if (!plugin) {
+        console.warn(`[ImportMapper] No language plugin for file: ${filePath}`);
+        return;
+      }
+      
       const file = Bun.file(filePath);
       const content = await file.text();
       
-      const imports = await this.extractImportsWithTranspiler(content, filePath);
+      // Use the language plugin to parse imports
+      const imports = await plugin.parseImports(content, filePath);
       
       const relativePath = relative(this.rootPath, filePath);
       const node: DependencyNode = {
@@ -108,14 +123,8 @@ export class ImportMapper {
     }
   }
 
-  private async extractImportsWithTranspiler(
-    content: string, 
-    filePath: string
-  ): Promise<ImportStatement[]> {
-    // For now, use the regex-based approach as Bun's scanImports 
-    // doesn't provide the actual import names, just the paths
-    return this.extractImportsFallback(content);
-  }
+  // Import extraction methods have been moved to language plugins
+  // The TypeScript/JavaScript plugin handles all the parsing logic
 
   private extractImportNames(imp: any): string[] {
     const names: string[] = [];
