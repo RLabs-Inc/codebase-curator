@@ -49,7 +49,7 @@ export class LanguageRegistry implements ILanguageRegistry {
       this.extensionMap.set(normalizedExt, langName)
     })
     
-    console.log(`[LanguageRegistry] Registered language: ${plugin.language.displayName}`)
+    console.error(`[LanguageRegistry] Registered language: ${plugin.language.displayName}`)
   }
   
   /**

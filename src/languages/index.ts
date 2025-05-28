@@ -8,10 +8,12 @@ export { LanguageRegistry } from './base/LanguageRegistry'
 
 // Language plugins
 export { TypeScriptAnalyzer } from './plugins/typescript'
+export { PythonAnalyzer } from './plugins/python'
 
 // Initialize default languages
 import { LanguageRegistry } from './base/LanguageRegistry'
 import { TypeScriptAnalyzer } from './plugins/typescript'
+import { PythonAnalyzer } from './plugins/python'
 
 /**
  * Initialize the language registry with default languages
@@ -27,7 +29,11 @@ export function initializeLanguages(rootPath: string = process.cwd()): void {
   const tsAnalyzer = new TypeScriptAnalyzer({ rootPath })
   registry.register(tsAnalyzer)
   
-  console.log('[Languages] Initialized with:', registry.getStats())
+  // Register Python
+  const pyAnalyzer = new PythonAnalyzer()
+  registry.register(pyAnalyzer)
+  
+  console.error('[Languages] Initialized with:', registry.getStats())
 }
 
 // Auto-initialize with current directory

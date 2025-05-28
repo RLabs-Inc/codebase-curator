@@ -28,8 +28,8 @@ export abstract class BaseLanguageAnalyzer implements LanguagePlugin {
   /** Language-specific configuration */
   protected config: Record<string, any>
   
-  constructor(options: LanguagePluginOptions) {
-    this.rootPath = options.rootPath
+  constructor(options: LanguagePluginOptions = {}) {
+    this.rootPath = options.rootPath || process.cwd()
     
     // Load and merge exclusions
     const projectConfig = loadConfig(this.rootPath)

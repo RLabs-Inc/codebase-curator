@@ -2,7 +2,18 @@
 
 An innovative AI-powered codebase analysis system that enables AI assistants to deeply understand and work with any codebase. Built by RLabs Inc. and Claude.
 
-## 🎉 What's New in v2.2
+## 🎉 What's New in v2.3
+
+- **🐍 Python Support**: Full language analysis for Python projects
+  - Import parsing (standard, from, relative, wildcard imports)
+  - Framework detection (Django, Flask, FastAPI, pytest, pandas, etc.)
+  - Pattern extraction (classes, functions, decorators)
+- **🌍 Modular Language System**: Extensible plugin architecture for adding new languages
+  - Automatic language detection based on file extensions
+  - Common base class for consistent implementation
+  - Language-specific customizations preserved
+
+## Previous Updates (v2.2)
 
 - **🚀 Specialized Tools**: Three new MCP tools designed for common development tasks
   - `get_codebase_overview` - No more guessing what a codebase does
@@ -10,7 +21,6 @@ An innovative AI-powered codebase analysis system that enables AI assistants to 
   - `implement_change` - Focused fixes without breaking everything
 - **⚡ Performance**: Intelligent caching with hierarchical hash trees (3-5x faster)
 - **🤝 Claude-to-Claude**: Prompts rewritten for natural AI-to-AI communication
-- **🎯 Better Prompts**: Claude-to-Claude communication focusing on practical guidance
 - **🛡️ Stability**: Fixed MaxListenersExceeded warnings and MCP environment compatibility
 
 ## 🌟 What is Codebase Curator?
@@ -165,12 +175,27 @@ Create a `.curatorconfig.json` in your project root:
 ### Currently Supported
 - ✅ **TypeScript/JavaScript** - Full support with AST analysis
 - ✅ **JSX/TSX** - React and other JSX-based frameworks
+- ✅ **Python** - Full support with comprehensive import parsing (v2.3+)
 - ✅ **JSON** - Configuration and data files
 
+### Language Features by Type
+
+#### TypeScript/JavaScript
+- AST-based import parsing with Bun transpiler
+- ES6, CommonJS, and dynamic imports
+- Framework detection: React, Vue, Angular, Next.js, Express, etc.
+- Full JSX/TSX support
+
+#### Python (NEW in v2.3)
+- Import statement parsing (import, from...import, relative imports)
+- Framework detection: Django, Flask, FastAPI, pytest, pandas, NumPy, etc.
+- Pattern extraction: classes, functions, async functions, decorators
+- Handles Python-specific syntax and conventions
+
 ### Roadmap
-1. **Phase 1: Multi-Language Support** (Coming Soon)
-   - Python
-   - Go
+1. **Phase 1: Core Languages** (In Progress)
+   - ✅ Python (Completed in v2.3)
+   - Go (Next)
    - Rust
    - Java/Kotlin
    - C/C++
