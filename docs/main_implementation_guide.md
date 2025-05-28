@@ -32,7 +32,10 @@ Current AI coding assistants fail not because they're bad at generating code, bu
 - **Core:** Node.js + TypeScript
 - **Target Languages:** TypeScript/JavaScript (Phase 1), expandable architecture for other languages
 - **AST Parsing:** @babel/parser or @typescript-eslint/parser for TS/JS analysis
-- **Architecture:** Core Analysis Engine → MCP Server → Optional CLI
+- **Architecture:** Clean Layered Design
+  - **Presentation Layer:** CLI App (src/presentation/cli/) and MCP Server (src/presentation/mcp/)
+  - **Core Layer:** Business logic services (src/core/)
+  - **Infrastructure Layer:** Algorithms (src/algorithms/), Language plugins (src/languages/), Utilities (src/services/)
 - **Development:** Start with simple CLI, add MCP wrapper after core works
 
 ## Phase 1: Minimal But Useful System
@@ -109,29 +112,39 @@ bun add typescript @types/node
 ```
 
 ### Step 2: Core Engine Development
-Build each algorithm individually, test with simple CLI:
+Build each algorithm individually in the infrastructure layer, then expose through core services:
 ```bash
-# Test each algorithm separately
+# Test algorithms via the AnalysisService
 bun run analyze-imports ./test-project
 bun run detect-frameworks ./test-project  
 bun run analyze-organization ./test-project
+
+# Test curator via the CuratorService
+bun run curator:overview ./test-project
+bun run curator:ask "How does authentication work?"
 ```
 
 ### Step 3: Integration
 Only after all algorithms work individually:
 ```typescript
-// Simple orchestration - run algorithms in sequence
-// Combine results into unified output
-// Add basic cross-references between analyses
+// Core layer orchestration through services:
+// - AnalysisService: Coordinates algorithm execution
+// - CuratorService: Manages curator conversations
+// - SessionService: Tracks analysis sessions
+// - CuratorProcessService: Manages Claude CLI subprocess
 ```
 
 ### Step 4: MCP Server Wrapper
 ```typescript
-// Expose algorithms as MCP tools:
-// - get_codebase_overview
-// - find_similar_patterns  
-// - suggest_integration_approach
-// - check_architectural_conventions
+// MCP server in presentation layer (src/presentation/mcp/server.ts)
+// Exposes core services as MCP tools:
+// - get_codebase_overview (via CuratorService)
+// - ask_curator (via CuratorService)  
+// - add_new_feature (via CuratorService)
+// - implement_change (via CuratorService)
+// - run_analysis (via AnalysisService)
+// - get_curator_memory (via SessionService)
+// - clear_curator_session (via SessionService)
 ```
 
 ### Step 5: Additional MCP Tools (Future)

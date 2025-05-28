@@ -12,7 +12,7 @@ export class FrameworkDetector {
     this.importMap = importMap;
   }
 
-  async detect(): Promise<FrameworkDetectionResult> {
+  async analyze(): Promise<FrameworkDetectionResult> {
     const techStack: TechStack = {
       frameworks: [],
       languages: new Map(),

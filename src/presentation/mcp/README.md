@@ -81,23 +81,23 @@ This allows the curator to build up understanding over time, even though each in
 ## Setup
 
 1. Ensure Claude Code is installed and `claude` command is available in PATH
-2. Run the MCP server: `bun run mcp`
+2. Run the MCP server: `bun run src/presentation/mcp/server.ts`
 3. Configure your Claude Code instance to connect to this MCP server
 
-## Comparison: Direct vs Curator Mode
+## Unified Server (v2.3)
 
-### Direct Mode (`mcp:direct`)
-- Runs analysis algorithms directly
-- Returns raw data
-- Good for programmatic access
-- Limited to predefined analyses
+As of v2.3, we've unified the MCP server to provide both curator and direct analysis capabilities in a single implementation:
 
-### Curator Mode (`mcp`)
-- Spawns Claude instances
-- Provides semantic understanding
-- Can answer complex questions
-- Learns and maintains memory
-- More flexible but requires Claude Code CLI
+### All Tools Available
+- **Curator Tools**: `ask_curator`, `get_curator_memory`, `add_new_feature`, `implement_change`
+- **Direct Analysis**: `run_analysis`, `get_codebase_overview`, `get_cache_stats`
+- **Management**: `clear_curator_session`, `get_context_management_help`
+
+### Benefits of Unified Server
+- Single server to configure and maintain
+- Consistent performance and caching across all tools
+- Simplified deployment and setup
+- All functionality accessible through clean service architecture
 
 ## Future Enhancements
 

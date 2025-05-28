@@ -3,43 +3,43 @@
  * Defines the interfaces for the modular language expansion framework
  */
 
-import type { ImportStatement } from './imports'
-import type { Framework } from './framework'
-import type { CodePattern } from './patterns'
+import type { ImportStatement } from "./index";
+import type { Framework } from "./framework";
+import type { CodePattern } from "./patterns";
 
 /**
  * Represents a programming language and its characteristics
  */
 export interface Language {
   /** Unique identifier for the language */
-  name: string
-  
+  name: string;
+
   /** Display name for UI/logs */
-  displayName: string
-  
+  displayName: string;
+
   /** File extensions associated with this language */
-  extensions: string[]
-  
+  extensions: string[];
+
   /** Common import statement patterns */
-  importPatterns: RegExp[]
-  
+  importPatterns: RegExp[];
+
   /** Export statement patterns */
-  exportPatterns: RegExp[]
-  
+  exportPatterns: RegExp[];
+
   /** Function definition patterns */
-  functionPatterns: RegExp[]
-  
+  functionPatterns: RegExp[];
+
   /** Class definition patterns */
-  classPatterns: RegExp[]
-  
+  classPatterns: RegExp[];
+
   /** Single-line comment pattern */
-  singleLineComment?: string
-  
+  singleLineComment?: string;
+
   /** Multi-line comment patterns */
   multiLineComment?: {
-    start: string
-    end: string
-  }
+    start: string;
+    end: string;
+  };
 }
 
 /**
@@ -47,28 +47,31 @@ export interface Language {
  */
 export interface LanguagePlugin {
   /** Language definition */
-  language: Language
-  
+  language: Language;
+
   /** Parse import statements from source code */
-  parseImports(content: string, filePath: string): ImportStatement[]
-  
+  parseImports(content: string, filePath: string): ImportStatement[];
+
   /** Detect frameworks from dependencies and code patterns */
-  detectFrameworks(dependencies: string[], fileContents?: Map<string, string>): Framework[]
-  
+  detectFrameworks(
+    dependencies: string[],
+    fileContents?: Map<string, string>,
+  ): Framework[];
+
   /** Extract code patterns from source */
-  extractPatterns(content: string, filePath: string): CodePattern[]
-  
+  extractPatterns(content: string, filePath: string): CodePattern[];
+
   /** Get glob pattern for finding source files */
-  getFilePattern(): string
-  
+  getFilePattern(): string;
+
   /** Parse function definitions */
-  parseFunctions?(content: string): FunctionDefinition[]
-  
+  parseFunctions?(content: string): FunctionDefinition[];
+
   /** Parse class definitions */
-  parseClasses?(content: string): ClassDefinition[]
-  
+  parseClasses?(content: string): ClassDefinition[];
+
   /** Language-specific AST parsing (optional) */
-  parseAST?(content: string): any
+  parseAST?(content: string): any;
 }
 
 /**
@@ -76,56 +79,56 @@ export interface LanguagePlugin {
  */
 export interface LanguageRegistry {
   /** Register a new language plugin */
-  register(plugin: LanguagePlugin): void
-  
+  register(plugin: LanguagePlugin): void;
+
   /** Get plugin by language name */
-  getPlugin(language: string): LanguagePlugin | null
-  
+  getPlugin(language: string): LanguagePlugin | null;
+
   /** Get plugin by file extension */
-  getPluginByExtension(ext: string): LanguagePlugin | null
-  
+  getPluginByExtension(ext: string): LanguagePlugin | null;
+
   /** Get all registered languages */
-  getAllLanguages(): Language[]
-  
+  getAllLanguages(): Language[];
+
   /** Get combined file pattern for all languages */
-  getCombinedFilePattern(): string
-  
+  getCombinedFilePattern(): string;
+
   /** Check if a file is supported */
-  isFileSupported(filePath: string): boolean
+  isFileSupported(filePath: string): boolean;
 }
 
 /**
  * Function definition structure
  */
 export interface FunctionDefinition {
-  name: string
-  params: string[]
-  returnType?: string
-  isAsync?: boolean
-  isExported?: boolean
-  line: number
+  name: string;
+  params: string[];
+  returnType?: string;
+  isAsync?: boolean;
+  isExported?: boolean;
+  line: number;
 }
 
 /**
  * Class definition structure
  */
 export interface ClassDefinition {
-  name: string
-  extends?: string
-  implements?: string[]
-  isExported?: boolean
-  isAbstract?: boolean
-  line: number
-  methods?: FunctionDefinition[]
+  name: string;
+  extends?: string;
+  implements?: string[];
+  isExported?: boolean;
+  isAbstract?: boolean;
+  line: number;
+  methods?: FunctionDefinition[];
 }
 
 /**
  * Language detection result
  */
 export interface LanguageDetection {
-  language: string
-  confidence: number
-  indicators: string[]
+  language: string;
+  confidence: number;
+  indicators: string[];
 }
 
 /**
@@ -133,11 +136,11 @@ export interface LanguageDetection {
  */
 export interface LanguagePluginOptions {
   /** Root path of the project */
-  rootPath: string
-  
+  rootPath: string;
+
   /** Custom file exclusions */
-  exclusions?: string[]
-  
+  exclusions?: string[];
+
   /** Language-specific configuration */
-  config?: Record<string, any>
+  config?: Record<string, any>;
 }

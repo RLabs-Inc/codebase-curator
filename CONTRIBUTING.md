@@ -42,7 +42,7 @@ bun install
 bun test
 
 # Run the CLI
-bun run src/cli.ts --help
+bun run src/presentation/cli/app.ts --help
 ```
 
 ## Code Style
@@ -53,16 +53,37 @@ bun run src/cli.ts --help
 - Add comments for complex logic
 - Keep functions focused and small
 
-## Algorithm Contributions
+## Architecture and Contributions
+
+### Adding Analysis Algorithms
 
 If you're adding a new analysis algorithm:
 
 1. Create the algorithm in `src/algorithms/`
 2. Add types in `src/types/`
-3. Update the CLI in `src/cli.ts`
-4. Update the MCP server if applicable
+3. Update `AnalysisService` in `src/core/AnalysisService.ts`
+4. Update the CLI presentation layer in `src/presentation/cli/app.ts`
 5. Add tests
 6. Update documentation
+
+### Adding Language Support
+
+For new language plugins:
+
+1. Create plugin in `src/languages/plugins/{language}/`
+2. Extend `BaseLanguageAnalyzer`
+3. Register in `src/languages/index.ts`
+4. Add comprehensive tests
+5. Update documentation
+
+### Service Layer Changes
+
+When modifying core services (`src/core/`):
+
+- Follow the service architecture pattern
+- Keep presentation layers thin
+- Update both CLI and MCP interfaces if needed
+- Ensure proper dependency injection
 
 ## Testing
 

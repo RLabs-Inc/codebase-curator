@@ -56,18 +56,46 @@
 - Enable global access to advanced AI coding tools
 - Make tool available to developers regardless of economic situation
 
-### Architecture: Core → MCP → CLI
+### Architecture: Clean Layered Design
 
 ```
-┌─────────────────┐    ┌──────────────┐    ┌─────────────┐
-│ Core Analysis   │────│ MCP Server   │────│ Optional    │
-│ Engine          │    │ (Tools)      │    │ CLI         │
-└─────────────────┘    └──────────────┘    └─────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                  Presentation Layer                      │
+│  ┌─────────────┐      ┌─────────────┐                  │
+│  │ CLI App     │      │ MCP Server  │                  │
+│  │ (src/       │      │ (src/       │                  │
+│  │ presentation│      │ presentation│                  │
+│  │ /cli/)      │      │ /mcp/)      │                  │
+│  └─────────────┘      └─────────────┘                  │
+└───────────────────────┬─────────────────────────────────┘
+                        │
+┌───────────────────────▼─────────────────────────────────┐
+│                     Core Layer                          │
+│  ┌──────────────┐  ┌─────────────┐  ┌────────────┐    │
+│  │ Analysis     │  │ Curator     │  │ Session    │    │
+│  │ Service      │  │ Service     │  │ Service    │    │
+│  └──────────────┘  └─────────────┘  └────────────┘    │
+│         │                  │                │           │
+│  ┌──────▼──────────────────▼────────────────▼─────┐    │
+│  │          CuratorProcessService                 │    │
+│  │     (Manages Claude CLI subprocess)            │    │
+│  └────────────────────────────────────────────────┘    │
+└───────────────────────┬─────────────────────────────────┘
+                        │
+┌───────────────────────▼─────────────────────────────────┐
+│                 Infrastructure Layer                    │
+│  ┌─────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │ Algorithms   │  │ Languages    │  │ Services     │  │
+│  │ (importMap, │  │ (TypeScript, │  │ (context     │  │
+│  │ framework,  │  │ Python       │  │  manager)    │  │
+│  │ etc.)       │  │ plugins)     │  │              │  │
+│  └─────────────┘  └──────────────┘  └──────────────┘  │
+└─────────────────────────────────────────────────────────┘
 ```
 
-- **Core Engine:** Pure TypeScript algorithms, no external dependencies
-- **MCP Server:** Wraps core with standard tool interface
-- **CLI:** Development and debugging interface
+- **Presentation Layer:** User interfaces (CLI and MCP server)
+- **Core Layer:** Business logic and orchestration services
+- **Infrastructure Layer:** Technical implementations (algorithms, language plugins, utilities)
 
 ## Why These 5 Specific Algorithms
 

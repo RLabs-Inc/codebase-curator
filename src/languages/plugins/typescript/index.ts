@@ -176,6 +176,7 @@ export class TypeScriptAnalyzer extends BaseLanguageAnalyzer {
       
       // CommonJS requires
       const requireRegex = /(?:const|let|var)\s+(?:(\w+)|({[^}]+}))\s*=\s*require\s*\(['"]([^'"]+)['"]\)/g
+      let match
       
       while ((match = requireRegex.exec(line)) !== null) {
         const [, defaultImport, destructured, source] = match

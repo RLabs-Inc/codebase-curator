@@ -3,9 +3,24 @@ import { ImportStatement, CodePattern, Framework, Language } from '../../../type
 
 export class PythonAnalyzer extends BaseLanguageAnalyzer {
   language: Language = {
-    name: 'Python',
+    name: 'python',
+    displayName: 'Python',
     extensions: ['.py'],
-    aliases: ['python', 'py']
+    aliases: ['python', 'py'],
+    importPatterns: [
+      /^import\s+[\w.]+/,
+      /^from\s+[\w.]+\s+import/
+    ],
+    exportPatterns: [
+      /__all__\s*=\s*\[/
+    ],
+    functionPatterns: [
+      /^def\s+\w+\s*\(/,
+      /^async\s+def\s+\w+\s*\(/
+    ],
+    classPatterns: [
+      /^class\s+\w+/
+    ]
   }
 
   parseImports(content: string, filePath: string): ImportStatement[] {

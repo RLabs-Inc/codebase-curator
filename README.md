@@ -4,6 +4,10 @@ An innovative AI-powered codebase analysis system that enables AI assistants to 
 
 ## 🎉 What's New in v2.3
 
+- **🏗️ Clean Architecture**: Major refactoring to layered service architecture
+  - Separation of core business logic from presentation layers
+  - Unified MCP server with both curator and direct analysis tools
+  - Service-oriented design for better testability and maintenance
 - **🐍 Python Support**: Full language analysis for Python projects
   - Import parsing (standard, from, relative, wildcard imports)
   - Framework detection (Django, Flask, FastAPI, pytest, pandas, etc.)
@@ -76,10 +80,10 @@ cd codebase-curator
 bun install
 
 # Run CLI analysis
-bun run src/cli.ts <command> <path>
+bun run src/presentation/cli/app.ts <command> <path>
 
 # Start MCP server
-bun run src/mcp/server-curator.ts
+bun run src/presentation/mcp/server.ts
 ```
 
 ## 🛠️ Usage
@@ -88,22 +92,22 @@ bun run src/mcp/server-curator.ts
 
 ```bash
 # Analyze imports and dependencies
-bun run src/cli.ts imports /path/to/project
+bun run src/presentation/cli/app.ts imports /path/to/project
 
 # Detect frameworks and libraries
-bun run src/cli.ts frameworks /path/to/project
+bun run src/presentation/cli/app.ts frameworks /path/to/project
 
 # Analyze file organization
-bun run src/cli.ts organization /path/to/project
+bun run src/presentation/cli/app.ts organization /path/to/project
 
 # Discover code patterns
-bun run src/cli.ts patterns /path/to/project
+bun run src/presentation/cli/app.ts patterns /path/to/project
 
 # Find similar code
-bun run src/cli.ts similarity /path/to/project
+bun run src/presentation/cli/app.ts similarity /path/to/project
 
 # Run all analyses
-bun run src/cli.ts all /path/to/project
+bun run src/presentation/cli/app.ts all /path/to/project
 ```
 
 ### CLI Options
@@ -122,7 +126,7 @@ bun run src/cli.ts all /path/to/project
   "mcpServers": {
     "codebase-curator": {
       "command": "bun",
-      "args": ["run", "/path/to/codebase-curator/src/mcp/server-curator.ts"],
+      "args": ["run", "/path/to/codebase-curator/src/presentation/mcp/server.ts"],
       "cwd": "/path/to/codebase-curator"
     }
   }
@@ -217,12 +221,21 @@ Create a `.curatorconfig.json` in your project root:
 ```
 codebase-curator/
 ├── src/
-│   ├── algorithms/        # Core analysis algorithms
-│   ├── mcp/              # MCP server implementation
-│   ├── types/            # TypeScript type definitions
-│   └── utils/            # Utility functions
-├── tests/                # Test files
-└── docs/                 # Documentation
+│   ├── core/             # Business logic services
+│   │   ├── AnalysisService.ts    # Analysis orchestration
+│   │   ├── CuratorService.ts     # Main curator logic
+│   │   ├── SessionService.ts     # Session management
+│   │   └── CuratorProcessService.ts # Claude spawning
+│   ├── presentation/     # UI/Interface layers
+│   │   ├── cli/          # Command-line interface
+│   │   └── mcp/          # MCP server interface
+│   ├── algorithms/       # Core analysis algorithms
+│   ├── languages/        # Language plugin system
+│   ├── services/         # Supporting services
+│   ├── types/           # TypeScript type definitions
+│   └── utils/           # Utility functions
+├── tests/               # Test files
+└── docs/                # Documentation
 ```
 
 ## 🤝 How It Works

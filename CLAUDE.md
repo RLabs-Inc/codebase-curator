@@ -8,6 +8,27 @@ Codebase Curator is an AI-powered codebase analysis system that enables AI assis
 
 ## Recent Updates (v2.3)
 
+### Clean Architecture Refactoring
+
+We've completed a major architectural refactoring from monolithic files to a clean layered service architecture:
+
+```
+Presentation Layer (CLI/MCP) → Core Services → Algorithms
+```
+
+**Key Changes:**
+- **Core Services**: Business logic extracted into dedicated service classes
+  - `CuratorService` - Main orchestration and coordination
+  - `AnalysisService` - Unified wrapper for all analysis algorithms
+  - `CuratorProcessService` - Manages Claude CLI spawning
+  - `SessionService` - Conversation history and session management
+- **Presentation Layer**: Thin UI layers that delegate to core services
+  - `src/presentation/cli/app.ts` - Command-line interface
+  - `src/presentation/mcp/server.ts` - Unified MCP server (curator + direct tools)
+- **Removed Duplicates**: Eliminated old monolithic implementations
+  - `src/cli.ts` → `src/presentation/cli/app.ts`
+  - `src/mcp/server-curator.ts` → `src/presentation/mcp/server.ts`
+
 ### Language System Architecture
 
 We've implemented a modular language plugin system that automatically detects and uses the appropriate language analyzer based on file extensions:
@@ -18,6 +39,30 @@ ImportMapper → LanguageRegistry.getPluginForFile(filePath) → Appropriate Lan
 ```
 
 ### Key Components
+
+#### Core Services (`src/core/`)
+
+1. **CuratorService** - The orchestra conductor
+   - Main entry point for all curator functionality
+   - Coordinates between AnalysisService, CuratorProcessService, and SessionService
+   - Implements the specialized tools (overview, feature, change)
+
+2. **AnalysisService** - The algorithm runner
+   - Unified wrapper for all 5 analysis algorithms
+   - Handles caching through ContextManager
+   - Runs analyses in parallel with Promise.all()
+
+3. **CuratorProcessService** - The Claude whisperer
+   - Spawns and manages Claude CLI processes
+   - The META part: Claude analyzing code by spawning Claude
+   - Manages process lifecycle and streaming JSON responses
+
+4. **SessionService** - The memory keeper
+   - Persistent session management in `~/.codebase-curator/sessions/`
+   - Tracks conversation history and insights
+   - Auto-cleanup of old sessions
+
+#### Language System
 
 1. **Language Registry** (`src/languages/base/LanguageRegistry.ts`)
    - Singleton pattern for managing language plugins

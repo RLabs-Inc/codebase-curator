@@ -38,14 +38,31 @@ A specialized Claude instance (the "curator") that deeply understands a specific
 - **Base platform**: Claude Code (provides terminal access, file operations, MCP integration)
 - **Curator implementation**: MCP server using TypeScript + official MCP SDK
 - **Core service**: Node.js with simple CLI (avoiding over-engineering with Ink/React)
-- **Architecture**: Core Analysis Engine → MCP Server → Optional CLI for development/debugging
+- **Architecture**: Clean Layered Design with separation of concerns:
+  - **Presentation Layer** (src/presentation/): User interfaces
+    - CLI App (src/presentation/cli/app.ts): Command-line interface for development
+    - MCP Server (src/presentation/mcp/server.ts): MCP protocol interface
+  - **Core Layer** (src/core/): Business logic and orchestration
+    - AnalysisService: Coordinates algorithm execution
+    - CuratorService: Manages curator AI conversations
+    - SessionService: Tracks analysis sessions and memory
+    - CuratorProcessService: Manages Claude CLI subprocess
+  - **Infrastructure Layer**: Technical implementations
+    - Algorithms (src/algorithms/): Analysis algorithms
+    - Languages (src/languages/): Language-specific plugins
+    - Services (src/services/): Utilities like ContextManager
 
 ### MCP Server Features
 Tools for the working Claude to access curator knowledge:
-- `get_codebase_overview`
-- `find_similar_patterns`
-- `suggest_integration_approach`
-- `check_architectural_conventions`
+- `get_codebase_overview` - Get comprehensive codebase understanding
+- `ask_curator` - Ask questions about architecture and patterns
+- `add_new_feature` - Get guidance for implementing new features
+- `implement_change` - Get focused action plan for specific changes
+- `run_analysis` - Run specific analysis algorithms
+- `get_curator_memory` - Retrieve accumulated knowledge
+- `clear_curator_session` - Reset curator session
+- `get_cache_stats` - Monitor performance and cache usage
+- `get_context_management_help` - Learn about context preservation
 
 ## Core Innovation: Data/Event Flow Mapping
 

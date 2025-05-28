@@ -55,15 +55,15 @@
 
 **Test Cases:**
 ```bash
-# Basic functionality
-bun run test-imports ./simple-react-app
-bun run test-imports ./express-api
-bun run test-imports ./python-flask-app
+# Test via the presentation layer CLI
+bun run src/presentation/cli/app.ts analyze --algorithm imports ./simple-react-app
+bun run src/presentation/cli/app.ts analyze --algorithm imports ./express-api
+bun run src/presentation/cli/app.ts analyze --algorithm imports ./python-flask-app
 
-# Edge cases  
-bun run test-imports ./project-with-circular-deps
-bun run test-imports ./monorepo-workspace
-bun run test-imports ./project-with-dynamic-imports
+# Or test directly via core services
+bun test tests/importMapper.test.ts
+bun test tests/pythonAnalyzer.test.ts
+bun test tests/languageSystem.test.ts
 ```
 
 **Success Criteria:**
@@ -216,13 +216,14 @@ bun run test-integration ./mixed-language-monorepo
 
 ### MCP Server Testing
 ```bash
-# Test individual MCP tools
-claude-mcp-test get_codebase_overview ./test-project
-claude-mcp-test find_similar_patterns ./test-project
-claude-mcp-test suggest_integration_approach ./test-project
+# Test MCP server from presentation layer
+bun run src/presentation/mcp/server.ts
+
+# Test curator tools
+bun run test-curator-tools.ts
 
 # Test in actual Claude Code session
-claude --with-mcp-server ./mcp-server.js
+claude --mcp-server-bun src/presentation/mcp/server.ts
 > "How does this codebase handle authentication?"
 > "Where should I add a new API endpoint?"
 > "What patterns should I follow for error handling?"
