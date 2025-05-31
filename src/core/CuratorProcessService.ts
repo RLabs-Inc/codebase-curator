@@ -4,7 +4,7 @@
  */
 
 import { spawn, ChildProcess } from 'child_process'
-import { existsSync, mkdirSync } from 'fs'
+import { existsSync, mkdirSync, appendFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { execSync } from 'child_process'
 import type { CoreService, CuratorQuery, CuratorResponse, ServiceStatus } from '../types/core'
@@ -71,7 +71,7 @@ export class CuratorProcessService implements CoreService {
     )
     
     // Parse the response
-    const response = this.parseResponse(output)
+    const content = this.parseResponse(output)
     
     // Extract session ID for continuity
     const sessionId = this.extractSessionId(output) || existingSession || 'new-session'
@@ -82,7 +82,7 @@ export class CuratorProcessService implements CoreService {
     }
     
     return {
-      content: response,
+      content: content,
       sessionId,
       metadata: {
         duration: Date.now() - startTime
@@ -102,24 +102,35 @@ export class CuratorProcessService implements CoreService {
       // Build command arguments
       const args = this.buildArgs(question, existingSession)
       
-      // Get Claude script path
-      const claudeScript = this.getClaudeScript()
-      
-      console.error(`[CuratorProcess] Spawning claude with cwd: ${projectPath}`)
+      console.error(`[CuratorProcess] Spawning Claude with cwd: ${projectPath}`)
       console.error(`[CuratorProcess] Session: ${existingSession || 'new'}`)
+      console.error(`[CuratorProcess] Claude path: ${this.claudeCliPath}`)
+      console.error(`[CuratorProcess] Question preview: ${question.substring(0, 100)}...`)
       
-      // Clean environment
-      const cleanEnv = { ...process.env }
-      delete cleanEnv.BUN_INSTALL
-      delete cleanEnv.NODE_PATH
+      // Just use the Claude path as found by findClaudeCli()
+      const claudeCommand = this.claudeCliPath;
       
-      // Spawn the process
-      const claude = spawn(this.nodePath, [claudeScript, ...args], {
+      // Check if Claude exists
+      if (!existsSync(claudeCommand)) {
+        console.error(`[CuratorProcess] Claude not found at: ${claudeCommand}`)
+        reject(new Error(`Claude CLI not found at: ${claudeCommand}`))
+        return
+      }
+      
+      // Log the exact command being executed
+      console.error(`[CuratorProcess] Executing command: ${claudeCommand} ${args.join(' ')}`)
+      
+      // Try using bun to execute claude since it was installed with bun
+      const bunPath = process.env.BUN_INSTALL ? `${process.env.BUN_INSTALL}/bin/bun` : 'bun'
+      
+      // Log the full command with bun
+      const fullCommand = `${bunPath} x claude ${args.map(a => a.includes(' ') ? `"${a}"` : a).join(' ')}`
+      console.error(`[CuratorProcess] Full command: ${fullCommand}`)
+      
+      // Use bun x to run claude with proper module resolution
+      const claude = spawn(bunPath, ['x', 'claude', ...args], {
         cwd: projectPath,
-        env: {
-          ...cleanEnv,
-          CLAUDE_CODE_NO_MCP: '1' // Disable MCP for curator
-        },
+        env: process.env, // Keep full environment including MCP
         shell: false,
         stdio: ['pipe', 'pipe', 'pipe']
       })
@@ -138,9 +149,9 @@ export class CuratorProcessService implements CoreService {
     const args: string[] = []
     
     if (existingSession) {
-      args.push('--resume', existingSession, '--print', question)
+      args.push('-p', '-r', existingSession, question)
     } else {
-      args.push('--print', question)
+      args.push('-p', question)
     }
     
     args.push(
@@ -191,12 +202,21 @@ export class CuratorProcessService implements CoreService {
     claude.stdout?.on('data', (data) => {
       const chunk = data.toString()
       output += chunk
-      console.error(`[CuratorProcess stdout]: ${chunk.substring(0, 100)}...`)
+      
+      // Parse and show real-time progress
+      this.logRealTimeProgress(chunk)
+      
       resetTimeout()
     })
     
     claude.stderr?.on('data', (data) => {
-      error += data.toString()
+      const stderrChunk = data.toString()
+      error += stderrChunk
+      
+      // Show ALL stderr for debugging
+      console.error(`[Curator Claude stderr]: ${stderrChunk}`)
+      
+      resetTimeout() // Reset timeout on ANY stderr activity too
     })
     
     claude.on('error', (err) => {
@@ -207,9 +227,15 @@ export class CuratorProcessService implements CoreService {
     claude.on('close', (code) => {
       clearTimeout(timeout)
       console.error(`[CuratorProcess] Process exited with code: ${code}`)
+      console.error(`[CuratorProcess] Total output length: ${output.length}`)
+      console.error(`[CuratorProcess] Total error length: ${error.length}`)
       
       if (code !== 0 && code !== null && code !== 143) {
+        console.error(`[CuratorProcess] Full error output: ${error}`)
+        console.error(`[CuratorProcess] Full stdout output: ${output}`)
         reject(new Error(`Claude exited with code ${code}: ${error}`))
+      } else if (output.trim().length === 0) {
+        reject(new Error(`Claude produced no output. Error: ${error}`))
       } else {
         resolve(output)
       }
@@ -284,7 +310,9 @@ export class CuratorProcessService implements CoreService {
       return null
     }
     const file = Bun.file(sessionFile)
-    return (await file.text()).trim()
+    const sessionId = (await file.text()).trim()
+    console.error(`[CuratorProcess] Read session ID from file: "${sessionId}" (length: ${sessionId.length})`)
+    return sessionId
   }
 
   /**
@@ -326,41 +354,56 @@ export class CuratorProcessService implements CoreService {
    * Get Claude script path
    */
   private getClaudeScript(): string {
+    // Find the actual CLI.js script, not just the 'claude' wrapper
     if (this.claudeCliPath.endsWith('.js')) {
-      return this.claudeCliPath
+      return this.claudeCliPath // Already points to the script
     }
     
-    // Try to find the actual script
-    const scriptPath = join(
-      dirname(this.claudeCliPath),
-      'node_modules/@anthropic-ai/claude-code/cli.js'
-    )
+    // Look for the actual Node script
+    const possiblePaths = [
+      join(dirname(this.claudeCliPath), 'node_modules/@anthropic-ai/claude-code/cli.js'),
+      join(dirname(this.claudeCliPath), '../lib/node_modules/@anthropic-ai/claude-code/cli.js'),
+      // Bun installation path
+      join(process.env.HOME || '', '.bun/install/global/node_modules/@anthropic-ai/claude-code/cli.js')
+    ]
     
-    if (existsSync(scriptPath)) {
-      return scriptPath
+    for (const scriptPath of possiblePaths) {
+      if (existsSync(scriptPath)) {
+        console.error(`[CuratorProcess] Found Claude script at: ${scriptPath}`)
+        return scriptPath
+      }
     }
     
-    // Alternative path
-    const altPath = join(
-      dirname(this.claudeCliPath),
-      '../lib/node_modules/@anthropic-ai/claude-code/cli.js'
-    )
-    
-    if (existsSync(altPath)) {
-      return altPath
-    }
-    
-    throw new Error(`Claude CLI script not found. Looked for:
-- ${this.claudeCliPath}
-- ${scriptPath}
-- ${altPath}`)
+    // Fallback to the claude binary itself
+    console.error(`[CuratorProcess] Could not find cli.js, using claude binary: ${this.claudeCliPath}`)
+    return this.claudeCliPath
   }
 
   /**
    * Find Claude CLI path
    */
   private findClaudeCli(): string {
-    // Check common locations first (more reliable than command -v)
+    // First, try to get the actual path using 'which'
+    try {
+      const claudePath = execSync('which claude', { encoding: 'utf-8' }).trim()
+      if (claudePath) {
+        // If it's an alias, resolve it
+        if (claudePath.includes('aliased to')) {
+          const match = claudePath.match(/aliased to (.+)/)
+          if (match && match[1]) {
+            const actualPath = match[1].trim()
+            console.error(`[CuratorProcess] Claude CLI aliased to: ${actualPath}`)
+            return actualPath
+          }
+        }
+        console.error(`[CuratorProcess] Claude CLI found at: ${claudePath}`)
+        return claudePath
+      }
+    } catch (e) {
+      console.error(`[CuratorProcess] 'which claude' failed, trying other methods...`)
+    }
+    
+    // Check common locations as fallback
     const locations = [
       join(process.env.HOME || '', '.claude/local/claude'),
       join(process.env.HOME || '', '.claude/local/bin/claude'),
@@ -370,20 +413,15 @@ export class CuratorProcessService implements CoreService {
     
     for (const loc of locations) {
       if (existsSync(loc)) {
-        console.error(`[CuratorProcess] Found Claude at: ${loc}`)
-        return loc
+        // Test if this claude actually works
+        try {
+          execSync(`${loc} --help`, { encoding: 'utf-8', stdio: 'pipe' })
+          console.error(`[CuratorProcess] Found working Claude at: ${loc}`)
+          return loc
+        } catch {
+          console.error(`[CuratorProcess] Found Claude at ${loc} but it doesn't execute properly`)
+        }
       }
-    }
-    
-    // Fallback to command -v
-    try {
-      const claudePath = execSync('command -v claude', { encoding: 'utf-8' }).trim()
-      if (claudePath && existsSync(claudePath)) {
-        console.error(`[CuratorProcess] Found Claude via command -v: ${claudePath}`)
-        return claudePath
-      }
-    } catch {
-      // Fall through
     }
     
     throw new Error('Claude CLI not found. Please install it or provide the path.')
@@ -397,6 +435,125 @@ export class CuratorProcessService implements CoreService {
       return execSync('which node', { encoding: 'utf-8' }).trim()
     } catch {
       return 'node' // Hope it's in PATH
+    }
+  }
+
+  /**
+   * Write to activity log file
+   */
+  private writeToActivityLog(message: string): void {
+    try {
+      const logsDir = join(process.env.HOME || '', '.codebase-curator', 'logs')
+      if (!existsSync(logsDir)) {
+        mkdirSync(logsDir, { recursive: true })
+      }
+      
+      const logFile = join(logsDir, `curator-activity-${new Date().toISOString().split('T')[0]}.log`)
+      const timestamp = new Date().toISOString()
+      appendFileSync(logFile, `[${timestamp}] ${message}\n`)
+    } catch {
+      // Ignore logging errors
+    }
+  }
+
+  /**
+   * Log real-time progress from Claude's stdout
+   */
+  private logRealTimeProgress(chunk: string): void {
+    try {
+      // Parse each line as potential JSON
+      const lines = chunk.split('\n').filter(line => line.trim())
+      
+      for (const line of lines) {
+        try {
+          const json = JSON.parse(line)
+          
+          // Enhanced logging based on message type
+          if (json.type === 'assistant' && json.message?.content) {
+            // Parse assistant messages for text content
+            const content = json.message.content
+            if (Array.isArray(content)) {
+              for (const item of content) {
+                if (item.type === 'text' && item.text) {
+                  // Show first 100 chars of text response
+                  const preview = item.text.substring(0, 100).replace(/\n/g, ' ')
+                  const msg = `💬 "${preview}${item.text.length > 100 ? '...' : ''}"`
+                  console.error(`[Curator Claude] ${msg}`)
+                  this.writeToActivityLog(msg)
+                } else if (item.type === 'tool_use') {
+                  // Tool use in content
+                  const toolInfo = this.formatToolUse(item.name, item.input)
+                  const msg = `🔧 ${toolInfo}`
+                  console.error(`[Curator Claude] ${msg}`)
+                  this.writeToActivityLog(msg)
+                }
+              }
+            }
+          } else if (json.type === 'user' && json.message?.content) {
+            // Show user messages (our prompts)
+            const text = typeof json.message.content === 'string' 
+              ? json.message.content 
+              : json.message.content[0]?.text || ''
+            const preview = text.substring(0, 80).replace(/\n/g, ' ')
+            console.error(`[Curator Claude] 📝 Received: "${preview}${text.length > 80 ? '...' : ''}"`)
+          } else if (json.type === 'system' && json.subtype === 'init') {
+            // Session initialization
+            const sessionMsg = `🚀 Session started (${json.session_id?.substring(0, 8)}...)`
+            console.error(`[Curator Claude] ${sessionMsg}`)
+            this.writeToActivityLog(sessionMsg)
+            
+            // Log where activity logs are saved
+            const logsDir = join(process.env.HOME || '', '.codebase-curator', 'logs')
+            console.error(`[Curator Claude] 📄 Activity logs: ${logsDir}`)
+            
+            if (json.tools && json.tools.length > 0) {
+              const toolsMsg = `🛠️  Available tools: ${json.tools.filter((t: string) => !t.startsWith('mcp_')).join(', ')}`
+              console.error(`[Curator Claude] ${toolsMsg}`)
+              this.writeToActivityLog(toolsMsg)
+            }
+          } else if (json.type === 'result') {
+            // Final result
+            if (json.subtype === 'error_max_turns') {
+              console.error(`[Curator Claude] ⚠️  Max turns reached after ${json.num_turns} turns`)
+            } else if (json.is_error) {
+              console.error(`[Curator Claude] ❌ Error: ${json.result?.substring(0, 100)}...`)
+            } else {
+              console.error(`[Curator Claude] ✅ Completed in ${json.duration_ms}ms (${json.num_turns} turns, $${json.cost_usd?.toFixed(4) || '0'})`)
+            }
+          }
+        } catch {
+          // Not JSON - ignore
+        }
+      }
+    } catch (e) {
+      // Ignore parsing errors
+    }
+  }
+
+  /**
+   * Format tool use for logging
+   */
+  private formatToolUse(toolName: string, input: any): string {
+    switch (toolName) {
+      case 'Read':
+        const files = Array.isArray(input.file_path) ? input.file_path : [input.file_path]
+        return `Reading ${files.length} file(s): ${files.map((f: string) => f.split('/').pop()).join(', ')}`
+      case 'Grep':
+        return `Searching for "${input.pattern}" in ${input.path || 'project'}`
+      case 'Glob':
+        return `Finding files matching "${input.pattern}"`
+      case 'LS':
+        return `Listing ${input.path || 'current directory'}`
+      case 'Edit':
+        return `Editing ${input.file_path?.split('/').pop() || 'file'}`
+      case 'Write':
+        return `Writing to ${input.file_path?.split('/').pop() || 'file'}`
+      case 'Task':
+        return `Launching task: "${input.prompt?.substring(0, 50)}..."`
+      case 'Bash':
+        return `Running: ${input.command?.substring(0, 50)}${input.command?.length > 50 ? '...' : ''}`
+      default:
+        return `Using ${toolName}`
     }
   }
 

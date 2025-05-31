@@ -4,19 +4,18 @@
  */
 
 export { CuratorService, createCuratorService } from './CuratorService'
-export { AnalysisService } from './AnalysisService'
 export { CuratorProcessService } from './CuratorProcessService'
 export { SessionService } from './SessionService'
+export { CodebaseStreamerBun } from './CodebaseStreamerBun'
+export type { StreamBatch, StreamOptions } from './CodebaseStreamerBun'
 
 // Re-export core types
 export type {
   CoreService,
   CuratorOptions,
-  AnalysisRequest,
-  AnalysisResult,
   CuratorQuery,
   CuratorResponse,
   FeatureRequest,
   ChangeRequest,
-  ServiceStatus
+  ServiceStatus,
 } from '../types/core'

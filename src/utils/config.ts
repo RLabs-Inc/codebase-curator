@@ -1,26 +1,22 @@
 import { existsSync, readFileSync } from 'fs';
-import { join, dirname } from 'path';
+import { join } from 'path';
 import type { CuratorConfig } from '../types/config';
 import { DEFAULT_EXCLUSIONS } from '../types/config';
 
 export function loadConfig(projectPath: string): CuratorConfig {
-  // Look for config file in project root and parent directories
+  // Look for config file in project directory
   const configNames = ['.curatorconfig.json', '.curatorrc.json', '.curatorrc'];
   
-  let currentPath = projectPath;
-  while (currentPath !== dirname(currentPath)) { // Stop at root
-    for (const configName of configNames) {
-      const configPath = join(currentPath, configName);
-      if (existsSync(configPath)) {
-        try {
-          const content = readFileSync(configPath, 'utf-8');
-          return JSON.parse(content);
-        } catch (e) {
-          console.error(`Error loading config from ${configPath}:`, e);
-        }
+  for (const configName of configNames) {
+    const configPath = join(projectPath, configName);
+    if (existsSync(configPath)) {
+      try {
+        const content = readFileSync(configPath, 'utf-8');
+        return JSON.parse(content);
+      } catch (e) {
+        console.error(`Error loading config from ${configPath}:`, e);
       }
     }
-    currentPath = dirname(currentPath);
   }
   
   // Return empty config if none found
@@ -69,12 +65,26 @@ export function shouldExclude(
 
 // Simple minimatch implementation for basic patterns
 function minimatch(path: string, pattern: string): boolean {
-  // Convert glob to regex (very basic implementation)
-  if (pattern.includes('*')) {
-    const regex = pattern
-      .replace(/\./g, '\\.')
-      .replace(/\*/g, '.*');
+  // Convert glob pattern to regex
+  let regex = pattern
+    .replace(/[.+^${}()|[\]\\]/g, '\\$&')  // Escape regex special chars except * and ?
+    .replace(/\*\*/g, '§§')                 // Temporarily replace ** to avoid conflict
+    .replace(/\*/g, '[^/]*')                // * matches within directory only
+    .replace(/§§/g, '.*')                   // ** matches any number of directories
+    .replace(/\?/g, '.');                   // ? matches single character
+  
+  // For patterns starting with **, match anywhere in the path
+  if (pattern.startsWith('**/')) {
+    // Remove the leading .*/ to match from any position in the path
+    const cleanRegex = regex.replace(/^\.?\*\//, '');
+    return new RegExp(cleanRegex).test(path);
+  }
+  
+  // For patterns like *.log, match at any level  
+  if (pattern.startsWith('*')) {
     return new RegExp(regex).test(path);
   }
-  return path.includes(pattern);
+  
+  // For specific paths, anchor at start
+  return new RegExp('^' + regex).test(path);
 }

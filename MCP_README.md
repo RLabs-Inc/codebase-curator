@@ -5,38 +5,34 @@ The Codebase Curator is now available as an MCP (Model Context Protocol) server,
 ## Available Tools
 
 ### 1. `get_codebase_overview`
+
 Get a comprehensive overview of a TypeScript/JavaScript codebase.
 
 **Parameters:**
+
 - `path` (required): The path to the codebase to analyze
-- `includeImports` (optional, default: true): Include import/dependency analysis
-- `includeFrameworks` (optional, default: true): Include framework detection
-- `includeOrganization` (optional, default: true): Include file organization analysis
-- `includePatterns` (optional, default: true): Include pattern aggregation
-- `includeSimilarity` (optional, default: false): Include code similarity analysis
 
 **Example:**
+
 ```json
 {
-  "path": "/path/to/project",
-  "includeImports": true,
-  "includeFrameworks": true,
-  "includeOrganization": true,
-  "includePatterns": true,
-  "includeSimilarity": false
+  "path": "/path/to/project"
 }
 ```
 
 ### 2. `find_similar_patterns`
+
 Find code patterns similar to a given example in the codebase.
 
 **Parameters:**
+
 - `path` (required): The path to the codebase to search
 - `pattern` (required): The code pattern to search for (e.g., 'useState', 'async function')
 - `includeContext` (optional, default: true): Include surrounding code context
 - `maxResults` (optional, default: 10): Maximum number of results to return
 
 **Example:**
+
 ```json
 {
   "path": "/path/to/project",
@@ -47,14 +43,17 @@ Find code patterns similar to a given example in the codebase.
 ```
 
 ### 3. `suggest_integration_approach`
+
 Suggest how to integrate new code or features based on existing architectural patterns.
 
 **Parameters:**
+
 - `path` (required): The path to the codebase
 - `featureDescription` (required): Description of the feature or code to integrate
 - `featureType` (optional): Type of feature - "component", "service", "utility", "feature", or "api"
 
 **Example:**
+
 ```json
 {
   "path": "/path/to/project",
@@ -64,14 +63,17 @@ Suggest how to integrate new code or features based on existing architectural pa
 ```
 
 ### 4. `check_architectural_conventions`
+
 Check if a code snippet follows the codebase's architectural conventions.
 
 **Parameters:**
+
 - `path` (required): The path to the codebase
 - `codeSnippet` (required): The code snippet to check
 - `filePath` (optional): The intended file path for the code
 
 **Example:**
+
 ```json
 {
   "path": "/path/to/project",
@@ -83,6 +85,7 @@ Check if a code snippet follows the codebase's architectural conventions.
 ## Running the MCP Server
 
 ### Standalone Mode
+
 ```bash
 bun run mcp
 ```
@@ -119,6 +122,7 @@ bun run mcp
 ## Development
 
 To test the MCP server:
+
 ```bash
 bun run test-mcp.ts
 ```

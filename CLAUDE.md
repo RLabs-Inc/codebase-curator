@@ -6,7 +6,30 @@ This file contains important information for Claude (or other AI assistants) wor
 
 Codebase Curator is an AI-powered codebase analysis system that enables AI assistants to deeply understand and work with any codebase through the MCP (Model Context Protocol).
 
+## Recent Updates (v2.4 - Streaming Revolution!)
+
+### Memory-Efficient Streaming Analyzers (JUST COMPLETED!)
+
+We've successfully implemented streaming analyzers that reduce memory usage by 99%:
+- **OLD**: Analyzers loaded entire codebases into memory (1.83GB for large projects)
+- **NEW**: Streaming analyzers process files in batches (25MB total!)
+- **How**: Built `CodebaseStreamer` using Bun's native file streaming and glob APIs
+- **Result**: MCP server is now production-ready for ANY size codebase!
+
+Key components:
+- `BaseStreamingAnalyzer` - Base class all analyzers extend
+- `CodebaseStreamerBun` - Ultra-efficient file streaming with Bun's native APIs
+- `DataFlowTracerNew`, `DependencyOracleNew`, `PatternLibraryNew` - Streaming versions
+
 ## Recent Updates (v2.3)
+
+### Go Language Support Added
+
+We've successfully implemented full Go language support with:
+- Complete import parsing (single, grouped, aliased, blank imports)
+- Framework detection for popular Go libraries (Gin, Echo, Bubble Tea, Cobra, etc.)
+- Go-specific pattern extraction (goroutines, channels, defer, error handling)
+- Ready to use for analyzing charm.sh libraries for our beautiful CLI!
 
 ### Clean Architecture Refactoring
 

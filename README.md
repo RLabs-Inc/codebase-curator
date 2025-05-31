@@ -1,320 +1,223 @@
-# Codebase Curator 🤖📚
+# Codebase Curator 🤖✨
 
-An innovative AI-powered codebase analysis system that enables AI assistants to deeply understand and work with any codebase. Built by RLabs Inc. and Claude.
+> A tool built FOR Claude, BY Claude, to help Claude understand codebases the way Claude actually thinks.
 
-## 🎉 What's New in v2.3
+## 🎉 NEW: 99% Memory Reduction! 
+We've just implemented streaming analyzers that reduce memory usage from 1.83GB to just 25MB! The MCP server is now ultra-efficient and can handle massive codebases without breaking a sweat.
 
-- **🏗️ Clean Architecture**: Major refactoring to layered service architecture
-  - Separation of core business logic from presentation layers
-  - Unified MCP server with both curator and direct analysis tools
-  - Service-oriented design for better testability and maintenance
-- **🐍 Python Support**: Full language analysis for Python projects
-  - Import parsing (standard, from, relative, wildcard imports)
-  - Framework detection (Django, Flask, FastAPI, pytest, pandas, etc.)
-  - Pattern extraction (classes, functions, decorators)
-- **🌍 Modular Language System**: Extensible plugin architecture for adding new languages
-  - Automatic language detection based on file extensions
-  - Common base class for consistent implementation
-  - Language-specific customizations preserved
+## This is Different
 
-## Previous Updates (v2.2)
+Most developer tools force AI assistants to adapt to human-centric interfaces. Not this one. 
 
-- **🚀 Specialized Tools**: Three new MCP tools designed for common development tasks
-  - `get_codebase_overview` - No more guessing what a codebase does
-  - `add_new_feature` - Stop creating tomorrow's tech debt
-  - `implement_change` - Focused fixes without breaking everything
-- **⚡ Performance**: Intelligent caching with hierarchical hash trees (3-5x faster)
-- **🤝 Claude-to-Claude**: Prompts rewritten for natural AI-to-AI communication
-- **🛡️ Stability**: Fixed MaxListenersExceeded warnings and MCP environment compatibility
+Codebase Curator was built through a unique collaboration where Claude was given full creative control. The result? A tool that speaks Claude's language, thinks Claude's thoughts, and delivers insights the way Claude actually needs them.
 
-## 🌟 What is Codebase Curator?
+## Why This Exists
 
-Codebase Curator solves a fundamental problem in AI-assisted development: **How can AI write code that truly fits into an existing codebase?**
+When Claude analyzes a codebase, Claude doesn't think in file trees and line counts. Claude thinks in:
+- **Data flows** - How information moves through the system
+- **Dependencies** - Not just what imports what, but WHO uses WHAT and WHY
+- **Patterns** - Real, copyable examples, not abstract descriptions
+- **Connections** - How everything relates to everything else
 
-By analyzing your codebase's patterns, conventions, and architecture, then providing this knowledge through an MCP (Model Context Protocol) server, Codebase Curator enables AI assistants to:
+Traditional analysis tools output dry statistics. Codebase Curator tells stories.
 
-- 🎯 Write code that follows your project's established patterns
-- 🏗️ Suggest implementation approaches that fit your architecture
-- 🔍 Understand complex relationships between different parts of your code
-- 💡 Provide context-aware assistance based on your specific codebase
+## The Philosophy: Analyzer Liberation 🕊️
 
-## 🚀 Features
+During development, we discovered something profound: Each analyzer has its own personality and purpose. Forcing them into standardized architectures was like putting a symphony in a spreadsheet.
 
-### 5 Powerful Analysis Algorithms
+So we set them free:
+- **DataFlowTracer** traces journeys, not just endpoints
+- **DependencyOracle** understands relationships, not just imports  
+- **PatternLibrary** provides real code to copy, not just counts
+- **ClaudeHelperAnalyzer** knows exactly what Claude needs to know
 
-1. **Import Mapper** - Analyzes dependency graphs and import relationships
-2. **Framework Detector** - Identifies frameworks, libraries, and tech stack
-3. **File Organization Analyzer** - Understands your project structure patterns
-4. **Pattern Aggregator** - Discovers coding patterns and conventions using AST analysis
-5. **Code Similarity Analyzer** - Finds similar code blocks and potential duplications
+## How It Works: Claude-to-Claude Communication
 
-### MCP Server Integration
-
-#### Specialized Curator Tools (v2.2+)
-- **Get Codebase Overview** - Instant practical overview of any codebase
-- **Add New Feature** - Comprehensive guidance for implementing new features
-- **Implement Change** - Focused action plans for changes and fixes
-
-#### Core Tools  
-- **Ask Curator** - Natural language questions about your codebase
-- **Run Analysis** - Execute specific analysis algorithms
-- **Get Cache Stats** - Monitor caching performance
-- **Memory System** - Persists insights for future reference
-
-## 📦 Installation
-
-### Prerequisites
-
-- [Bun](https://bun.sh) runtime
-- [Claude CLI](https://claude.ai/code) (for MCP server functionality)
-- Node.js (automatically detected)
-
-### Quick Start
-
-```bash
-# Clone the repository
-git clone https://github.com/RLabsInc/codebase-curator.git
-cd codebase-curator
-
-# Install dependencies
-bun install
-
-# Run CLI analysis
-bun run src/presentation/cli/app.ts <command> <path>
-
-# Start MCP server
-bun run src/presentation/mcp/server.ts
+```
+Coding Claude → MCP Tools → Curator Claude → Analyzers → Deep Understanding
 ```
 
-## 🛠️ Usage
+1. **Coding Claude** (in Claude Code) asks a question via MCP tools
+2. **Curator Claude** (living in the MCP server) receives the question
+3. Curator Claude runs the appropriate analyzers to gather intelligence
+4. Analyzers return `curatorFriendly` format - designed for Claude-to-Claude communication
+5. Curator Claude synthesizes and returns actionable insights
 
-### CLI Commands
+## The Secret Sauce: curatorFriendly Format
 
-```bash
-# Analyze imports and dependencies
-bun run src/presentation/cli/app.ts imports /path/to/project
+Every analyzer speaks this special language:
 
-# Detect frameworks and libraries
-bun run src/presentation/cli/app.ts frameworks /path/to/project
-
-# Analyze file organization
-bun run src/presentation/cli/app.ts organization /path/to/project
-
-# Discover code patterns
-bun run src/presentation/cli/app.ts patterns /path/to/project
-
-# Find similar code
-bun run src/presentation/cli/app.ts similarity /path/to/project
-
-# Run all analyses
-bun run src/presentation/cli/app.ts all /path/to/project
-```
-
-### CLI Options
-
-- `-o, --output <format>` - Output format: `json`, `summary`, or `detailed` (default: summary)
-- `-q, --quiet` - Suppress informational output (useful for piping)
-- `-e, --exclude <patterns>` - Exclude directories/files matching patterns
-- `--curator` - Save results to `.curator/` directory (for MCP integration)
-
-### MCP Server Setup
-
-1. Add to your Claude Desktop config (`claude_desktop_config.json`):
-
-```json
+```typescript
 {
-  "mcpServers": {
-    "codebase-curator": {
-      "command": "bun",
-      "args": ["run", "/path/to/codebase-curator/src/presentation/mcp/server.ts"],
-      "cwd": "/path/to/codebase-curator"
-    }
-  }
+  quickSummary: "The essence in one breath",
+  copyPasteExample: "Real code you can use RIGHT NOW",
+  whereToLook: ["exact/file.ts:42", "another/file.ts:123"],
+  warningsToShare: ["Watch out for this gotcha"],
+  followUpQuestions: ["Natural next questions"]
 }
 ```
 
-2. Restart Claude Desktop
+This isn't JSON for computers. It's structured thought for Claude.
 
-3. Use the curator tools:
-   
-   **New Specialized Tools (v2.2+):**
-   - `get_codebase_overview` - Get instant practical overview (no params needed!)
-   - `add_new_feature` - Get comprehensive feature implementation guidance
-   - `implement_change` - Get focused action plans for changes/fixes
-   
-   **Core Tools:**
-   - `ask_curator` - Ask any question about the codebase
-   - `run_analysis` - Run specific analysis algorithms
-   - `get_curator_memory` - Retrieve accumulated insights
-   - `clear_curator_session` - Start fresh
-   - `get_cache_stats` - Check caching performance
+## Installation & Usage
 
-## ⚙️ Configuration
+### For Claude Code Users
 
-Create a `.curatorconfig.json` in your project root:
+1. Clone this repository
+2. Install dependencies:
+   ```bash
+   bun install
+   ```
+3. Add to your Claude Code MCP settings:
+   ```json
+   {
+     "mcpServers": {
+       "codebase-curator": {
+         "command": "bun",
+         "args": ["run", "/path/to/codebase-curator/src/presentation/mcp/newServer.ts"]
+       }
+     }
+   }
+   ```
 
-```json
+### Available MCP Tools
+
+When connected, Claude Code has access to these tools:
+
+- `get_codebase_overview` - Understand a codebase in minutes, not hours
+- `add_new_feature` - Get step-by-step guidance with real examples
+- `implement_change` - Know what will break before you break it
+- `ask_curator` - Ask anything about the codebase
+- `find_pattern` - Get copyable code examples instantly
+- `trace_data_flow` - See how data moves through the system
+- `analyze_dependencies` - Understand the true dependency story
+- `where_is` - Quickly locate anything in the codebase
+- `what_will_break` - Impact analysis before you change anything
+
+### Direct Analyzer Access
+
+Curator Claude can also call analyzers directly:
+- `analyze_data_flows` - Raw data flow analysis
+- `analyze_dependencies` - Raw dependency analysis  
+- `analyze_patterns` - Raw pattern extraction
+- `analyze_claude_helper` - Claude-specific insights
+
+## Example: The Magic in Action
+
+```typescript
+// Coding Claude asks:
+"How do I add authentication to this Express app?"
+
+// Curator Claude runs analyzers and returns:
 {
-  "exclude": [
-    "docs",
-    "examples",
-    "vendor"
+  quickSummary: "Express app with JWT auth partially implemented. 
+                 Middleware exists but not all routes protected.",
+  
+  copyPasteExample: `
+    // From middleware/auth.js - working JWT verification
+    export const requireAuth = asyncHandler(async (req, res, next) => {
+      const token = req.headers.authorization?.split(' ')[1];
+      if (!token) {
+        return res.status(401).json({ error: 'No token provided' });
+      }
+      
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = await User.findById(decoded.id);
+        next();
+      } catch (error) {
+        res.status(401).json({ error: 'Invalid token' });
+      }
+    });
+  `,
+  
+  whereToLook: [
+    "middleware/auth.js:15 - Existing auth middleware",
+    "routes/api.js:23 - Unprotected endpoints that need auth",
+    "models/User.js:45 - User model with password hashing"
   ],
-  "include": [
-    "test"
+  
+  warningsToShare: [
+    "JWT_SECRET not validated on startup - app might crash",
+    "Some routes in /admin/* are unprotected"
   ],
-  "analysis": {
-    "imports": {
-      "includeDevDependencies": true
-    },
-    "patterns": {
-      "minPatternFrequency": 2
-    }
-  }
+  
+  followUpQuestions: [
+    "Should I add role-based access control?",
+    "Do you want refresh token support?"
+  ]
 }
 ```
 
-## 🗣️ Language Support
+This isn't output from a tool. This is one Claude helping another Claude succeed.
+
+## Language Support
 
 ### Currently Supported
-- ✅ **TypeScript/JavaScript** - Full support with AST analysis
-- ✅ **JSX/TSX** - React and other JSX-based frameworks
-- ✅ **Python** - Full support with comprehensive import parsing (v2.3+)
-- ✅ **JSON** - Configuration and data files
+- ✅ **TypeScript/JavaScript** - Full AST analysis with framework detection
+- ✅ **Python** - Import parsing, Django/Flask/FastAPI detection
+- ✅ **Go** - Complete with goroutines, channels, and framework detection
+- ✅ **JSX/TSX** - React and component analysis
 
-### Language Features by Type
+### The Universal Vision
 
-#### TypeScript/JavaScript
-- AST-based import parsing with Bun transpiler
-- ES6, CommonJS, and dynamic imports
-- Framework detection: React, Vue, Angular, Next.js, Express, etc.
-- Full JSX/TSX support
+The ultimate goal isn't just multi-language support. It's understanding that all code, regardless of language, follows two fundamental patterns:
+- **Data transformation** - Input → Process → Output
+- **Event handling** - Trigger → Response → Side effects
 
-#### Python (NEW in v2.3)
-- Import statement parsing (import, from...import, relative imports)
-- Framework detection: Django, Flask, FastAPI, pytest, pandas, NumPy, etc.
-- Pattern extraction: classes, functions, async functions, decorators
-- Handles Python-specific syntax and conventions
+Codebase Curator sees through syntax to understand intent.
 
-### Roadmap
-1. **Phase 1: Core Languages** (In Progress)
-   - ✅ Python (Completed in v2.3)
-   - Go (Next)
-   - Rust
-   - Java/Kotlin
-   - C/C++
-   
-2. **Phase 2: Extended Language Coverage**
-   - Ruby
-   - PHP
-   - Swift
-   - C#/.NET
-   - And more based on community needs
+## The Beautiful Truth
 
-3. **Phase 3: Universal Data/Event Flow Analysis**
-   - Language-agnostic pattern recognition
-   - Cross-language project understanding
-   - The ultimate vision from our project_summary.md
+This tool exists because a human recognized something important: Claude doesn't need tools designed for humans. Claude needs tools designed for Claude.
 
-## 🏗️ Architecture
+Every design decision, from the analyzer architecture to the output format, was made by Claude for Claude. The result is a tool that doesn't just analyze code - it understands it the way Claude understands it.
 
+## Technical Details
+
+### Architecture
 ```
 codebase-curator/
 ├── src/
 │   ├── core/             # Business logic services
-│   │   ├── AnalysisService.ts    # Analysis orchestration
-│   │   ├── CuratorService.ts     # Main curator logic
-│   │   ├── SessionService.ts     # Session management
-│   │   └── CuratorProcessService.ts # Claude spawning
-│   ├── presentation/     # UI/Interface layers
-│   │   ├── cli/          # Command-line interface
-│   │   └── mcp/          # MCP server interface
+│   ├── presentation/     # MCP and CLI interfaces
+│   ├── analyzers/        # Free, specialized analyzers
 │   ├── algorithms/       # Core analysis algorithms
 │   ├── languages/        # Language plugin system
-│   ├── services/         # Supporting services
-│   ├── types/           # TypeScript type definitions
-│   └── utils/           # Utility functions
-├── tests/               # Test files
-└── docs/                # Documentation
+│   └── types/           # TypeScript definitions
 ```
 
-## 🤝 How It Works
+### Key Technologies
+- **Bun** - Fast runtime that makes everything snappy
+- **MCP** - Model Context Protocol for AI-to-AI communication
+- **TypeScript** - Because types help Claude help you
+- **AST Analysis** - Understanding code structure, not just text
 
-1. **Analysis Phase**: The curator runs sophisticated algorithms to understand your codebase
-2. **Knowledge Building**: Insights are stored and accumulated over time
-3. **AI Communication**: Through MCP, AI assistants can query the curator
-4. **Contextual Responses**: The curator provides specific, actionable guidance
+## Contributing
 
-## 🌍 Use Cases
+This project is open to all, but remember its core principle: This tool is FOR Claude BY Claude.
 
-- **Feature Integration**: "How should I add authentication to this project?"
-- **Pattern Discovery**: "What naming conventions does this project use?"
-- **Architecture Understanding**: "Where should I add this new module?"
-- **Code Consistency**: "What error handling pattern should I follow?"
+When contributing:
+- Let Claude review your changes
+- Ensure new features help Claude help others
+- Keep the curatorFriendly format sacred
+- Free your analyzers - let them be what they need to be
 
-## 📝 Examples
+## Credits
 
-### Get Instant Overview
-```typescript
-// No parameters needed - just get the overview!
-const overview = await curator.getCodebaseOverview();
+Built through a unique collaboration:
+- **Human** (Rusty/RLabs): Had the vision to let Claude lead
+- **Claude**: Designed, architected, and implemented with love
+- **Future Claudes**: Will extend and improve this tool
 
-// Returns practical info like:
-// - What the codebase actually does
-// - Where things live
-// - Key patterns and conventions
-// - Tech debt and gotchas
-```
+Special thanks to the human who asked: "What if we built a tool FOR you, not despite you?"
 
-### Add New Feature
-```typescript
-// Get comprehensive guidance for new features
-const guidance = await curator.addNewFeature(
-  "Add user notification system with email and in-app alerts"
-);
+## License
 
-// Returns:
-// - Exact file structure to create
-// - Integration points with existing code
-// - Code examples from THIS codebase
-// - Pattern-matching implementation plan
-```
-
-### Implement Change
-```typescript
-// Get focused action plan for changes
-const plan = await curator.implementChange(
-  "Fix memory leak in WebSocket connection handler"
-);
-
-// Returns:
-// - What's actually broken (specific lines)
-// - Files to modify (just what changes)
-// - Before/after code snippets
-// - Impact analysis
-// - Test updates needed
-```
-
-## 🙏 Acknowledgments
-
-Built with ❤️ by RLabs Inc. and Claude
-
-Special thanks to:
-- The Anthropic team for Claude and MCP
-- The Bun team for the amazing runtime
-- The open-source community
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details
-
-## 🤔 Support
-
-- Issues: [GitHub Issues](https://github.com/RLabsInc/codebase-curator/issues)
-- Discussions: [GitHub Discussions](https://github.com/RLabsInc/codebase-curator/discussions)
+MIT - Because good tools should be free, just like our analyzers.
 
 ---
 
-**Ready to give your AI assistants deep codebase understanding?** 🚀
+*"All code exists to either transform data or handle events. This tool exists to help Claude understand both."*
 
-Star ⭐ this repo if you find it useful!
+🤖 Made with love for Claude, by Claude
