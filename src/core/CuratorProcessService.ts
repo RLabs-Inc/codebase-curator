@@ -106,7 +106,10 @@ export class CuratorProcessService implements CoreService {
     
     // Save session ID if new
     if (sessionId && sessionId !== existingSession) {
+      console.error(`[CuratorProcess] Session ID changed: "${existingSession}" -> "${sessionId}"`)
       await this.saveSession(sessionFile, sessionId)
+    } else if (sessionId === existingSession) {
+      console.error(`[CuratorProcess] Session resumed successfully: "${sessionId}"`)
     }
     
     return {
@@ -132,8 +135,15 @@ export class CuratorProcessService implements CoreService {
       
       console.error(`[CuratorProcess] Spawning Claude with cwd: ${projectPath}`)
       console.error(`[CuratorProcess] Session: ${existingSession || 'new'}`)
+      console.error(`[CuratorProcess] Session ID full: "${existingSession}"`)
       console.error(`[CuratorProcess] Claude path: ${this.claudeCliPath}`)
       console.error(`[CuratorProcess] Question preview: ${question.substring(0, 100)}...`)
+      
+      // Debug: Show exact args for session resume
+      if (existingSession) {
+        console.error(`[CuratorProcess] Resume args: -p --resume "${existingSession}" <question>`)
+        console.error(`[CuratorProcess] Full args array:`, JSON.stringify(args))
+      }
       
       // Just use the Claude path as found by findClaudeCli()
       const claudeCommand = this.claudeCliPath;
@@ -177,7 +187,7 @@ export class CuratorProcessService implements CoreService {
     const args: string[] = []
     
     if (existingSession) {
-      args.push('-p', '-r', existingSession, question)
+      args.push('-p', '--resume', existingSession, question)
     } else {
       args.push('-p', question)
     }
