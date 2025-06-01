@@ -6,9 +6,12 @@ This file contains important information for Claude working on this codebase.
 
 Codebase Curator is an AI-powered codebase analysis system that enables Claude to deeply understand and work with any codebase through the MCP (Model Context Protocol).
 
-Key components:
+### Key Innovations We've Implemented:
 
-- `CodebaseStreamerBun` - Ultra-efficient file streaming with Bun's native APIs
+1. **Two-Claude Architecture** - One Claude (Curator) helps another Claude (Coding) understand codebases
+2. **Session Persistence** - Fixed! Sessions now properly maintain context across commands
+3. **Dynamic Timeouts** - Different tools get different timeouts (Task: 10min, Bash: 5min, Read: 2min)
+4. **Smart Grep** - Semantic code search with usage counts and cross-references
 
 ### Architecture
 
@@ -19,7 +22,7 @@ The project is structured into three main layers:
   - `src/core/CuratorService.ts` - Main orchestration service
   - `src/core/CuratorProcessService.ts` - Manages Claude CLI processes
   - `src/core/CuratorPrompts.ts` - Contains prompts for Curator Claude
-  - `src/core/SessionService.ts` - Handles conversation history and sessions (needs attention as curator claude sessions are getting corrupted)
+  - `src/core/SessionService.ts` - Handles conversation history and sessions (corruption issue FIXED!)
   - `src/core/CodebaseStreamerBun.ts` - Efficient file streaming implementation
 
 - **Presentation Layer**: Thin UI layers that delegate to core services
@@ -34,15 +37,19 @@ The project is structured into three main layers:
 ### Important Implementation Notes
 
 1. **MCP Server Logging**
-
    - Use `console.error()` for logging in MCP contexts, NOT `console.log()`
    - All stdout must be valid JSON for the MCP protocol
 
-2. **Incremental Indexing** (TODO)
+2. **Session Persistence** ✅ FIXED
+   - Claude CLI creates immutable sessions - each resume creates a new session ID
+   - We properly save and load the latest session ID
+   - Context is preserved even though IDs change
 
-   - Uses hierarchical hash trees for efficient change detection
+3. **Dynamic Timeouts** 
+   - Implemented in `CuratorProcessService.getDynamicTimeout()`
+   - Task: 600s, Bash: 300s, Read: 120s, LS/Glob: 60s
 
-3. **Testing Commands**
+4. **Testing Commands**
 
    ```bash
    # Run specific tests
@@ -61,8 +68,10 @@ The project is structured into three main layers:
 
 ### Performance Considerations
 
-1. The curator spawns a separate Claude CLI process for analysis
-2. Caching prevents re-analysis of unchanged files (not implemented yet)
+1. **Process Spawning**: The curator spawns a separate Claude CLI process for analysis
+2. **Session Reuse**: First overview takes ~2 minutes, subsequent questions are instant
+3. **Anthropic Caching**: API caching reduces costs for repeated context
+4. **Streaming**: Files are streamed, never fully loaded into memory
 
 ## Project Philosophy
 

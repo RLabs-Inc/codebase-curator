@@ -2,106 +2,243 @@
 
 ## Overview
 
-The Codebase Curator MCP Server provides a unique approach to codebase understanding: instead of directly executing analysis and returning data, it spawns specialized Claude instances that act as "curators" for specific codebases.
+The Codebase Curator MCP Server implements a unique "Two-Claude Architecture": it spawns a specialized Claude instance (Curator Claude) that becomes an expert on your specific codebase and helps you (Coding Claude) understand it deeply.
 
 ## Architecture
 
 ```
-┌─────────────────┐     MCP Tools      ┌──────────────────┐
+┌─────────────────┐     MCP Protocol    ┌──────────────────┐
 │  Coding Claude  │ ◄─────────────────► │   MCP Server     │
-│ (uses codebase) │                     │                  │
+│ (You in Code)   │                     │  (Thin Layer)    │
 └─────────────────┘                     └────────┬─────────┘
                                                  │
                                                  │ Spawns
                                                  ▼
                                         ┌──────────────────┐
                                         │  Curator Claude  │
-                                        │  (understands    │
-                                        │   codebase)      │
+                                        │ (Your Codebase   │
+                                        │    Expert)       │
                                         └──────────────────┘
 ```
 
 ## How It Works
 
-1. **Coding Claude** asks a semantic question like "How does this codebase handle authentication?"
-2. **MCP Server** spawns a new Claude instance with:
-   - System prompt explaining it's the "Codebase Curator"
-   - Initial analysis data as context
-   - Access to read files and run analysis tools
-   - The specific question to answer
-3. **Curator Claude** analyzes the codebase and provides detailed, contextual answers
-4. **MCP Server** returns the curator's response to the coding Claude
+1. **You ask a question** through MCP tools (e.g., "How does authentication work?")
+2. **MCP Server** receives the request and orchestrates the response
+3. **CuratorService** prepares specialized prompts for codebase analysis
+4. **CuratorProcessService** spawns Claude CLI with proper arguments
+5. **Curator Claude** analyzes your codebase using restricted tools
+6. **Response flows back** with deep, contextual understanding
 
-## Available Tools
+## Available MCP Tools
 
-### `ask_curator`
-Ask the codebase curator any question about the codebase.
+### Core Tools
 
-**Parameters:**
-- `question` (required): The question to ask
-- `projectPath` (optional): Path to the codebase (defaults to current directory)
-- `includeAnalysis` (optional): Whether to run fresh analysis
+#### `set_project_path`
+Set the project path for all subsequent operations.
+```
+Parameters:
+- path: Absolute path to your project
+```
 
-**Example questions:**
-- "How does this codebase handle authentication?"
-- "What's the established pattern for error handling?"
-- "Where should I add a new API endpoint?"
-- "How do components communicate with each other?"
+#### `get_codebase_overview` 
+Get a comprehensive overview of how the codebase actually works.
+```
+Parameters:
+- projectPath (optional): Override the set project path
+- newSession (optional): Force a fresh session (default: false)
+```
+**Always run this first!** It builds the foundational understanding.
 
-### `get_curator_memory`
-Retrieve the curator's accumulated knowledge about the codebase.
+#### `ask_curator`
+Ask questions about the codebase architecture, patterns, or implementation.
+```
+Parameters:
+- question: Your question about the codebase
+- projectPath (optional): Override the set project path
+- newSession (optional): Start fresh (default: false)
+```
 
-**Parameters:**
-- `projectPath` (optional): Path to the codebase
+#### `add_new_feature`
+Get comprehensive guidance for implementing a new feature.
+```
+Parameters:
+- feature: Description of the feature to implement
+- projectPath (optional): Override the set project path
+```
 
-### `run_analysis`
-Run a specific analysis algorithm directly.
+#### `implement_change`
+Get focused action plan for implementing a specific change or fix.
+```
+Parameters:
+- change: Description of the change or fix
+- projectPath (optional): Override the set project path
+- scope (optional): Specific files or areas to focus on
+```
 
-**Parameters:**
-- `analysisType`: One of: imports, frameworks, organization, patterns, similarity
-- `projectPath` (optional): Path to the codebase
+### Session Management
 
-## Curator Capabilities
+#### `get_curator_memory`
+Retrieve the curator's accumulated knowledge and insights.
+```
+Parameters:
+- projectPath (optional): Override the set project path
+```
 
-The Curator Claude has access to:
-- **Read**: Can read any file in the codebase
-- **Grep/Glob**: Can search for patterns and files
-- **Bash**: Can run analysis commands (restricted to `bun run` commands)
-- **Write**: Can only write to `.curator/` directory for maintaining memory
+#### `clear_curator_session`
+Clear the curator's session for a fresh start.
+```
+Parameters:
+- projectPath (optional): Override the set project path
+```
+
+#### `get_curator_activity`
+View recent curator activity logs.
+```
+Parameters:
+- lines (optional): Number of log lines (default: 50)
+```
+
+### Utility Tools
+
+#### `get_cache_stats`
+Get cache statistics including hit rates and memory usage.
+
+#### `get_context_management_help`
+Learn about context management and the /compact command.
+
+#### `get_project_path`
+Get the currently set project path.
+
+## Curator Claude's Capabilities
+
+The Curator Claude has restricted but powerful tools:
+
+### ✅ Allowed Tools
+- **Read**: Read any file in the codebase
+- **Grep/Glob**: Search for patterns and files
+- **LS**: List directory contents
+- **Bash**: Run commands (especially `bun run smartgrep`)
+- **Limited Write**: Only to `.curator/` directory for memory
+- **Task**: Launch parallel analysis agents
+
+### ❌ Restricted
+- No internet access
+- No arbitrary code execution
+- No writing to source files
+- No access outside project directory
+
+## Session Persistence
+
+The MCP server maintains session continuity:
+
+1. **First `get_codebase_overview`**: Creates comprehensive understanding (~2 minutes)
+2. **Subsequent commands**: Build on that context (instant responses)
+3. **Session IDs**: Change with each command but context is preserved
+4. **Cost optimization**: Anthropic's caching reduces costs over time
 
 ## Memory System
 
-The curator maintains memory in `.curator/memory.md` with:
-- Insights discovered about the codebase
-- Architectural patterns identified
+The curator can maintain memory in `.curator/memory.md`:
+- Architectural insights discovered
+- Patterns and conventions identified
 - Important notes for future reference
+- Tech debt and gotchas
 
-This allows the curator to build up understanding over time, even though each instance is spawned fresh.
+## Implementation Details
 
-## Setup
+### Key Files
+- `server.ts` - This MCP server (thin routing layer)
+- `../core/CuratorService.ts` - Main orchestration logic
+- `../core/CuratorProcessService.ts` - Claude CLI process management
+- `../core/CuratorPrompts.ts` - Specialized prompts (DO NOT MODIFY)
 
-1. Ensure Claude Code is installed and `claude` command is available in PATH
-2. Run the MCP server: `bun run src/presentation/mcp/server.ts`
-3. Configure your Claude Code instance to connect to this MCP server
+### Logging
+**CRITICAL**: Use `console.error()` for all logging, never `console.log()`!
+- stdout must be valid JSON for MCP protocol
+- All debug output goes to stderr
 
-## Unified Server (v2.3)
+### Dynamic Timeouts
+Different operations get different timeouts:
+```typescript
+'Task': 600000,    // 10 minutes
+'Bash': 300000,    // 5 minutes  
+'Read': 120000,    // 2 minutes
+'LS': 60000,       // 1 minute
+```
 
-As of v2.3, we've unified the MCP server to provide both curator and direct analysis capabilities in a single implementation:
+## Setup for Development
 
-### All Tools Available
-- **Curator Tools**: `ask_curator`, `get_curator_memory`, `add_new_feature`, `implement_change`
-- **Direct Analysis**: `run_analysis`, `get_codebase_overview`, `get_cache_stats`
-- **Management**: `clear_curator_session`, `get_context_management_help`
+1. **Install dependencies**
+```bash
+bun install
+```
 
-### Benefits of Unified Server
-- Single server to configure and maintain
-- Consistent performance and caching across all tools
-- Simplified deployment and setup
-- All functionality accessible through clean service architecture
+2. **Run in development mode**
+```bash
+bun run --watch src/mcp/server.ts
+```
+
+3. **Configure Claude Code**
+```json
+{
+  "mcpServers": {
+    "codebase-curator-dev": {
+      "command": "bun",
+      "args": ["run", "--watch", "/path/to/dev/codebase-curator/src/mcp/server.ts"]
+    }
+  }
+}
+```
+
+## Deployment Options
+
+### NPM Package (Recommended)
+```bash
+npm install -g codebase-curator
+# Then use: codebase-curator-mcp
+```
+
+### Direct from GitHub
+```json
+{
+  "mcpServers": {
+    "codebase-curator": {
+      "command": "npx",
+      "args": ["-y", "github:RLabsInc/codebase-curator"]
+    }
+  }
+}
+```
+
+### Local Installation
+```json
+{
+  "mcpServers": {
+    "codebase-curator": {
+      "command": "bun",
+      "args": ["run", "/path/to/codebase-curator/src/mcp/server.ts"]
+    }
+  }
+}
+```
 
 ## Future Enhancements
 
-- Incremental indexing when files change
-- Shared curator memory across teams
-- Specialized curators for different aspects (security, performance, etc.)
-- Integration with version control for historical understanding
+- [ ] Incremental indexing for changed files
+- [ ] Team knowledge sharing (shared curator sessions)
+- [ ] Specialized curators (security, performance, etc.)
+- [ ] Watch mode for real-time updates
+- [ ] Multi-language support beyond TypeScript
+
+## Troubleshooting
+
+See [docs/TROUBLESHOOTING.md](../../docs/TROUBLESHOOTING.md) for common issues.
+
+## Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
+
+---
+
+Remember: This MCP server gives your Claude a dedicated codebase expert. Use it wisely! 🧠

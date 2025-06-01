@@ -6,7 +6,7 @@ First off, thank you for considering contributing to Codebase Curator! 🎉
 
 ### Reporting Bugs
 
-- Check if the bug has already been reported in [Issues](https://github.com/RLabsInc/codebase-curator/issues)
+- Check if the bug has already been reported in [Issues](https://github.com/RLabs-Inc/codebase-curator/issues)
 - If not, create a new issue with:
   - Clear title and description
   - Steps to reproduce
@@ -15,7 +15,7 @@ First off, thank you for considering contributing to Codebase Curator! 🎉
 
 ### Suggesting Enhancements
 
-- Check existing [Issues](https://github.com/RLabsInc/codebase-curator/issues) and [Discussions](https://github.com/RLabsInc/codebase-curator/discussions)
+- Check existing [Issues](https://github.com/RLabs-Inc/codebase-curator/issues) and [Discussions](https://github.com/RLabs-Inc/codebase-curator/discussions)
 - Create a new discussion for feature proposals
 - Explain the use case and benefits
 

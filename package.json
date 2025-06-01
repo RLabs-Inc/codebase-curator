@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/RLabsInc/codebase-curator.git"
+    "url": "https://github.com/RLabs-Inc/codebase-curator.git"
   },
   "keywords": [
     "codebase-analysis",
@@ -20,7 +20,14 @@
   "type": "module",
   "bin": {
     "codebase-curator": "./src/cli/app.ts",
+    "codebase-curator-mcp": "./src/mcp/server.ts",
     "smartgrep": "./src/semantic/cli.ts"
+  },
+  "exports": {
+    ".": "./src/mcp/server.ts",
+    "./mcp": "./src/mcp/server.ts",
+    "./cli": "./src/cli/app.ts",
+    "./smartgrep": "./src/semantic/cli.ts"
   },
   "scripts": {
     "start": "bun run src/presentation/cli/app.ts",
