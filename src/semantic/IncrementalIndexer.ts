@@ -17,6 +17,7 @@ export class IncrementalIndexer {
   private hashTreePath: string;
   private isBuilding = false;
   private buildPromise?: Promise<void>;
+  private silentMode = false;
 
   constructor(projectPath: string) {
     this.hashTree = new HashTree(projectPath);
@@ -71,7 +72,9 @@ export class IncrementalIndexer {
   }
 
   async updateIndex(diff: HashTreeDiff): Promise<void> {
-    console.error(`Updating index: +${diff.added.length} ~${diff.modified.length} -${diff.deleted.length}`);
+    if (!this.silentMode) {
+      console.error(`Updating index: +${diff.added.length} ~${diff.modified.length} -${diff.deleted.length}`);
+    }
     
     // Remove deleted files from semantic index
     for (const deletedFile of diff.deleted) {
@@ -92,7 +95,13 @@ export class IncrementalIndexer {
     await this.hashTree.startWatching(async (diff) => {
       await this.updateIndex(diff);
     });
-    console.error('Started watching for file changes');
+    if (!this.silentMode) {
+      console.error('Started watching for file changes');
+    }
+  }
+
+  setSilentMode(silent: boolean): void {
+    this.silentMode = silent;
   }
 
   stopWatching(): void {

@@ -17,9 +17,14 @@ export class SemanticService {
     // Add more extractors here as you implement them
   ];
   private projectPath: string;
+  private silentMode = false;
 
   constructor(projectPath: string) {
     this.projectPath = projectPath;
+  }
+
+  setSilentMode(silent: boolean): void {
+    this.silentMode = silent;
   }
 
   async indexCodebase(projectPath: string): Promise<void> {
@@ -121,7 +126,9 @@ export class SemanticService {
    * Index specific files (for incremental updates)
    */
   async indexFiles(files: string[]): Promise<void> {
-    console.log(`🔄 Indexing ${files.length} files...`);
+    if (!this.silentMode) {
+      console.log(`🔄 Indexing ${files.length} files...`);
+    }
     let entriesIndexed = 0;
 
     for (const filePath of files) {
@@ -147,12 +154,16 @@ export class SemanticService {
             this.index.addCrossReference(ref);
           });
         } catch (error) {
-          console.warn(`Error processing ${filePath}:`, error);
+          if (!this.silentMode) {
+            console.warn(`Error processing ${filePath}:`, error);
+          }
         }
       }
     }
 
-    console.log(`✅ Indexed ${entriesIndexed} entries from ${files.length} files`);
+    if (!this.silentMode) {
+      console.log(`✅ Indexed ${entriesIndexed} entries from ${files.length} files`);
+    }
     
     // Save updated index
     const indexPath = this.getIndexPath(this.projectPath);

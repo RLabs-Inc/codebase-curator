@@ -181,7 +181,7 @@ MIT - see [LICENSE](LICENSE)
 
 ## 🙏 Acknowledgments
 
-Built with ❤️ by [RLabsInc](https://github.com/RLabs-Inc) and Claude
+Built with ❤️ by [RLabs Inc.](https://github.com/RLabs-Inc) and Claude
 
 Special thanks to the Claude Code team for making this integration possible.
 

@@ -23,6 +23,7 @@ export class HashTree {
   private hashCache: Map<string, string> = new Map();
   private watcher?: FSWatcher;
   private watchCallbacks: Set<(changes: HashTreeDiff) => void> = new Set();
+  private debounceTimers: Map<string, Timer> = new Map();
 
   constructor(rootPath: string) {
     this.root = {
@@ -42,13 +43,31 @@ export class HashTree {
         if (!filename) return;
         
         const fullPath = path.join(this.root.path, filename);
-        const changes = await this.updatePath(fullPath);
         
-        if (changes) {
-          for (const cb of this.watchCallbacks) {
-            cb(changes);
-          }
+        // Skip .curator directory files (hash tree, indexes, etc.)
+        if (fullPath.includes('/.curator/') || fullPath.includes('\\.curator\\')) {
+          return;
         }
+        
+        // Debounce file changes - clear existing timer and set new one
+        const existingTimer = this.debounceTimers.get(fullPath);
+        if (existingTimer) {
+          clearTimeout(existingTimer);
+        }
+        
+        // Wait 500ms before processing change to allow for rapid successive events
+        const timer = setTimeout(async () => {
+          this.debounceTimers.delete(fullPath);
+          
+          const changes = await this.updatePath(fullPath);
+          if (changes) {
+            for (const cb of this.watchCallbacks) {
+              cb(changes);
+            }
+          }
+        }, 500);
+        
+        this.debounceTimers.set(fullPath, timer);
       });
     }
   }
@@ -61,6 +80,12 @@ export class HashTree {
     }
     
     if (this.watchCallbacks.size === 0 && this.watcher) {
+      // Clear all pending debounce timers
+      for (const timer of this.debounceTimers.values()) {
+        clearTimeout(timer);
+      }
+      this.debounceTimers.clear();
+      
       this.watcher.close();
       this.watcher = undefined;
     }

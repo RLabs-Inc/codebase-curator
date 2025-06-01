@@ -17,6 +17,9 @@ interface MonitorStats {
   reindexOperations: number;
   startTime: number;
   lastActivity: number;
+  uniqueFilesModified: Set<string>;
+  uniqueFilesAdded: Set<string>;
+  uniqueFilesDeleted: Set<string>;
 }
 
 class IndexingMonitor {
@@ -27,6 +30,8 @@ class IndexingMonitor {
   private showLiveOverview = false;
   private overviewData: any = null;
   private isUpdatingOverview = false;
+  private recentChanges: string[] = [];
+  private changeLogTimer?: Timer;
 
   constructor(projectPath: string) {
     this.indexer = new IncrementalIndexer(projectPath);
@@ -37,7 +42,10 @@ class IndexingMonitor {
       filesDeleted: 0,
       reindexOperations: 0,
       startTime: Date.now(),
-      lastActivity: Date.now()
+      lastActivity: Date.now(),
+      uniqueFilesModified: new Set(),
+      uniqueFilesAdded: new Set(),
+      uniqueFilesDeleted: new Set()
     };
   }
 
@@ -57,6 +65,13 @@ class IndexingMonitor {
       console.log(`📖 Loaded existing index (${status.indexedFiles} files)`);
     }
 
+    // Enable silent mode for live overview to prevent console spam
+    if (withOverview) {
+      this.indexer.setSilentMode(true);
+      const semanticService = await this.indexer.getSemanticService();
+      semanticService.setSilentMode(true);
+    }
+    
     // Start watching for changes
     await this.indexer.startWatching();
     
@@ -101,40 +116,50 @@ class IndexingMonitor {
     this.stats.reindexOperations++;
     this.stats.lastActivity = Date.now();
 
-    // Log the specific changes
-    const timestamp = new Date().toLocaleTimeString();
-    console.log(`\n[${timestamp}] 📁 File Changes Detected:`);
-    
-    if (diff.added.length > 0) {
-      console.log(`  ✅ Added (${diff.added.length}):`);
-      diff.added.forEach(file => {
-        console.log(`    + ${this.relativePath(file)}`);
-      });
-    }
-    
-    if (diff.modified.length > 0) {
-      console.log(`  🔄 Modified (${diff.modified.length}):`);
-      diff.modified.forEach(file => {
-        console.log(`    ~ ${this.relativePath(file)}`);
-      });
-    }
-    
-    if (diff.deleted.length > 0) {
-      console.log(`  ❌ Deleted (${diff.deleted.length}):`);
-      diff.deleted.forEach(file => {
-        console.log(`    - ${this.relativePath(file)}`);
-      });
-    }
+    // Track unique files for more accurate reporting
+    diff.added.forEach(file => this.stats.uniqueFilesAdded.add(file));
+    diff.modified.forEach(file => this.stats.uniqueFilesModified.add(file));
+    diff.deleted.forEach(file => this.stats.uniqueFilesDeleted.add(file));
 
-    console.log(`  🔄 Reindexing ${diff.added.length + diff.modified.length} files...`);
+    // Create change logs for each file that changed
+    const timestamp = new Date().toLocaleTimeString();
+    
+    // Process each type of change
+    [...diff.added, ...diff.modified, ...diff.deleted].forEach(filePath => {
+      // Skip .curator directory files in display
+      if (filePath.includes('/.curator/') || filePath.includes('\\.curator\\')) {
+        return;
+      }
+      
+      const fileName = path.basename(filePath);
+      let changeType = '';
+      
+      if (diff.added.includes(filePath)) changeType = '+';
+      else if (diff.modified.includes(filePath)) changeType = '~';
+      else if (diff.deleted.includes(filePath)) changeType = '-';
+      
+      const changeLog = `[${timestamp}] ${changeType} ${fileName}`;
+      
+      // Add to recent changes (keep last 3)
+      this.recentChanges.unshift(changeLog);
+      if (this.recentChanges.length > 3) {
+        this.recentChanges = this.recentChanges.slice(0, 3);
+      }
+    });
+
+    // Clear old changes after 30 seconds
+    if (this.changeLogTimer) {
+      clearTimeout(this.changeLogTimer);
+    }
+    this.changeLogTimer = setTimeout(() => {
+      this.recentChanges = [];
+    }, 30000);
     
     // Update overview data immediately when changes occur (if in live overview mode)
     if (this.showLiveOverview) {
       // Update after a small delay to allow indexing to complete
       setTimeout(async () => {
         await this.updateOverviewData();
-        // Force immediate display update to show changes right away
-        await this.displayLiveOverview();
       }, 1500);
     }
   }
@@ -201,17 +226,18 @@ class IndexingMonitor {
     const timeSinceLastActivity = this.formatDuration(Date.now() - this.stats.lastActivity);
     const timeSinceOverviewUpdate = this.formatDuration(Date.now() - this.overviewData.lastUpdate);
 
-    // Clear screen and move to top
-    process.stdout.write('\x1b[2J\x1b[H');
+    // Move cursor to home position and clear screen
+    process.stdout.write('\x1b[H\x1b[2J');
 
     console.log('╔═══════════════════════════════════════════════════════════════════════════════╗');
     console.log('║                        🔥 LIVE CODEBASE MONITOR                              ║');
     console.log('╠═══════════════════════════════════════════════════════════════════════════════╣');
     
-    // Status bar with update indicator
+    // Status bar with update indicator and more accurate metrics
     const updateIndicator = this.isUpdatingOverview ? '🔄' : '✅';
-    console.log(`║ 📊 Files: ${status.totalFiles.toString().padEnd(4)} │ Indexed: ${status.indexedFiles.toString().padEnd(4)} │ Uptime: ${uptime.padEnd(8)} │ Watching: ${status.isWatching ? '✅' : '❌'} ║`);
-    console.log(`║ 📈 Changes: ${this.stats.totalChanges.toString().padEnd(3)} │ Last Activity: ${timeSinceLastActivity.padEnd(6)} │ Overview: ${updateIndicator} ${timeSinceOverviewUpdate.padEnd(6)} ago    ║`);
+    const uniqueFilesChanged = this.stats.uniqueFilesModified.size + this.stats.uniqueFilesAdded.size + this.stats.uniqueFilesDeleted.size;
+    console.log(`║ 📊 Tracked: ${status.indexedFiles.toString().padEnd(3)} files │ Changed: ${uniqueFilesChanged.toString().padEnd(2)} files │ Uptime: ${uptime.padEnd(8)} │ Watching: ${status.isWatching ? '✅' : '❌'} ║`);
+    console.log(`║ 📈 Events: ${this.stats.totalChanges.toString().padEnd(3)} │ Last Activity: ${timeSinceLastActivity.padEnd(6)} │ Overview: ${updateIndicator} ${timeSinceOverviewUpdate.padEnd(6)} ago     ║`);
     console.log('╠═══════════════════════════════════════════════════════════════════════════════╣');
     
     // Live overview data
@@ -227,28 +253,42 @@ class IndexingMonitor {
     });
     
     console.log('╠═══════════════════════════════════════════════════════════════════════════════╣');
-    console.log('║ 🧠 TOP COMPLEX FILES:                                                        ║');
+    console.log('║ 🧠 FILES BY SEMANTIC ELEMENTS:                                               ║');
     
     // Show top 5 most complex files
     const topFiles = this.overviewData.byFile.slice(0, 5);
     topFiles.forEach(([file, count]: [string, number]) => {
       const relativePath = this.relativePath(file);
       const truncatedPath = relativePath.length > 55 ? '...' + relativePath.slice(-52) : relativePath;
-      console.log(`║   ${truncatedPath.padEnd(55)} ${count.toString().padStart(3)} declarations ║`);
+      console.log(`║   ${truncatedPath.padEnd(55)} ${count.toString().padStart(3)} elements   ║`);
     });
     
     console.log('╠═══════════════════════════════════════════════════════════════════════════════╣');
     console.log('║ 📁 RECENT CHANGES:                                                           ║');
     
-    // Show recent activity summary
-    if (this.stats.totalChanges === 0) {
+    // Show the last 3 changes or activity summary
+    if (this.recentChanges.length > 0) {
+      this.recentChanges.forEach(changeLog => {
+        const truncatedLog = changeLog.length > 77 ? changeLog.substring(0, 74) + '...' : changeLog;
+        console.log(`║   ${truncatedLog.padEnd(77)} ║`);
+      });
+      
+      // Fill remaining slots with empty lines to maintain consistent height
+      for (let i = this.recentChanges.length; i < 3; i++) {
+        console.log('║                                                                               ║');
+      }
+    } else if (this.stats.totalChanges === 0) {
       console.log('║   No changes detected yet...                                                  ║');
+      console.log('║                                                                               ║');
+      console.log('║                                                                               ║');
     } else {
-      console.log(`║   Total: ${this.stats.totalChanges.toString().padEnd(3)} │ Added: ${this.stats.filesAdded.toString().padEnd(3)} │ Modified: ${this.stats.filesModified.toString().padEnd(3)} │ Deleted: ${this.stats.filesDeleted.toString().padEnd(3)} │ Reindexed: ${this.stats.reindexOperations.toString().padEnd(3)} ║`);
+      console.log(`║   Events: ${this.stats.totalChanges.toString().padEnd(2)} │ Unique files: ${uniqueFilesChanged.toString().padEnd(2)} │ Saves: ${this.stats.filesModified.toString().padEnd(2)} │ Additions: ${this.stats.filesAdded.toString().padEnd(2)} │ Deletions: ${this.stats.filesDeleted.toString().padEnd(2)} ║`);
+      console.log('║                                                                               ║');
+      console.log('║                                                                               ║');
     }
     
     console.log('╚═══════════════════════════════════════════════════════════════════════════════╝');
-    console.log('\n💡 Live overview updates on file changes + every 2 seconds. Press Ctrl+C to stop.\n');
+    console.log('\n💡 Live overview updates on file changes + every 2 seconds. Press Ctrl+C to stop.');
   }
 
   private relativePath(filePath: string): string {
@@ -274,6 +314,9 @@ class IndexingMonitor {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
     }
+    if (this.changeLogTimer) {
+      clearTimeout(this.changeLogTimer);
+    }
     
     this.indexer.stopWatching();
     await this.indexer.dispose();
@@ -281,11 +324,11 @@ class IndexingMonitor {
     console.log('\n🛑 Monitoring stopped');
     console.log('\n📊 Final Statistics:');
     console.log(`  Total runtime: ${this.formatDuration(Date.now() - this.stats.startTime)}`);
-    console.log(`  Total changes: ${this.stats.totalChanges}`);
-    console.log(`  Files added: ${this.stats.filesAdded}`);
-    console.log(`  Files modified: ${this.stats.filesModified}`);
-    console.log(`  Files deleted: ${this.stats.filesDeleted}`);
-    console.log(`  Reindex operations: ${this.stats.reindexOperations}`);
+    console.log(`  File save events: ${this.stats.totalChanges}`);
+    console.log(`  Unique files changed: ${this.stats.uniqueFilesModified.size + this.stats.uniqueFilesAdded.size + this.stats.uniqueFilesDeleted.size}`);
+    console.log(`  Files saved: ${this.stats.filesModified} times (${this.stats.uniqueFilesModified.size} unique)`);
+    console.log(`  Files added: ${this.stats.filesAdded} (${this.stats.uniqueFilesAdded.size} unique)`);
+    console.log(`  Files deleted: ${this.stats.filesDeleted} (${this.stats.uniqueFilesDeleted.size} unique)`);
   }
 
   async showCodebaseOverview(): Promise<void> {
