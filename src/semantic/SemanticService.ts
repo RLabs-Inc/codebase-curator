@@ -16,6 +16,11 @@ export class SemanticService {
     new TypeScriptExtractor(),
     // Add more extractors here as you implement them
   ];
+  private projectPath: string;
+
+  constructor(projectPath: string) {
+    this.projectPath = projectPath;
+  }
 
   async indexCodebase(projectPath: string): Promise<void> {
     console.log('🔍 Building semantic index...');
@@ -106,13 +111,76 @@ export class SemanticService {
   }
 
   /**
+   * Build index for the configured project path
+   */
+  async buildIndex(): Promise<void> {
+    await this.indexCodebase(this.projectPath);
+  }
+
+  /**
+   * Index specific files (for incremental updates)
+   */
+  async indexFiles(files: string[]): Promise<void> {
+    console.log(`🔄 Indexing ${files.length} files...`);
+    let entriesIndexed = 0;
+
+    for (const filePath of files) {
+      const extractor = this.extractors.find(e => e.canHandle(filePath));
+      
+      if (extractor) {
+        try {
+          const file = Bun.file(filePath);
+          const content = await file.text();
+          const result = extractor.extract(content, filePath);
+          
+          // Remove existing entries for this file first
+          this.index.removeFile(filePath);
+          
+          // Add new definitions
+          result.definitions.forEach(info => {
+            this.index.add(info);
+            entriesIndexed++;
+          });
+          
+          // Add cross-references
+          result.references.forEach(ref => {
+            this.index.addCrossReference(ref);
+          });
+        } catch (error) {
+          console.warn(`Error processing ${filePath}:`, error);
+        }
+      }
+    }
+
+    console.log(`✅ Indexed ${entriesIndexed} entries from ${files.length} files`);
+    
+    // Save updated index
+    const indexPath = this.getIndexPath(this.projectPath);
+    await this.saveIndex(indexPath);
+  }
+
+  /**
+   * Remove a file from the semantic index
+   */
+  async removeFile(filePath: string): Promise<void> {
+    this.index.removeFile(filePath);
+    
+    // Save updated index
+    const indexPath = this.getIndexPath(this.projectPath);
+    await this.saveIndex(indexPath);
+  }
+
+  /**
+   * Clear the entire index
+   */
+  async clearIndex(): Promise<void> {
+    this.index.clear();
+  }
+
+  /**
    * Get index statistics
    */
   getStats(): { totalEntries: number; totalFiles: number } {
-    // TODO: Add stats tracking to index
-    return {
-      totalEntries: 0,
-      totalFiles: 0,
-    };
+    return this.index.getStats();
   }
 }

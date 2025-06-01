@@ -213,6 +213,50 @@ export class SemanticIndexImpl implements SemanticIndex {
     this.fileReferences.clear();
   }
 
+  removeFile(filePath: string): void {
+    // Remove from file-based index
+    const fileEntries = this.entries.get(filePath) || [];
+    this.entries.delete(filePath);
+
+    // Remove from term-based index
+    fileEntries.forEach(info => {
+      const normalizedTerm = info.term.toLowerCase();
+      const termEntries = this.termIndex.get(normalizedTerm) || [];
+      const filtered = termEntries.filter(entry => entry.location.file !== filePath);
+      
+      if (filtered.length === 0) {
+        this.termIndex.delete(normalizedTerm);
+      } else {
+        this.termIndex.set(normalizedTerm, filtered);
+      }
+    });
+
+    // Remove from cross-references
+    this.fileReferences.delete(filePath);
+    
+    // Remove references that originate from this file
+    for (const [term, refs] of this.crossReferences.entries()) {
+      const filtered = refs.filter(ref => ref.fromLocation.file !== filePath);
+      if (filtered.length === 0) {
+        this.crossReferences.delete(term);
+      } else {
+        this.crossReferences.set(term, filtered);
+      }
+    }
+  }
+
+  getStats(): { totalEntries: number; totalFiles: number } {
+    let totalEntries = 0;
+    for (const entries of this.entries.values()) {
+      totalEntries += entries.length;
+    }
+
+    return {
+      totalEntries,
+      totalFiles: this.entries.size
+    };
+  }
+
   async save(path: string): Promise<void> {
     const data = {
       entries: Array.from(this.entries.entries()),
