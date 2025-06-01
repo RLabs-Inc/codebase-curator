@@ -36,17 +36,41 @@ You get → Specific guidance that fits YOUR patterns
 
 ## ✨ Key Features
 
+### 🤖 Two-Claude Architecture
+- **Curator Claude**: A dedicated AI that becomes an expert on YOUR codebase
+- **Persistent Sessions**: Remembers context between questions
+- **Instant Follow-ups**: First question takes 2 minutes, rest are instant
+
 ### 🔍 Smart Grep - Semantic Code Search
 
 ```bash
 # Don't just search - understand
-smartgrep "auth"
+smartgrep group auth            # Search ALL auth patterns
+smartgrep "handleAuth"         # Search specific term
 
 # Returns organized results:
 # → Functions: authenticate() (12 uses), validateUser() (5 uses)
-# → Classes: AuthService, AuthMiddleware
-# → Patterns: JWT tokens, session management
-# → Cross-references: Shows where each is used
+# → Classes: AuthService, AuthMiddleware  
+# → Strings: "Login failed", "Invalid token"
+# → Cross-references: Shows actual calling code
+
+# Advanced patterns
+smartgrep "error&handler"       # AND search
+smartgrep "login|signin|auth"   # OR search
+smartgrep "!test" --type function # Exclude tests
+```
+
+### 🎯 Live Monitoring Dashboard
+
+```bash
+# Watch your codebase evolve in real-time
+bun run monitor watch --overview
+
+# See:
+# → Live code distribution by type
+# → File changes as they happen
+# → Most complex files by declaration count
+# → Automatic reindexing on changes
 ```
 
 ### 🧠 Persistent Understanding
@@ -129,18 +153,33 @@ Use add_new_feature: "Add user notifications"
 Use implement_change: "Fix the login timeout bug"
 ```
 
-### Smart Grep CLI
+### Smart Grep CLI - Now with Concept Groups!
 
 ```bash
 # Install globally
 bun link
 
-# Search your codebase semantically
-smartgrep "database"           # Find all database patterns
+# Concept groups - search semantic patterns
+smartgrep group auth           # ALL auth patterns (login, jwt, token...)
+smartgrep group error          # ALL error patterns (exception, fail...)
+smartgrep group api            # ALL API patterns (endpoint, route...)
+smartgrep --list-groups        # See all 20+ concept groups
+
+# Advanced search patterns
 smartgrep "user|auth"          # OR search
-smartgrep "async&function"      # AND search
+smartgrep "async&function"      # AND search  
 smartgrep "!test" --type function  # Exclude tests
 smartgrep refs "PaymentService"    # Find all usages
+
+# Type filters for precision
+smartgrep "auth" --type function      # Only functions
+smartgrep "error" --type string       # Only string literals
+smartgrep group api --type class      # Only API classes
+
+# Sort and format options
+smartgrep group service --sort usage  # Most used first
+smartgrep "user" --compact           # One line per result
+smartgrep "api" --json               # Machine-readable output
 ```
 
 ## 🏗️ Architecture
@@ -153,9 +192,12 @@ smartgrep refs "PaymentService"    # Find all usages
 
 ### Smart Components
 
-- **Session Persistence**: Maintains context between questions
-- **Dynamic Timeouts**: Adapts to different operations
-- **Semantic Indexing**: Understands code structure, not just text
+- **Session Persistence**: Maintains context between questions with --resume
+- **Dynamic Timeouts**: Adapts to different operations (Task: 10min, Bash: 5min)
+- **Semantic Indexing**: Understands code structure with 20+ concept groups
+- **Incremental Indexing**: Only reprocesses changed files with debouncing
+- **Live Monitoring**: Real-time dashboard shows code evolution as you work
+- **Cross-References**: Shows not just where code is defined, but who uses it
 - **Streaming Architecture**: Handles massive codebases efficiently
 
 ## 🤝 Contributing
@@ -171,9 +213,23 @@ bun test
 # Run MCP server locally
 bun run src/mcp/server.ts
 
-# Run CLI
-bun run src/cli/app.ts
+# Run CLI tools
+bun run src/cli/app.ts            # Curator CLI
+bun run smartgrep [query]         # Smart grep
+bun run monitor watch --overview  # Live monitoring
+
+# Build semantic index
+bun run smartgrep index
 ```
+
+### MCP Tools Available
+
+- `get_codebase_overview` - Deep analysis of your codebase
+- `ask_curator` - Ask questions about the code
+- `add_new_feature` - Get guidance for new features
+- `implement_change` - Get help with specific changes
+- `list_project_special_tools` - Discover AI-optimized tools
+- `remind_about_smartgrep` - Get smart-grep usage examples
 
 ## 📄 License
 
@@ -188,3 +244,18 @@ Special thanks to the Claude Code team for making this integration possible.
 ---
 
 _Remember: Your Claude works hard to help you code. Give it the superpower it deserves!_ 🚀
+
+## 🎆 What's New
+
+### v3.0 - Smart Grep Revolution
+- **Concept Groups**: `smartgrep group auth` searches semantic patterns
+- **Advanced Search**: AND/OR/NOT patterns, regex support
+- **Type Filters**: Search only functions, classes, variables, etc.
+- **Live Monitoring**: Real-time codebase overview dashboard
+- **MCP Discovery**: Tools help Claudes discover smart-grep features
+
+### v2.3 - Incremental Indexing
+- **Hash Tree**: Bun.hash() for instant file change detection
+- **Smart Debouncing**: Handles duplicate save events gracefully
+- **Silent Mode**: Clean output for live monitoring
+- **Unique File Tracking**: Shows real changes, not event counts

@@ -79,7 +79,27 @@ async function main() {
       break;
       
     case '--groups':
+    case '--list-groups':
       showConceptGroups();
+      break;
+      
+    case 'group':
+      // Handle concept group search
+      if (args.length < 2) {
+        console.error('Please specify a concept group. Available groups:');
+        showConceptGroups();
+        process.exit(1);
+      }
+      const groupName = args[1].toLowerCase();
+      const conceptGroup = CONCEPT_GROUPS[groupName];
+      if (!conceptGroup) {
+        console.error(`Unknown concept group: "${groupName}"`);
+        console.error('\nAvailable groups:');
+        showConceptGroups();
+        process.exit(1);
+      }
+      // Search using the concept group
+      await handleGroupSearch(service, projectPath, groupName, conceptGroup, args.slice(2));
       break;
       
     case 'refs':
@@ -171,6 +191,73 @@ async function handleIndex(service: SemanticService, projectPath: string) {
   console.log(`📂 Indexing codebase at: ${projectPath}`);
   await service.indexCodebase(projectPath);
   console.log('✨ Indexing complete!');
+}
+
+async function handleGroupSearch(service: SemanticService, projectPath: string, groupName: string, conceptGroup: string[], args: string[]) {
+  // Load index
+  const loaded = await service.loadIndex(projectPath);
+  if (!loaded) {
+    console.log('No semantic index found. Building...');
+    await service.indexCodebase(projectPath);
+  }
+
+  // Parse additional options (filters, sorting, etc.)
+  let typeFilter: string[] | undefined;
+  let fileFilter: string[] | undefined;
+  let maxResults = 50;
+  let sortBy: 'relevance' | 'usage' | 'name' | 'file' = 'relevance';
+  let outputFormat: 'pretty' | 'json' | 'compact' = 'pretty';
+  let showContext = true;
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    
+    if (arg === '--type' && args[i + 1]) {
+      typeFilter = args[++i].split(',');
+    } else if (arg === '--file' && args[i + 1]) {
+      fileFilter = args[++i].split(',');
+    } else if (arg === '--max' && args[i + 1]) {
+      maxResults = parseInt(args[++i]);
+    } else if (arg === '--sort' && args[i + 1]) {
+      sortBy = args[++i] as any;
+    } else if (arg === '--json') {
+      outputFormat = 'json';
+    } else if (arg === '--compact') {
+      outputFormat = 'compact';
+    } else if (arg === '--no-context') {
+      showContext = false;
+    }
+  }
+
+  // Search using the concept group
+  let results = service.searchGroup(conceptGroup);
+  
+  // Apply filters if provided
+  if (typeFilter || fileFilter) {
+    results = results.filter(r => {
+      if (typeFilter && !typeFilter.includes(r.info.type)) return false;
+      if (fileFilter && !fileFilter.some(pattern => r.info.location.file.includes(pattern))) return false;
+      return true;
+    });
+  }
+  
+  // Sort results
+  results = sortResults(results, sortBy);
+  
+  // Limit results
+  results = results.slice(0, maxResults);
+
+  // Display results based on format
+  switch (outputFormat) {
+    case 'json':
+      console.log(JSON.stringify(results, null, 2));
+      break;
+    case 'compact':
+      displayResultsCompact(`group:${groupName}`, results);
+      break;
+    default:
+      displayGroupResults(groupName, conceptGroup, results, showContext);
+  }
 }
 
 async function handleReferences(service: SemanticService, projectPath: string, term: string) {
@@ -277,12 +364,8 @@ async function handleSearch(service: SemanticService, projectPath: string, args:
   // Handle different search patterns
   let results: SearchResult[] = [];
   
-  // Check if it's a concept group
-  const conceptGroup = CONCEPT_GROUPS[query.toLowerCase()];
-  
-  if (conceptGroup) {
-    results = service.searchGroup(conceptGroup);
-  } else if (query.includes('|')) {
+  // Note: Concept groups are now handled by the 'group' command
+  if (query.includes('|')) {
     // OR pattern: term1|term2|term3
     const terms = query.split('|').map(t => t.trim());
     results = service.searchGroup(terms);
@@ -319,8 +402,23 @@ async function handleSearch(service: SemanticService, projectPath: string, args:
       displayResultsCompact(query, results);
       break;
     default:
-      displayResults(query, results, conceptGroup, showContext);
+      displayResults(query, results, undefined, showContext);
   }
+}
+
+function displayGroupResults(groupName: string, conceptGroup: string[], results: SearchResult[], showContext: boolean = true) {
+  if (results.length === 0) {
+    console.log(`\nNo results found for concept group "${groupName}"`);
+    return;
+  }
+
+  const groupIcon = getGroupIcon(groupName);
+  console.log(`\n${groupIcon} Concept Group: "${groupName}"`);
+  console.log(`🔍 Searching for: ${conceptGroup.slice(0, 5).join(', ')}${conceptGroup.length > 5 ? ', ...' : ''}`);
+  console.log(`📊 Found ${results.length} results\n`);
+
+  // Continue with same display logic as displayResults
+  displayResultsBody(results, showContext);
 }
 
 function displayResults(query: string, results: SearchResult[], conceptGroup?: string[], showContext: boolean = true) {
@@ -331,6 +429,15 @@ function displayResults(query: string, results: SearchResult[], conceptGroup?: s
 
   console.log(`\n🔍 Search: "${query}" ${conceptGroup ? `(concept group: ${conceptGroup.join(', ')})` : ''}`);
   console.log(`📊 Found ${results.length} results\n`);
+
+  displayResultsBody(results, showContext);
+}
+
+function displayResultsBody(results: SearchResult[], showContext: boolean = true) {
+  if (results.length === 0) {
+    console.log(`No results found for "${query}"`);
+    return;
+  }
 
   // Group by type
   const grouped = results.reduce((acc, result) => {
@@ -446,10 +553,11 @@ function showHelp() {
 🔍 Smart Grep - Semantic Code Search with Cross-References
 
 Usage:
-  smartgrep <query>                Search for a term or concept
+  smartgrep <query>                Search for a term or pattern
+  smartgrep group <name>           Search using a concept group
   smartgrep index                  Rebuild the semantic index
   smartgrep refs <term>            Show where a term is referenced
-  smartgrep --groups              Show available concept groups
+  smartgrep --list-groups          Show available concept groups
 
 🎯 Search Patterns:
   term1|term2|term3               OR search - find any of these terms
@@ -479,11 +587,11 @@ Usage:
   • Exact line and column positions
 
 🏷️ Concept Groups:
-  smartgrep auth        Authentication & security patterns
-  smartgrep service     Service classes and patterns
-  smartgrep error       Error handling patterns
-  smartgrep flow        Data flow and streaming
-  ...and more! Use --groups to see all available groups
+  smartgrep group auth        Authentication & security patterns
+  smartgrep group service     Service classes and patterns
+  smartgrep group error       Error handling patterns
+  smartgrep group flow        Data flow and streaming
+  ...and more! Use --list-groups to see all available groups
 
 💡 Examples:
   smartgrep "authenticateUser"                  # Find function with usage info
@@ -491,10 +599,10 @@ Usage:
   smartgrep "error&string"                      # Find error-related strings
   smartgrep "!test" --type function             # Functions not containing 'test'
   smartgrep "/add.*Reference/" --regex          # Regex pattern search
-  smartgrep auth --sort usage                   # Auth code sorted by usage
+  smartgrep group auth --sort usage             # Auth code sorted by usage
   smartgrep "CuratorService" --json             # Machine-readable output
   smartgrep refs "processPayment"               # Full impact analysis
-  smartgrep service --type class --max 10       # Top 10 service classes
+  smartgrep group service --type class --max 10 # Top 10 service classes
 
 📍 Pro Tips:
   • The tool shows function signatures, surrounding context, and related code
@@ -513,7 +621,7 @@ function showConceptGroups() {
   for (const [group, terms] of Object.entries(CONCEPT_GROUPS)) {
     console.log(`${getGroupIcon(group)} ${group}`);
     console.log(`   Terms: ${terms.slice(0, 5).join(', ')}${terms.length > 5 ? ', ...' : ''}`);
-    console.log(`   Usage: smartgrep ${group}\n`);
+    console.log(`   Usage: smartgrep group ${group}\n`);
   }
 }
 

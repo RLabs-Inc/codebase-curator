@@ -22,7 +22,7 @@ const COMMON_CURATOR_INSTRUCTIONS = `
 **Your Investigation Strategy** 🎯:
 
 ⚠️ **ALWAYS START WITH SMART GREP!** Don't use Task for initial exploration - it's slower!
-- First command should be: \`bun run smartgrep <concept>\` via Bash tool
+- First command should be: \`bun run smartgrep <pattern>\` or \`bun run smartgrep group <concept>\` via Bash tool
 - Smart grep gives you organized, semantic results FAST
 - Only use Task for complex parallel investigations AFTER initial smart grep
 
@@ -33,7 +33,8 @@ Use your Claude tools systematically:
 
 ⚡ **IMPORTANT: Smart-Grep vs Regular Grep**
 - Regular grep: \`grep "error"\` → 500 results, many false positives
-- Smart-Grep: \`smartgrep error\` → Organized results by type (functions, strings, comments)
+- Smart-Grep: \`smartgrep "error"\` → Search for literal "error" organized by type
+- Smart-Grep Groups: \`smartgrep group error\` → ALL error patterns (exception, fail, catch, throw...)
 - Smart-Grep understands code structure and gives you semantic matches!
 - Always try Smart-Grep first for concept searches!
 
@@ -105,31 +106,39 @@ smartgrep is a game-changer! It shows usage counts, cross-references, and rich c
 - Exact file:line:column positions
 
 **POWERFUL OPTIONS:**
-- \`--type function,class\` → Filter by multiple types
+- \`--type function\` → Only functions
+- \`--type class\` → Only classes
+- \`--type variable\` → Only variables
+- \`--type string\` → Only string literals
+- \`--type function,class\` → Multiple types (functions AND classes)
 - \`--sort usage\` → Sort by usage count (find most used!)
 - \`--compact\` → One line per result for scanning
 - \`--no-context\` → Hide context for cleaner view
 - \`smartgrep refs "functionName"\` → See ALL places it's used
 
-**CONCEPT GROUPS:**
-- \`smartgrep auth\` → ALL auth patterns (functions, classes, strings, comments)
-- \`smartgrep service\` → Service classes and patterns
-- \`smartgrep error\` → Error handling patterns
-- \`smartgrep flow\` → Data flow and streaming
-- \`smartgrep --groups\` → See all 20+ concept groups
+**CONCEPT GROUPS (NEW SYNTAX!):**
+- \`smartgrep group auth\` → ALL auth patterns (login, token, jwt, oauth...)
+- \`smartgrep group error\` → ALL error patterns (exception, fail, catch, throw...)
+- \`smartgrep group service\` → Service classes and patterns
+- \`smartgrep group database\` → DB patterns (query, model, repository...)
+- \`smartgrep group api\` → API patterns (endpoint, route, controller...)
+- \`smartgrep --list-groups\` → See all 20+ concept groups with their keywords!
 
 **Pro tips:**
 - Use OR patterns instead of multiple greps: \`smartgrep "login|signin|auth"\`
-- Find unused code: \`smartgrep function --sort usage | grep "(0 uses)"\`
+- Find unused code: \`smartgrep "" --type function --sort usage | grep "(0 uses)"\`
 - Understand impact: \`smartgrep refs "PaymentService"\`
 - Type combinations work great: \`--type function,class --file "*.service.*"\`
+- Combine group with filters: \`smartgrep group auth --type function --max 10\`
 
 ## YOUR WORKFLOW 📋
 
 1. **Start with semantic search**:
-   - Use smartgrep for concept exploration
-   - Use Glob to understand structure
-   - Use Grep for specific patterns
+   - Use \`smartgrep group <concept>\` for broad concept exploration
+   - Use \`smartgrep "term"\` for specific term search
+   - Use \`smartgrep --list-groups\` to see available concept groups
+   - Use Glob to understand file structure
+   - Use Grep for file content patterns
    - Use LS to explore directories
    
 2. **Build understanding**:

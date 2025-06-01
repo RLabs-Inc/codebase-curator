@@ -9,11 +9,12 @@ Codebase Curator is an AI-powered codebase analysis system that enables Claude t
 ### Key Innovations We've Implemented:
 
 1. **Two-Claude Architecture** - One Claude (Curator) helps another Claude (Coding) understand codebases
-2. **Session Persistence** - Fixed! Sessions now properly maintain context across commands
-3. **Dynamic Timeouts** - Different tools get different timeouts (Task: 10min, Bash: 5min, Read: 2min)
-4. **Smart Grep** - Semantic code search with usage counts and cross-references
-5. **🔥 Hierarchical Hash Tree** - Incremental indexing with Bun-native xxHash64 for lightning-fast file change detection
-6. **🎯 Live Monitoring** - Real-time codebase overview dashboard that evolves as you code
+2. **Session Persistence** ✅ - Fixed! Sessions now properly maintain context across commands using --resume
+3. **Dynamic Timeouts** ✅ - Different tools get different timeouts (Task: 10min, Bash: 5min, Read: 2min)
+4. **Smart Grep** 🚀 - Semantic code search with concept groups, AND/OR/NOT searches, and cross-references
+5. **🔥 Hierarchical Hash Tree** ✅ - Incremental indexing with Bun.hash() for lightning-fast file change detection
+6. **🎯 Live Monitoring** ✅ - Real-time codebase overview dashboard with unique file tracking
+7. **MCP Tool Discovery** ✅ - Help Claudes discover smart-grep with compelling examples
 
 ### Architecture
 
@@ -68,10 +69,10 @@ The project is structured into three main layers:
    bun test
    ```
 
-5. **🔥 Incremental Indexing System** ✅ NEW!
-   - **HashTree.ts**: Bun-native xxHash64 for lightning-fast file change detection
-   - **IncrementalIndexer.ts**: Only reprocesses changed files, dramatically reducing overhead
-   - **Live Monitoring**: Real-time dashboard showing codebase evolution as you code
+5. **🔥 Incremental Indexing System** ✅ IMPLEMENTED!
+   - **HashTree.ts**: Bun.hash() for fast file change detection with 500ms debouncing
+   - **IncrementalIndexer.ts**: Only reprocesses changed files, silent mode for clean output
+   - **Live Monitoring**: Real-time dashboard showing unique files changed (not duplicate events)
    
    ```bash
    # Live monitoring with codebase overview
@@ -82,6 +83,29 @@ The project is structured into three main layers:
    
    # Technical status and integrity checks
    bun run monitor status
+   ```
+
+6. **🔍 Smart Grep - Semantic Code Search** ✅ FULLY FEATURED!
+   - **Concept Groups**: `smartgrep group auth` searches ALL auth patterns
+   - **Advanced Patterns**: AND (`&`), OR (`|`), NOT (`!`), regex (`/pattern/`)
+   - **Type Filters**: `--type function,class,variable,string,comment`
+   - **Cross-References**: `smartgrep refs "functionName"` shows all usages
+   - **20+ Concept Groups**: auth, error, api, database, cache, etc.
+   
+   ```bash
+   # List all concept groups
+   bun run smartgrep --list-groups
+   
+   # Search concept group
+   bun run smartgrep group error --type function
+   
+   # Advanced searches
+   bun run smartgrep "error&string"           # AND search
+   bun run smartgrep "login|signin|auth"      # OR search
+   bun run smartgrep "!test" --type function  # NOT search
+   
+   # Find references
+   bun run smartgrep refs "processPayment"
    ```
 
 ### Debugging MCP Issues
@@ -98,7 +122,8 @@ The project is structured into three main layers:
 3. **Anthropic Caching**: API caching reduces costs for repeated context
 4. **Streaming**: Files are streamed, never fully loaded into memory
 5. **🚀 Incremental Performance**: Hash tree enables sub-second updates by only processing changed files
-6. **Bun-Native Speed**: xxHash64 + file watching provides near-instant change detection
+6. **Bun-Native Speed**: Bun.hash() + file watching provides near-instant change detection
+7. **Smart-Grep Cache**: Semantic index persisted, instant searches after first index
 
 ## Project Philosophy
 
@@ -107,9 +132,79 @@ The project is structured into three main layers:
 - **Modular Extension**: Easy to add new tools without breaking existing ones
 - **Practical Focus**: Provide actionable insights, not academic analysis
 
-## Future Directions
+## Implementation Status
 
-1. **More Languages**: Go, Rust, Java, Ruby, etc.
-2. **Real-time Analysis**: Watch mode for continuous updates
+### ✅ Completed Features
+- Two-Claude architecture with MCP
+- Session persistence with --resume flag
+- Dynamic timeouts for different tools
+- Smart-grep with full semantic search
+- Concept groups with intuitive `group` command
+- Hierarchical hash tree with Bun.hash()
+- Incremental indexing with debouncing
+- Live monitoring dashboard
+- MCP tool discovery helpers
+- .curator directory exclusion
+- Unique file tracking (vs event counts)
+
+### 🚀 Next Up
+1. **Multi-Language Support**: Python, Go, Rust extractors
+2. **Enhanced Monitoring**: More detailed code metrics
+3. **Performance Optimization**: Parallel indexing
+
+## Smart Grep Usage Guide
+
+### Basic Commands
+```bash
+# Search for literal term
+bun run smartgrep "handleAuth"
+
+# Search concept group
+bun run smartgrep group auth
+
+# List all concept groups
+bun run smartgrep --list-groups
+
+# Find references
+bun run smartgrep refs "apiClient"
+```
+
+### Advanced Patterns
+```bash
+# AND search (must contain both)
+bun run smartgrep "error&handler"
+
+# OR search (contains any)
+bun run smartgrep "login|signin|auth"
+
+# NOT search (exclude term)
+bun run smartgrep "!test" --type function
+
+# Regex search
+bun run smartgrep "/handle.*Event/" --regex
+```
+
+### Type Filters
+```bash
+# Single type
+bun run smartgrep "auth" --type function
+
+# Multiple types
+bun run smartgrep "user" --type function,class
+
+# All types: function, class, variable, string, comment, import
+```
+
+### Combining Features
+```bash
+# Concept group + type filter + sorting
+bun run smartgrep group error --type function --sort usage
+
+# Pattern + file filter + max results
+bun run smartgrep "service" --file "*.ts" --max 10
+
+# Compact output for scanning
+bun run smartgrep group api --compact
+```
 
 Remember: The goal is to help AI assistants write code that truly fits into existing codebases, not just syntactically correct code in isolation.

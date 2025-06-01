@@ -14,6 +14,12 @@ import {
 import { createCuratorService } from '../core'
 import type { CuratorService } from '../core'
 import { getCompactSystemExplanation } from '../core/CuratorPrompts'
+import { 
+  ListProjectSpecialToolsSchema,
+  RemindAboutSmartgrepSchema,
+  PROJECT_SPECIAL_TOOLS,
+  SMARTGREP_REMINDER 
+} from './tools.js'
 
 // Server metadata
 const serverInfo = {
@@ -210,6 +216,16 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         },
       },
     },
+    {
+      name: ListProjectSpecialToolsSchema.name,
+      description: ListProjectSpecialToolsSchema.description,
+      inputSchema: ListProjectSpecialToolsSchema.inputSchema,
+    },
+    {
+      name: RemindAboutSmartgrepSchema.name,
+      description: RemindAboutSmartgrepSchema.description,
+      inputSchema: RemindAboutSmartgrepSchema.inputSchema,
+    },
   ],
 }))
 
@@ -351,6 +367,41 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
         return {
           content: [{ type: 'text', text: content }],
+        }
+      }
+
+      case 'list_project_special_tools': {
+        return {
+          content: [{ type: 'text', text: PROJECT_SPECIAL_TOOLS.overview }],
+        }
+      }
+
+      case 'remind_about_smartgrep': {
+        const formattedResponse = `🔍 **Smart Grep - Semantic Code Search**
+
+**Quick Start:** \`${SMARTGREP_REMINDER.quickstart}\`
+
+**🚀 Killer Examples:**
+${SMARTGREP_REMINDER.killer_examples.map(ex => `• ${ex}`).join('\n')}
+
+**📚 Concept Groups:**
+${SMARTGREP_REMINDER.concept_groups.hint}
+${SMARTGREP_REMINDER.concept_groups.examples.map(ex => `• ${ex}`).join('\n')}
+📖 See all: \`${SMARTGREP_REMINDER.concept_groups.see_all}\`
+
+**🎯 Type Filters:**
+${SMARTGREP_REMINDER.type_filters.hint}
+${SMARTGREP_REMINDER.type_filters.examples.map(ex => `• ${ex}`).join('\n')}
+
+**✨ Pro Features:**
+${SMARTGREP_REMINDER.pro_features.map(f => f).join('\n')}
+
+**${SMARTGREP_REMINDER.game_changer}**
+
+💡 **Tip:** ${SMARTGREP_REMINDER.quick_tip}`
+
+        return {
+          content: [{ type: 'text', text: formattedResponse }],
         }
       }
 
