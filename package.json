@@ -18,18 +18,28 @@
   ],
   "module": "index.ts",
   "type": "module",
+  "bin": {
+    "codebase-curator": "./src/cli/app.ts",
+    "smartgrep": "./src/semantic/cli.ts"
+  },
   "scripts": {
     "start": "bun run src/presentation/cli/app.ts",
     "test": "bun test",
     "test:watch": "bun test --watch",
-    "mcp": "bun run src/presentation/mcp/server.ts"
+    "mcp": "bun run src/presentation/mcp/server.ts",
+    "smartgrep": "bun run src/semantic/cli.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "@babel/parser": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
+    "@babel/types": "^7.23.0"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/babel__parser": "^7.1.1",
+    "@types/babel__traverse": "^7.20.2"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

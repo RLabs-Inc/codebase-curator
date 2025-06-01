@@ -13,7 +13,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js'
 import { createCuratorService } from '../core'
 import type { CuratorService } from '../core'
-import { getCompactSystemExplanation } from '../core/curatorPrompts'
+import { getCompactSystemExplanation } from '../core/CuratorPrompts'
 
 // Server metadata
 const serverInfo = {
@@ -317,23 +317,29 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'get_curator_activity': {
         const { join } = await import('path')
         const { existsSync } = await import('fs')
-        
+
         const lines = (args?.lines as number) || 50
-        const logsDir = join(process.env.HOME || '', '.codebase-curator', 'logs')
+        const logsDir = join(
+          process.env.HOME || '',
+          '.codebase-curator',
+          'logs'
+        )
         const today = new Date().toISOString().split('T')[0]
         const logFile = join(logsDir, `curator-activity-${today}.log`)
-        
+
         let content = ''
         if (existsSync(logFile)) {
           // Read last N lines of the log file
           const logContent = await Bun.file(logFile).text()
           const logLines = logContent.trim().split('\n')
           const recentLines = logLines.slice(-lines)
-          content = `📄 Recent Curator Activity (last ${lines} lines):\n\n${recentLines.join('\n')}\n\n📁 Full logs at: ${logsDir}`
+          content = `📄 Recent Curator Activity (last ${lines} lines):\n\n${recentLines.join(
+            '\n'
+          )}\n\n📁 Full logs at: ${logsDir}`
         } else {
           content = `No curator activity logged today. Activity logs are saved to: ${logsDir}`
         }
-        
+
         return {
           content: [{ type: 'text', text: content }],
         }

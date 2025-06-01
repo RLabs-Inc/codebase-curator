@@ -12,7 +12,7 @@ import {
   INTEGRATION_PROMPT,
   ADD_FEATURE_DIRECT_PROMPT,
   IMPLEMENT_CHANGE_DIRECT_PROMPT,
-} from './curatorPrompts'
+} from './CuratorPrompts'
 import type {
   CoreService,
   CuratorOptions,
@@ -156,7 +156,8 @@ export class CuratorService implements CoreService {
         path,
         query.sessionId
       )
-      curatorQuery.sessionId = session.id
+      // Don't pass SessionService ID to curator - it manages its own Claude CLI sessions
+      // curatorQuery.sessionId = session.id
     }
 
     // Ask the curator with the full prompt

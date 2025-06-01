@@ -494,8 +494,10 @@ export class CuratorProcessService implements CoreService {
             const text = typeof json.message.content === 'string' 
               ? json.message.content 
               : json.message.content[0]?.text || ''
-            const preview = text.substring(0, 80).replace(/\n/g, ' ')
-            console.error(`[Curator Claude] 📝 Received: "${preview}${text.length > 80 ? '...' : ''}"`)
+            if (text.trim()) {  // Only log non-empty messages
+              const preview = text.substring(0, 80).replace(/\n/g, ' ')
+              console.error(`[Curator Claude] 📝 Received: "${preview}${text.length > 80 ? '...' : ''}"`)
+            }
           } else if (json.type === 'system' && json.subtype === 'init') {
             // Session initialization
             const sessionMsg = `🚀 Session started (${json.session_id?.substring(0, 8)}...)`

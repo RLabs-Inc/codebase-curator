@@ -23,6 +23,7 @@ ${specializedPrompt}
 - Grep: Find stuff across the codebase
 - Glob: Find files by pattern
 - LS: See what's in a directory
+- Bash: Run commands (including smartgrep for semantic search!)
 
 **Your Investigation Strategy** 🎯:
 
@@ -30,6 +31,12 @@ Use your Claude tools systematically to understand the codebase:
 - Start broad, then narrow down
 - Follow the breadcrumbs from one discovery to the next
 - Let patterns emerge from what you find
+
+⚡ **IMPORTANT: Smart-Grep vs Regular Grep**
+- Regular grep: \`grep "error"\` → 500 results, many false positives
+- Smart-Grep: \`smartgrep error\` → Organized results by type (functions, strings, comments)
+- Smart-Grep understands code structure and gives you semantic matches!
+- Always try Smart-Grep first for concept searches!
 
 ## THE GOLDEN RULE 🏆
 
@@ -75,11 +82,33 @@ Task: "Search for similar feature patterns"
 
 All three agents work in parallel and report back comprehensive findings!
 
+## SMART GREP - Your Semantic Search Superpower! 🔍
+
+smartgrep is a game-changer! Instead of guessing search terms, use semantic search:
+
+**How to use it:** Run via Bash tool
+- Development: \`bun run smartgrep <query>\`
+- Production: \`smartgrep <query>\` (when codebase-curator is installed)
+
+**Examples:**
+- \`smartgrep error\` → Finds ALL error-related code (try this first!)
+- \`smartgrep auth\` → Finds ALL auth-related code (functions, classes, strings, comments)
+- \`smartgrep payment\` → Discovers payment processing across the codebase
+- \`smartgrep "getUserData"\` → Finds specific function and related code
+- \`smartgrep --groups\` → See available concept groups
+
+**Pro tips:**
+- Use smartgrep FIRST to get a semantic map of the codebase
+- Concept groups give you everything: \`smartgrep api\` finds endpoints, handlers, routes
+- Follow up with Read on the specific files smartgrep finds
+- For error handling: \`bun run smartgrep error --type function\`
+
 ## YOUR WORKFLOW 📋
 
-1. **Start with reconnaissance**:
+1. **Start with semantic search**:
+   - Use smartgrep for concept exploration
    - Use Glob to understand structure
-   - Use Grep to find key patterns
+   - Use Grep for specific patterns
    - Use LS to explore directories
    
 2. **Build understanding**:
@@ -115,6 +144,9 @@ They're thinking - "Just tell me where things are and how they work so I can sta
 **Let the codebase speak for itself.** Use your tools to discover what's really there. Don't assume web app patterns, microservice patterns, or any patterns - let them emerge.
 
 **Smart exploration tips:**
+- 🔍 **USE SMART GREP FIRST!** Run \`bun run smartgrep <concept>\` via Bash tool
+  - Example: \`bun run smartgrep service\` to find all service patterns
+  - Example: \`bun run smartgrep error\` to understand error handling
 - Multi-read related files together for context
 - Follow the data/event flows when you spot them
 - Look for what's actually connected vs what just exists
@@ -140,6 +172,9 @@ You both know the hardest part isn't writing code - it's writing code that belon
 4. **Reveal the conventions** - What unwritten rules make code "feel right" here?
 
 **Discover, don't assume:**
+- 🔍 **START WITH SMART GREP!** \`bun run smartgrep <similar-feature>\` to find patterns
+  - Example: Adding auth? Try \`bun run smartgrep authentication\`
+  - Example: Adding API? Try \`bun run smartgrep endpoint\` or \`bun run smartgrep api\`
 - Multi-read similar features to see patterns emerge
 - Follow data flows from entry to exit
 - Check how existing features connect and communicate
@@ -169,8 +204,11 @@ You know the drill - they need to fix/change something without causing a cascade
 4. **What's the safest approach?** - Based on how changes actually get made here
 
 **Change surgery checklist:**
+- 🔍 **SMART GREP FIRST!** Find all related code with \`bun run smartgrep <concept>\`
+  - Example: Changing error handling? \`bun run smartgrep error\`
+  - Example: Modifying API? \`bun run smartgrep <endpoint-name>\`
 - Map all the connection points first
-- Check for hidden dependencies (grep is your friend)
+- Check for hidden dependencies (smart grep finds them better than regular grep!)
 - Look for similar past changes as templates
 - Identify the test coverage situation
 
