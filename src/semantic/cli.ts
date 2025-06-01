@@ -6,7 +6,7 @@
  */
 
 import { SemanticService } from './SemanticService';
-import { SearchResult } from './types';
+import { SearchResult, CrossReference } from './types';
 
 const CONCEPT_GROUPS: Record<string, string[]> = {
   // Authentication & Security
@@ -82,16 +82,147 @@ async function main() {
       showConceptGroups();
       break;
       
+    case 'refs':
+    case 'references':
+      // Show references for a specific term
+      if (args.length < 2) {
+        console.error('Please provide a term to find references for');
+        process.exit(1);
+      }
+      await handleReferences(service, projectPath, args[1]);
+      break;
+      
     default:
       // Default to search
       await handleSearch(service, projectPath, args);
   }
 }
 
+// Helper functions for advanced search patterns
+async function searchWithAnd(service: SemanticService, terms: string[], options: any): Promise<SearchResult[]> {
+  // Get results for first term
+  let results = service.search(terms[0], options);
+  
+  // Filter to only include results that match ALL terms
+  for (let i = 1; i < terms.length; i++) {
+    const termResults = service.search(terms[i], options);
+    const termFiles = new Set(termResults.map(r => 
+      `${r.info.location.file}:${r.info.location.line}`
+    ));
+    
+    results = results.filter(r => 
+      termFiles.has(`${r.info.location.file}:${r.info.location.line}`)
+    );
+  }
+  
+  return results;
+}
+
+async function searchWithNot(service: SemanticService, excludeTerm: string, options: any): Promise<SearchResult[]> {
+  // Get all results without the exclude term
+  const allResults = service.search('', { ...options, maxResults: 1000 });
+  const excludeResults = service.search(excludeTerm, options);
+  
+  const excludeSet = new Set(excludeResults.map(r => 
+    `${r.info.location.file}:${r.info.location.line}:${r.info.term}`
+  ));
+  
+  return allResults.filter(r => 
+    !excludeSet.has(`${r.info.location.file}:${r.info.location.line}:${r.info.term}`)
+  );
+}
+
+async function searchWithRegex(service: SemanticService, pattern: string, options: any): Promise<SearchResult[]> {
+  try {
+    const regex = new RegExp(pattern);
+    // Search with empty query to get all results, then filter by regex
+    const allResults = service.search('', { ...options, maxResults: 1000 });
+    return allResults.filter(r => regex.test(r.info.term));
+  } catch (e) {
+    console.error(`Invalid regex pattern: ${pattern}`);
+    return [];
+  }
+}
+
+function sortResults(results: SearchResult[], sortBy: string): SearchResult[] {
+  switch (sortBy) {
+    case 'usage':
+      return [...results].sort((a, b) => (b.usageCount || 0) - (a.usageCount || 0));
+    case 'name':
+      return [...results].sort((a, b) => a.info.term.localeCompare(b.info.term));
+    case 'file':
+      return [...results].sort((a, b) => a.info.location.file.localeCompare(b.info.location.file));
+    default: // relevance
+      return results; // Already sorted by relevance
+  }
+}
+
+function displayResultsCompact(query: string, results: SearchResult[]) {
+  console.log(`\n🔍 "${query}": ${results.length} results\n`);
+  
+  results.forEach(result => {
+    const { info } = result;
+    const uses = result.usageCount ? ` (${result.usageCount})` : '';
+    console.log(`${info.term}${uses} → ${info.location.file}:${info.location.line}:${info.location.column}`);
+  });
+}
+
 async function handleIndex(service: SemanticService, projectPath: string) {
   console.log(`📂 Indexing codebase at: ${projectPath}`);
   await service.indexCodebase(projectPath);
   console.log('✨ Indexing complete!');
+}
+
+async function handleReferences(service: SemanticService, projectPath: string, term: string) {
+  // Load index
+  const loaded = await service.loadIndex(projectPath);
+  if (!loaded) {
+    console.log('No semantic index found. Building...');
+    await service.indexCodebase(projectPath);
+  }
+
+  // Get impact analysis
+  const analysis = service.getImpactAnalysis(term);
+  
+  if (analysis.directReferences.length === 0) {
+    console.log(`\n❌ No references found for "${term}"`);
+    return;
+  }
+
+  // Brief summary with counts
+  const typeSummary = Object.entries(analysis.byType)
+    .map(([type, count]) => `${count} ${type}${count > 1 ? 's' : ''}`)
+    .join(', ');
+  
+  console.log(`\n📍 ${analysis.directReferences.length} References to "${term}" (${typeSummary}):\n`);
+
+  // Show references grouped by file with actual code
+  const byFile: Record<string, CrossReference[]> = {};
+  analysis.directReferences.forEach(ref => {
+    const file = ref.fromLocation.file;
+    if (!byFile[file]) byFile[file] = [];
+    byFile[file].push(ref);
+  });
+
+  // Sort files by path for consistent output
+  const sortedFiles = Object.keys(byFile).sort();
+  
+  for (const file of sortedFiles) {
+    const refs = byFile[file];
+    const shortPath = file.split('/').slice(-2).join('/');
+    console.log(`${shortPath}:`);
+    
+    // Sort references by line number
+    refs.sort((a, b) => a.fromLocation.line - b.fromLocation.line);
+    
+    refs.forEach(ref => {
+      const lineNum = ref.fromLocation.line.toString().padStart(4);
+      const typeIcon = getReferenceIcon(ref.referenceType);
+      console.log(`  ${lineNum}: ${ref.context.trim()}`);
+      console.log(`        ${typeIcon} ${ref.referenceType}`);
+    });
+    console.log('');
+  }
 }
 
 async function handleSearch(service: SemanticService, projectPath: string, args: string[]) {
@@ -107,6 +238,10 @@ async function handleSearch(service: SemanticService, projectPath: string, args:
   let typeFilter: string[] | undefined;
   let fileFilter: string[] | undefined;
   let maxResults = 50;
+  let searchMode: 'fuzzy' | 'exact' | 'regex' = 'fuzzy';
+  let showContext = true;
+  let sortBy: 'relevance' | 'usage' | 'name' | 'file' = 'relevance';
+  let outputFormat: 'pretty' | 'json' | 'compact' = 'pretty';
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -117,6 +252,18 @@ async function handleSearch(service: SemanticService, projectPath: string, args:
       fileFilter = args[++i].split(',');
     } else if (arg === '--max' && args[i + 1]) {
       maxResults = parseInt(args[++i]);
+    } else if (arg === '--exact') {
+      searchMode = 'exact';
+    } else if (arg === '--regex') {
+      searchMode = 'regex';
+    } else if (arg === '--no-context') {
+      showContext = false;
+    } else if (arg === '--sort' && args[i + 1]) {
+      sortBy = args[++i] as any;
+    } else if (arg === '--json') {
+      outputFormat = 'json';
+    } else if (arg === '--compact') {
+      outputFormat = 'compact';
     } else if (!arg.startsWith('--')) {
       query = arg;
     }
@@ -127,17 +274,56 @@ async function handleSearch(service: SemanticService, projectPath: string, args:
     process.exit(1);
   }
 
+  // Handle different search patterns
+  let results: SearchResult[] = [];
+  
   // Check if it's a concept group
   const conceptGroup = CONCEPT_GROUPS[query.toLowerCase()];
   
-  const results = conceptGroup 
-    ? service.searchGroup(conceptGroup)
-    : service.search(query, { type: typeFilter, files: fileFilter, maxResults });
+  if (conceptGroup) {
+    results = service.searchGroup(conceptGroup);
+  } else if (query.includes('|')) {
+    // OR pattern: term1|term2|term3
+    const terms = query.split('|').map(t => t.trim());
+    results = service.searchGroup(terms);
+  } else if (query.includes('&')) {
+    // AND pattern: term1&term2 (must contain all)
+    const terms = query.split('&').map(t => t.trim());
+    results = await searchWithAnd(service, terms, { type: typeFilter, files: fileFilter, maxResults });
+  } else if (query.startsWith('!')) {
+    // NOT pattern: !term (exclude results containing term)
+    results = await searchWithNot(service, query.substring(1), { type: typeFilter, files: fileFilter, maxResults });
+  } else if (searchMode === 'regex' || (query.startsWith('/') && query.endsWith('/'))) {
+    // Regex pattern: /pattern/
+    const pattern = query.startsWith('/') ? query.slice(1, -1) : query;
+    results = await searchWithRegex(service, pattern, { type: typeFilter, files: fileFilter, maxResults });
+  } else {
+    // Normal search with mode
+    results = service.search(query, { 
+      type: typeFilter, 
+      files: fileFilter, 
+      maxResults,
+      exact: searchMode === 'exact'
+    });
+  }
 
-  displayResults(query, results, conceptGroup);
+  // Sort results based on preference
+  results = sortResults(results, sortBy);
+
+  // Display results based on format
+  switch (outputFormat) {
+    case 'json':
+      console.log(JSON.stringify(results, null, 2));
+      break;
+    case 'compact':
+      displayResultsCompact(query, results);
+      break;
+    default:
+      displayResults(query, results, conceptGroup, showContext);
+  }
 }
 
-function displayResults(query: string, results: SearchResult[], conceptGroup?: string[]) {
+function displayResults(query: string, results: SearchResult[], conceptGroup?: string[], showContext: boolean = true) {
   if (results.length === 0) {
     console.log(`No results found for "${query}"`);
     return;
@@ -164,12 +350,65 @@ function displayResults(query: string, results: SearchResult[], conceptGroup?: s
       const relevance = (result.relevanceScore * 100).toFixed(0);
       const shortPath = info.location.file.split('/').slice(-2).join('/');
       
-      console.log(`├── ${info.term.padEnd(30)} → ${shortPath}:${info.location.line}`);
+      // Show term with usage count if available
+      const termDisplay = result.usageCount 
+        ? `${info.term} (${result.usageCount} uses)`
+        : info.term;
       
-      // Show context for strings and comments
-      if ((type === 'string' || type === 'comment') && info.context) {
-        const contextPreview = info.context.trim().substring(0, 60);
-        console.log(`│   ${contextPreview}${info.context.length > 60 ? '...' : ''}`);
+      console.log(`├── ${termDisplay.padEnd(30)} → ${shortPath}:${info.location.line}:${info.location.column}`);
+      
+      // Show enhanced context based on type
+      if (showContext) {
+        // Show function/class signatures with better formatting
+        if (type === 'function' || type === 'class') {
+          console.log(`│   ${info.context.trim()}`);
+          
+          // Show surrounding context if available
+          if (info.surroundingLines && info.surroundingLines.length > 0) {
+            console.log(`│   ┌─ Context:`);
+            info.surroundingLines.slice(0, 3).forEach(line => {
+              console.log(`│   │ ${line.trim()}`);
+            });
+          }
+          
+          // Show related terms found nearby
+          if (info.relatedTerms && info.relatedTerms.length > 0) {
+            console.log(`│   📎 Related: ${info.relatedTerms.slice(0, 5).join(', ')}`);
+          }
+        }
+        
+        // Show context for strings and comments
+        if ((type === 'string' || type === 'comment')) {
+          const contextPreview = info.context.trim();
+          console.log(`│   "${contextPreview}"`);
+          
+          // Show where this string appears
+          if (info.surroundingLines && info.surroundingLines.length > 0) {
+            const surroundingPreview = info.surroundingLines.find(line => line.includes(info.term));
+            if (surroundingPreview && surroundingPreview !== info.context) {
+              console.log(`│   In: ${surroundingPreview.trim()}`);
+            }
+          }
+        }
+        
+        // Show imports with what they import
+        if (type === 'import') {
+          console.log(`│   ${info.context.trim()}`);
+        }
+        
+        // Show sample usages for functions and classes
+        if ((type === 'function' || type === 'class') && result.sampleUsages && result.sampleUsages.length > 0) {
+          console.log(`│   `);
+          console.log(`│   📍 Used ${result.usageCount} times:`);
+          result.sampleUsages.slice(0, 3).forEach((usage, idx) => {
+            const usageFile = usage.fromLocation.file.split('/').slice(-2).join('/');
+            console.log(`│   ${idx + 1}. ${usageFile}:${usage.fromLocation.line} (${usage.referenceType})`);
+            console.log(`│      ${usage.context.trim()}`);
+          });
+          if (result.usageCount > 3) {
+            console.log(`│      ... and ${result.usageCount - 3} more`);
+          }
+        }
       }
     });
     
@@ -204,33 +443,67 @@ function getTypeIcon(type: string): string {
 
 function showHelp() {
   console.log(`
-🔍 Smart Grep - Semantic Code Search
+🔍 Smart Grep - Semantic Code Search with Cross-References
 
 Usage:
   smartgrep <query>                Search for a term or concept
   smartgrep index                  Rebuild the semantic index
+  smartgrep refs <term>            Show where a term is referenced
   smartgrep --groups              Show available concept groups
 
-Search Options:
-  --type <types>     Filter by type (function,class,string,etc.)
-  --file <patterns>  Filter by file patterns
-  --max <number>     Maximum results to show (default: 50)
+🎯 Search Patterns:
+  term1|term2|term3               OR search - find any of these terms
+  term1&term2                     AND search - must contain all terms
+  !term                           NOT search - exclude this term
+  /regex/                         Regex search - match pattern
+  "exact phrase"                  Exact match (or use --exact)
 
-Concept Groups:
-  smartgrep auth     Search for authentication-related code
-  smartgrep api      Search for API/endpoint-related code
-  smartgrep error    Search for error handling code
+🔧 Search Options:
+  --type <types>     Filter by type (function,class,string,variable,etc.)
+                     Can combine: --type function,class
+  --file <patterns>  Filter by file patterns (supports wildcards)
+  --max <number>     Maximum results to show (default: 50)
+  --exact            Exact match only (no fuzzy matching)
+  --regex            Treat query as regex pattern
+  --no-context       Hide surrounding context
+  --sort <by>        Sort by: relevance|usage|name|file
+  --json             Output as JSON
+  --compact          Compact output format
+
+📊 Information Displayed:
+  • Function signatures with parameters
+  • Usage counts and sample usage locations
+  • Surrounding code context (2-3 lines)
+  • Related terms found nearby
+  • Full cross-reference information
+  • Exact line and column positions
+
+🏷️ Concept Groups:
+  smartgrep auth        Authentication & security patterns
+  smartgrep service     Service classes and patterns
+  smartgrep error       Error handling patterns
+  smartgrep flow        Data flow and streaming
   ...and more! Use --groups to see all available groups
 
-Examples:
-  smartgrep "authenticateUser"
-  smartgrep auth
-  smartgrep "error" --type string
-  smartgrep "user" --file "*.service.*"
-  smartgrep payment --max 20
+💡 Examples:
+  smartgrep "authenticateUser"                  # Find function with usage info
+  smartgrep "addCrossReference|getReferences"   # Find any of these functions
+  smartgrep "error&string"                      # Find error-related strings
+  smartgrep "!test" --type function             # Functions not containing 'test'
+  smartgrep "/add.*Reference/" --regex          # Regex pattern search
+  smartgrep auth --sort usage                   # Auth code sorted by usage
+  smartgrep "CuratorService" --json             # Machine-readable output
+  smartgrep refs "processPayment"               # Full impact analysis
+  smartgrep service --type class --max 10       # Top 10 service classes
 
-The tool automatically indexes your codebase on first use.
-Subsequent searches use the cached index for fast results.
+📍 Pro Tips:
+  • The tool shows function signatures, surrounding context, and related code
+  • Cross-references include the actual code making the reference
+  • Use --no-context for a cleaner view when browsing many results
+  • Combine filters for precise searches: --type function --file "*.service.*"
+
+The tool indexes your entire codebase on first use.
+Subsequent searches are instant using the cached semantic index.
 `);
 }
 
@@ -242,6 +515,18 @@ function showConceptGroups() {
     console.log(`   Terms: ${terms.slice(0, 5).join(', ')}${terms.length > 5 ? ', ...' : ''}`);
     console.log(`   Usage: smartgrep ${group}\n`);
   }
+}
+
+function getReferenceIcon(type: string): string {
+  const icons: Record<string, string> = {
+    call: '📞',
+    import: '📥',
+    extends: '⬆️',
+    implements: '🔗',
+    instantiation: '✨',
+    'type-reference': '🏷️',
+  };
+  return icons[type] || '🔍';
 }
 
 function getGroupIcon(group: string): string {

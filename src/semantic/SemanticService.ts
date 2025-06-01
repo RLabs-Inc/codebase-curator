@@ -6,7 +6,7 @@
 import { CodebaseStreamerBun } from '../core/CodebaseStreamerBun';
 import { SemanticIndexImpl } from './SemanticIndexImpl';
 import { TypeScriptExtractor } from './extractors/TypeScriptExtractor';
-import { LanguageExtractor, SemanticInfo, SearchOptions, SearchResult } from './types';
+import { LanguageExtractor, SemanticInfo, SearchOptions, SearchResult, CrossReference } from './types';
 import { existsSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 
@@ -35,11 +35,19 @@ export class SemanticService {
         
         if (extractor) {
           try {
-            const semanticInfo = extractor.extract(content, filePath);
-            semanticInfo.forEach(info => {
+            const result = extractor.extract(content, filePath);
+            
+            // Add definitions
+            result.definitions.forEach(info => {
               this.index.add(info);
               entriesIndexed++;
             });
+            
+            // Add cross-references
+            result.references.forEach(ref => {
+              this.index.addCrossReference(ref);
+            });
+            
             filesProcessed++;
           } catch (error) {
             console.warn(`Error processing ${filePath}:`, error);
@@ -87,6 +95,10 @@ export class SemanticService {
 
   searchGroup(terms: string[]): SearchResult[] {
     return this.index.searchGroup(terms);
+  }
+
+  getImpactAnalysis(term: string): { directReferences: CrossReference[]; fileCount: number; byType: Record<string, number> } {
+    return this.index.getImpactAnalysis(term);
   }
 
   private getIndexPath(projectPath: string): string {

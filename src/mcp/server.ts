@@ -48,6 +48,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
             description:
               'Path to the project (optional, uses set_project_path value if not provided)',
           },
+          newSession: {
+            type: 'boolean',
+            description:
+              'Force a fresh session (default: false - reuses existing session)',
+            default: false,
+          },
         },
       },
     },
@@ -219,7 +225,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     switch (name) {
       case 'get_codebase_overview': {
-        const result = await curator.getOverview(args?.projectPath as string)
+        const result = await curator.getOverview(
+          args?.projectPath as string,
+          args?.newSession as boolean
+        )
         return {
           content: [{ type: 'text', text: result }],
         }

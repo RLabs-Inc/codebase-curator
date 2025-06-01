@@ -1,6 +1,6 @@
-# Smart Grep Tool - Language Expansion Guide
+# Smart Grep Tool - Language Expansion Guide (with Cross-References!)
 
-> **Goal**: Add support for new programming languages without overcomplicating the architecture. Each language addition should be straightforward and follow the same proven pattern.
+> **Goal**: Add support for new programming languages with full cross-reference tracking. Each language addition should extract both definitions AND usages, following the same proven pattern.
 
 ## The Simple 5-Step Process 🎯
 
@@ -66,8 +66,9 @@ export class PythonExtractor implements LanguageExtractor {
     return /\.py$/.test(filePath);
   }
 
-  extract(content: string, filePath: string): SemanticInfo[] {
-    const results: SemanticInfo[] = [];
+  extract(content: string, filePath: string): { definitions: SemanticInfo[]; references: CrossReference[] } {
+    const definitions: SemanticInfo[] = [];
+    const references: CrossReference[] = []; // NEW!
     const lines = content.split('\n');
 
     try {
@@ -76,8 +77,9 @@ export class PythonExtractor implements LanguageExtractor {
 
       // Walk the AST and extract information
       this.walkAst(ast, (node, location) => {
+        // DEFINITIONS
         if (node.type === 'FunctionDef') {
-          results.push(this.createSemanticInfo(
+          definitions.push(this.createSemanticInfo(
             node.name,
             'function',
             location,
@@ -88,7 +90,7 @@ export class PythonExtractor implements LanguageExtractor {
         }
         
         if (node.type === 'ClassDef') {
-          results.push(this.createSemanticInfo(
+          definitions.push(this.createSemanticInfo(
             node.name,
             'class',
             location,
@@ -96,6 +98,24 @@ export class PythonExtractor implements LanguageExtractor {
             lines,
             this.getContext(location, lines)
           ));
+          
+          // NEW! Track inheritance
+          if (node.bases) {
+            node.bases.forEach((base: any) => {
+              if (base.type === 'Name') {
+                references.push({
+                  targetTerm: base.id,
+                  referenceType: 'extends',
+                  fromLocation: {
+                    file: filePath,
+                    line: location.line || 0,
+                    column: location.column || 0,
+                  },
+                  context: this.getContext(location, lines),
+                });
+              }
+            });
+          }
         }
 
         if (node.type === 'Assign') {
@@ -107,7 +127,7 @@ export class PythonExtractor implements LanguageExtractor {
           // Handle string literals
           const value = node.value || node.s;
           if (this.isMeaningfulString(value)) {
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               value,
               'string',
               location,
@@ -117,17 +137,60 @@ export class PythonExtractor implements LanguageExtractor {
             ));
           }
         }
+
+        // NEW! CROSS-REFERENCES: Function calls
+        if (node.type === 'Call') {
+          let functionName: string | null = null;
+          
+          if (node.func.type === 'Name') {
+            // Direct call: function_name()
+            functionName = node.func.id;
+          } else if (node.func.type === 'Attribute') {
+            // Method call: object.method()
+            functionName = node.func.attr;
+          }
+
+          if (functionName) {
+            references.push({
+              targetTerm: functionName,
+              referenceType: 'call',
+              fromLocation: {
+                file: filePath,
+                line: location.line || 0,
+                column: location.column || 0,
+              },
+              context: this.getContext(location, lines),
+            });
+          }
+        }
+
+        // NEW! Track imports
+        if (node.type === 'Import' || node.type === 'ImportFrom') {
+          const importedNames = node.names || [];
+          importedNames.forEach((name: any) => {
+            references.push({
+              targetTerm: name.name,
+              referenceType: 'import',
+              fromLocation: {
+                file: filePath,
+                line: location.line || 0,
+                column: location.column || 0,
+              },
+              context: this.getContext(location, lines),
+            });
+          });
+        }
       });
 
       // Handle comments (implementation depends on parser)
-      this.extractComments(content, filePath, lines, results);
+      this.extractComments(content, filePath, lines, definitions);
 
     } catch (error) {
       console.warn(`Failed to parse Python file ${filePath}:`, error);
       return this.fallbackExtraction(content, filePath);
     }
 
-    return results;
+    return { definitions, references }; // Return both!
   }
 
   private walkAst(node: any, callback: (node: any, location: any) => void) {
@@ -158,16 +221,17 @@ export class PythonExtractor implements LanguageExtractor {
     // Same logic as TypeScript extractor
   }
 
-  private fallbackExtraction(content: string, filePath: string): SemanticInfo[] {
+  private fallbackExtraction(content: string, filePath: string): { definitions: SemanticInfo[]; references: CrossReference[] } {
     // Simple regex-based extraction for when parsing fails
-    const results: SemanticInfo[] = [];
+    const definitions: SemanticInfo[] = [];
+    const references: CrossReference[] = [];
     const lines = content.split('\n');
 
     lines.forEach((line, index) => {
       // Python function definition
-      const functionMatch = line.match(/^def\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
+      const functionMatch = line.match(/^\s*def\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
       if (functionMatch) {
-        results.push({
+        definitions.push({
           term: functionMatch[1],
           type: 'function',
           location: { file: filePath, line: index + 1, column: 0 },
@@ -179,9 +243,9 @@ export class PythonExtractor implements LanguageExtractor {
       }
 
       // Python class definition
-      const classMatch = line.match(/^class\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
+      const classMatch = line.match(/^\s*class\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
       if (classMatch) {
-        results.push({
+        definitions.push({
           term: classMatch[1],
           type: 'class',
           location: { file: filePath, line: index + 1, column: 0 },
@@ -198,7 +262,7 @@ export class PythonExtractor implements LanguageExtractor {
         stringMatches.forEach(match => {
           const value = match.slice(1, -1);
           if (this.isMeaningfulString(value)) {
-            results.push({
+            definitions.push({
               term: value,
               type: 'string',
               location: { file: filePath, line: index + 1, column: 0 },
@@ -212,16 +276,16 @@ export class PythonExtractor implements LanguageExtractor {
       }
     });
 
-    return results;
+    return { definitions, references };
   }
 
-  private extractComments(content: string, filePath: string, lines: string[], results: SemanticInfo[]): void {
+  private extractComments(content: string, filePath: string, lines: string[], definitions: SemanticInfo[]): void {
     lines.forEach((line, index) => {
       const commentMatch = line.match(/#\s*(.+)/);
       if (commentMatch) {
         const comment = commentMatch[1].trim();
         if (comment.length > 5) {
-          results.push({
+          definitions.push({
             term: comment,
             type: 'comment',
             location: { file: filePath, line: index + 1, column: 0 },
@@ -271,12 +335,40 @@ def authenticate_user(email, password):
     return True
     `;
     
-    const results = extractor.extract(code, 'test.py');
-    expect(results).toContainEqual(
+    const result = extractor.extract(code, 'test.py');
+    expect(result.definitions).toContainEqual(
       expect.objectContaining({
         term: 'authenticate_user',
         type: 'function',
         language: 'python'
+      })
+    );
+  });
+
+  it('extracts cross-references', () => {
+    const code = `
+from auth import authenticate_user
+
+def login(email, password):
+    user = authenticate_user(email, password)
+    return user
+    `;
+    
+    const result = extractor.extract(code, 'test.py');
+    
+    // Check import reference
+    expect(result.references).toContainEqual(
+      expect.objectContaining({
+        targetTerm: 'authenticate_user',
+        referenceType: 'import',
+      })
+    );
+    
+    // Check function call reference
+    expect(result.references).toContainEqual(
+      expect.objectContaining({
+        targetTerm: 'authenticate_user',
+        referenceType: 'call',
       })
     );
   });
@@ -405,6 +497,74 @@ smartgrep go_concurrency # Find all Go concurrency patterns
 
 ---
 
+## Cross-Reference Patterns by Language 🔍 (NEW!)
+
+### Python Cross-References
+```typescript
+// Function calls
+node.type === 'Call' && node.func.type === 'Name' // foo()
+node.type === 'Call' && node.func.type === 'Attribute' // obj.foo()
+
+// Class instantiation
+node.type === 'Call' && isClassName(node.func.id) // MyClass()
+
+// Inheritance
+node.type === 'ClassDef' && node.bases // class Child(Parent)
+
+// Imports
+node.type === 'Import' // import module
+node.type === 'ImportFrom' // from module import name
+```
+
+### JavaScript/TypeScript Cross-References
+```typescript
+// Function calls
+node.type === 'CallExpression' // foo()
+node.callee.type === 'MemberExpression' // obj.foo()
+
+// Class instantiation  
+node.type === 'NewExpression' // new MyClass()
+
+// Inheritance
+node.type === 'ClassDeclaration' && node.superClass // extends Parent
+
+// Imports
+node.type === 'ImportDeclaration' // import { foo } from 'bar'
+```
+
+### Go Cross-References
+```typescript
+// Function calls
+node.type === 'CallExpr' // foo()
+node.type === 'SelectorExpr' // pkg.Foo()
+
+// Type usage
+node.type === 'CompositeLit' // MyStruct{}
+
+// Interface implementation (implicit in Go)
+// Need to track method signatures
+
+// Imports
+node.type === 'ImportSpec' // import "fmt"
+```
+
+### Java Cross-References
+```typescript
+// Method calls
+node.type === 'MethodInvocation' // foo()
+node.type === 'MemberSelect' // obj.foo()
+
+// Class instantiation
+node.type === 'NewClass' // new MyClass()
+
+// Inheritance & Implementation
+node.type === 'ClassTree' && node.extendsClause // extends Parent
+node.type === 'ClassTree' && node.implementsClause // implements Interface
+
+// Imports
+node.type === 'Import' // import com.example.Class
+```
+
 ## Language-Specific Tips 💡
 
 ### Python Specifics
@@ -412,6 +572,7 @@ smartgrep go_concurrency # Find all Go concurrency patterns
 - **Decorators**: `@property`, `@classmethod`, `@decorator`
 - **Magic methods**: `__init__`, `__str__`, `__call__`
 - **Docstrings**: Triple-quoted strings as documentation
+- **Cross-refs**: Track `super()` calls, decorator usage
 
 ### Go Specifics  
 - **Package declarations**: `package main`

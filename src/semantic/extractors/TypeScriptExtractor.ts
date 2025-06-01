@@ -5,15 +5,16 @@
 
 import * as parser from '@babel/parser';
 import traverse from '@babel/traverse';
-import { LanguageExtractor, SemanticInfo } from '../types';
+import { LanguageExtractor, SemanticInfo, CrossReference } from '../types';
 
 export class TypeScriptExtractor implements LanguageExtractor {
   canHandle(filePath: string): boolean {
     return /\.(ts|tsx|js|jsx|mjs|cjs)$/.test(filePath);
   }
 
-  extract(content: string, filePath: string): SemanticInfo[] {
-    const results: SemanticInfo[] = [];
+  extract(content: string, filePath: string): { definitions: SemanticInfo[]; references: CrossReference[] } {
+    const definitions: SemanticInfo[] = [];
+    const references: CrossReference[] = [];
     const lines = content.split('\n');
 
     try {
@@ -42,7 +43,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
         // Function declarations
         FunctionDeclaration: (path) => {
           if (path.node.id?.name) {
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               path.node.id.name,
               'function',
               path.node.loc,
@@ -59,7 +60,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
             const isFunction = path.node.init.type === 'ArrowFunctionExpression' || 
                              path.node.init.type === 'FunctionExpression';
             
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               path.node.id.name,
               isFunction ? 'function' : 'variable',
               path.node.loc,
@@ -73,7 +74,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
         // Class declarations
         ClassDeclaration: (path) => {
           if (path.node.id?.name) {
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               path.node.id.name,
               'class',
               path.node.loc,
@@ -85,7 +86,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
             // Also extract class methods
             path.node.body.body.forEach(member => {
               if (member.type === 'ClassMethod' && member.key.type === 'Identifier') {
-                results.push(this.createSemanticInfo(
+                definitions.push(this.createSemanticInfo(
                   `${path.node.id?.name}.${member.key.name}`,
                   'function',
                   member.loc,
@@ -96,12 +97,26 @@ export class TypeScriptExtractor implements LanguageExtractor {
               }
             });
           }
+
+          // CROSS-REFERENCE: Class inheritance
+          if (path.node.superClass && path.node.superClass.type === 'Identifier') {
+            references.push({
+              targetTerm: path.node.superClass.name,
+              referenceType: 'extends',
+              fromLocation: {
+                file: filePath,
+                line: path.node.loc?.start?.line || 0,
+                column: path.node.loc?.start?.column || 0,
+              },
+              context: this.getContext(path.node.loc, lines),
+            });
+          }
         },
 
         // Object method shorthand: { methodName() {} }
         ObjectMethod: (path) => {
           if (path.node.key.type === 'Identifier') {
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               path.node.key.name,
               'function',
               path.node.loc,
@@ -122,7 +137,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
           // Handle export { name }
           path.node.specifiers.forEach(spec => {
             if (spec.type === 'ExportSpecifier' && spec.local.type === 'Identifier') {
-              results.push(this.createSemanticInfo(
+              definitions.push(this.createSemanticInfo(
                 spec.exported.type === 'Identifier' ? spec.exported.name : spec.local.name,
                 'variable',
                 spec.loc,
@@ -140,7 +155,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
             if (spec.type === 'ImportDefaultSpecifier' || 
                 spec.type === 'ImportSpecifier' ||
                 spec.type === 'ImportNamespaceSpecifier') {
-              results.push(this.createSemanticInfo(
+              definitions.push(this.createSemanticInfo(
                 spec.local.name,
                 'import',
                 spec.loc,
@@ -157,7 +172,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
           const value = path.node.value;
           // Only index meaningful strings
           if (value.length > 3 && this.isMeaningfulString(value)) {
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               value,
               'string',
               path.node.loc,
@@ -172,7 +187,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
         TemplateLiteral: (path) => {
           const value = path.node.quasis.map(q => q.value.raw).join('${...}');
           if (value.length > 3 && this.isMeaningfulString(value)) {
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               value,
               'string',
               path.node.loc,
@@ -186,7 +201,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
         // Type aliases and interfaces (TypeScript)
         TSTypeAliasDeclaration: (path) => {
           if (path.node.id?.name) {
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               path.node.id.name,
               'class', // Treat types as classes for simplicity
               path.node.loc,
@@ -199,7 +214,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
 
         TSInterfaceDeclaration: (path) => {
           if (path.node.id?.name) {
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               path.node.id.name,
               'class', // Treat interfaces as classes
               path.node.loc,
@@ -209,6 +224,56 @@ export class TypeScriptExtractor implements LanguageExtractor {
             ));
           }
         },
+
+        // CROSS-REFERENCES: Function calls
+        CallExpression: (path) => {
+          let functionName: string | null = null;
+          
+          if (path.node.callee.type === 'Identifier') {
+            // Direct function call: functionName()
+            functionName = path.node.callee.name;
+          } else if (path.node.callee.type === 'MemberExpression' && 
+                     path.node.callee.property.type === 'Identifier' &&
+                     !path.node.callee.computed) {
+            // Method call: object.method()
+            if (path.node.callee.object.type === 'Identifier') {
+              functionName = `${path.node.callee.object.name}.${path.node.callee.property.name}`;
+            } else {
+              // Just the method name for complex objects
+              functionName = path.node.callee.property.name;
+            }
+          }
+
+          if (functionName) {
+            references.push({
+              targetTerm: functionName,
+              referenceType: 'call',
+              fromLocation: {
+                file: filePath,
+                line: path.node.loc?.start?.line || 0,
+                column: path.node.loc?.start?.column || 0,
+              },
+              context: this.getContext(path.node.loc, lines),
+            });
+          }
+        },
+
+        // CROSS-REFERENCES: New expressions (instantiation)
+        NewExpression: (path) => {
+          if (path.node.callee.type === 'Identifier') {
+            references.push({
+              targetTerm: path.node.callee.name,
+              referenceType: 'instantiation',
+              fromLocation: {
+                file: filePath,
+                line: path.node.loc?.start?.line || 0,
+                column: path.node.loc?.start?.column || 0,
+              },
+              context: this.getContext(path.node.loc, lines),
+            });
+          }
+        },
+
       });
 
       // Extract comments
@@ -216,7 +281,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
         ast.comments.forEach(comment => {
           const value = comment.value.trim();
           if (value.length > 5) { // Skip tiny comments
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               value,
               'comment',
               comment.loc,
@@ -234,7 +299,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
       return this.fallbackExtraction(content, filePath);
     }
 
-    return results;
+    return { definitions, references };
   }
 
   private createSemanticInfo(
@@ -290,9 +355,10 @@ export class TypeScriptExtractor implements LanguageExtractor {
     return false;
   }
 
-  private fallbackExtraction(content: string, filePath: string): SemanticInfo[] {
+  private fallbackExtraction(content: string, filePath: string): { definitions: SemanticInfo[]; references: CrossReference[] } {
     // Simple regex-based extraction as fallback
-    const results: SemanticInfo[] = [];
+    const definitions: SemanticInfo[] = [];
+    const references: CrossReference[] = [];
     const lines = content.split('\n');
 
     lines.forEach((line, index) => {
@@ -305,7 +371,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
 
       functionMatches.forEach(match => {
         if (match && match[1]) {
-          results.push({
+          definitions.push({
             term: match[1],
             type: 'function',
             location: { file: filePath, line: index + 1, column: 0 },
@@ -320,7 +386,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
       // Extract class declarations
       const classMatch = line.match(/(?:export\s+)?class\s+([a-zA-Z_$][a-zA-Z0-9_$]*)/);
       if (classMatch) {
-        results.push({
+        definitions.push({
           term: classMatch[1],
           type: 'class',
           location: { file: filePath, line: index + 1, column: 0 },
@@ -337,7 +403,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
         stringMatches.forEach(match => {
           const value = match.slice(1, -1); // Remove quotes
           if (this.isMeaningfulString(value)) {
-            results.push({
+            definitions.push({
               term: value,
               type: 'string',
               location: { file: filePath, line: index + 1, column: 0 },
@@ -358,7 +424,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
 
       commentMatches.forEach(match => {
         if (match && match[1] && match[1].length > 5) {
-          results.push({
+          definitions.push({
             term: match[1].trim(),
             type: 'comment',
             location: { file: filePath, line: index + 1, column: 0 },
@@ -371,6 +437,6 @@ export class TypeScriptExtractor implements LanguageExtractor {
       });
     });
 
-    return results;
+    return { definitions, references };
   }
 }

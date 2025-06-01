@@ -61,17 +61,22 @@ export class CuratorService implements CoreService {
   /**
    * Get a comprehensive overview of the codebase
    */
-  async getOverview(projectPath?: string): Promise<string> {
+  async getOverview(projectPath?: string, newSession?: boolean): Promise<string> {
     const path = this.getPath(projectPath)
 
     // Don't run analyses - let Curator Claude use the tools himself!
     // Just give him the project path and our sophisticated prompts
 
+    // IMPORTANT: The overview builds the foundational understanding of the codebase.
+    // By default, we reuse the existing session so all subsequent commands 
+    // (ask_curator, add_new_feature, etc.) can build on this comprehensive context.
+    // Only start fresh if explicitly requested or for a new project.
+
     // Ask curator for comprehensive overview
     const query: CuratorQuery = {
       question: getCuratorContext(OVERVIEW_PROMPT),
       projectPath: path,
-      newSession: true, // Always fresh for overviews
+      newSession: newSession || false, // Default: reuse existing session to preserve context
     }
 
     const response = await this.curatorProcess.ask(query)

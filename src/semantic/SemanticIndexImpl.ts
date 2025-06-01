@@ -3,11 +3,14 @@
  * Fast in-memory index with term-based and partial match searching
  */
 
-import { SemanticIndex, SemanticInfo, SearchOptions, SearchResult } from './types';
+import { SemanticIndex, SemanticInfo, SearchOptions, SearchResult, CrossReference } from './types';
 
 export class SemanticIndexImpl implements SemanticIndex {
   private entries: Map<string, SemanticInfo[]> = new Map();
   private termIndex: Map<string, SemanticInfo[]> = new Map();
+  // Cross-reference tracking
+  private crossReferences: Map<string, CrossReference[]> = new Map();
+  private fileReferences: Map<string, CrossReference[]> = new Map();
 
   add(info: SemanticInfo): void {
     // Add to file-based index
@@ -59,27 +62,78 @@ export class SemanticIndexImpl implements SemanticIndex {
     });
   }
 
+  addCrossReference(ref: CrossReference): void {
+    // Index by target term
+    const targetRefs = this.crossReferences.get(ref.targetTerm) || [];
+    targetRefs.push(ref);
+    this.crossReferences.set(ref.targetTerm, targetRefs);
+
+    // Also index by file (for quick file-based lookups)
+    const fileRefs = this.fileReferences.get(ref.fromLocation.file) || [];
+    fileRefs.push(ref);
+    this.fileReferences.set(ref.fromLocation.file, fileRefs);
+  }
+
+  getReferences(term: string): CrossReference[] {
+    return this.crossReferences.get(term) || [];
+  }
+
+  getImpactAnalysis(term: string): { directReferences: CrossReference[]; fileCount: number; byType: Record<string, number> } {
+    const references = this.getReferences(term);
+    const uniqueFiles = new Set(references.map(ref => ref.fromLocation.file));
+    
+    const byType: Record<string, number> = {};
+    references.forEach(ref => {
+      byType[ref.referenceType] = (byType[ref.referenceType] || 0) + 1;
+    });
+
+    return {
+      directReferences: references,
+      fileCount: uniqueFiles.size,
+      byType
+    };
+  }
+
   search(query: string, options: SearchOptions = {}): SearchResult[] {
     const normalizedQuery = query.toLowerCase();
     const results: SearchResult[] = [];
 
-    // Exact matches first
-    const exactMatches = this.termIndex.get(normalizedQuery) || [];
-    exactMatches.forEach(info => {
-      if (this.matchesOptions(info, options)) {
-        results.push({ info, relevanceScore: 1.0 });
-      }
-    });
-
-    // Partial matches
-    for (const [term, infos] of this.termIndex.entries()) {
-      if (term.includes(normalizedQuery) && term !== normalizedQuery) {
+    // Handle empty query - return all results
+    if (!query) {
+      for (const [term, infos] of this.termIndex.entries()) {
         infos.forEach(info => {
           if (this.matchesOptions(info, options)) {
-            const score = normalizedQuery.length / term.length;
-            results.push({ info, relevanceScore: score });
+            results.push(this.createSearchResult(info, 0.5));
           }
         });
+      }
+    } else if (options.exact) {
+      // Exact match only
+      const exactMatches = this.termIndex.get(normalizedQuery) || [];
+      exactMatches.forEach(info => {
+        if (this.matchesOptions(info, options)) {
+          results.push(this.createSearchResult(info, 1.0));
+        }
+      });
+    } else {
+      // Fuzzy matching: exact matches first, then partial
+      const exactMatches = this.termIndex.get(normalizedQuery) || [];
+      exactMatches.forEach(info => {
+        if (this.matchesOptions(info, options)) {
+          results.push(this.createSearchResult(info, 1.0));
+        }
+      });
+
+      // Partial matches
+      for (const [term, infos] of this.termIndex.entries()) {
+        if (term.includes(normalizedQuery) && term !== normalizedQuery) {
+          infos.forEach(info => {
+            if (this.matchesOptions(info, options)) {
+              const score = normalizedQuery.length / term.length;
+              results.push(this.createSearchResult(info, score));
+            }
+          });
+        }
       }
     }
 
@@ -99,6 +153,22 @@ export class SemanticIndexImpl implements SemanticIndex {
     });
 
     return this.deduplicateResults(allResults);
+  }
+
+  private createSearchResult(info: SemanticInfo, relevanceScore: number): SearchResult {
+    const references = this.getReferences(info.term);
+    const result: SearchResult = {
+      info,
+      relevanceScore,
+      usageCount: references.length
+    };
+
+    // Add sample usages (up to 3)
+    if (references.length > 0) {
+      result.sampleUsages = references.slice(0, 3);
+    }
+
+    return result;
   }
 
   private matchesOptions(info: SemanticInfo, options: SearchOptions): boolean {
@@ -139,12 +209,16 @@ export class SemanticIndexImpl implements SemanticIndex {
   clear(): void {
     this.entries.clear();
     this.termIndex.clear();
+    this.crossReferences.clear();
+    this.fileReferences.clear();
   }
 
   async save(path: string): Promise<void> {
     const data = {
       entries: Array.from(this.entries.entries()),
       termIndex: Array.from(this.termIndex.entries()),
+      crossReferences: Array.from(this.crossReferences.entries()),
+      fileReferences: Array.from(this.fileReferences.entries()),
     };
     await Bun.write(path, JSON.stringify(data, null, 2));
   }
@@ -156,6 +230,8 @@ export class SemanticIndexImpl implements SemanticIndex {
       
       this.entries = new Map(data.entries);
       this.termIndex = new Map(data.termIndex);
+      this.crossReferences = new Map(data.crossReferences || []);
+      this.fileReferences = new Map(data.fileReferences || []);
     } catch (error) {
       console.warn(`Could not load semantic index from ${path}:`, error);
     }

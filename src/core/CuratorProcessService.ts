@@ -36,6 +36,8 @@ export class CuratorProcessService implements CoreService {
   private config: Required<CuratorProcessConfig>
   private claudeCliPath: string
   private nodePath: string
+  private currentTimeout: number
+  private lastToolUsed: string | null = null
   
   constructor(config: CuratorProcessConfig = {}) {
     this.config = {
@@ -48,6 +50,32 @@ export class CuratorProcessService implements CoreService {
     
     this.claudeCliPath = this.config.claudePath
     this.nodePath = this.config.nodePath
+    this.currentTimeout = this.config.inactivityTimeout
+  }
+
+  /**
+   * Get dynamic timeout based on tool being used
+   */
+  private getDynamicTimeout(toolName: string | null): number {
+    // Tool-specific timeouts
+    const toolTimeouts: Record<string, number> = {
+      'Task': 600000,       // 10 minutes for Task tool
+      'Bash': 300000,       // 5 minutes for Bash commands
+      'Edit': 60000,        // 1 minute for edits
+      'MultiEdit': 90000,   // 1.5 minutes for multi-edits
+      'Write': 60000,       // 1 minute for writes
+      'Read': 120000,       // 2 minutes for reads (increased from 30s)
+      'Grep': 60000,        // 1 minute for grep
+      'Glob': 60000,        // 1 minute for glob
+      'LS': 60000,          // 1 minute for ls (increased from 30s)
+    }
+    
+    if (toolName && toolTimeouts[toolName]) {
+      return toolTimeouts[toolName]
+    }
+    
+    // Default timeout
+    return this.config.inactivityTimeout
   }
 
   /**
@@ -187,10 +215,13 @@ export class CuratorProcessService implements CoreService {
     let timeout: NodeJS.Timeout
     const resetTimeout = () => {
       if (timeout) clearTimeout(timeout)
+      // Use dynamic timeout based on last tool used
+      const timeoutDuration = this.getDynamicTimeout(this.lastToolUsed)
+      console.error(`[CuratorProcess] Setting timeout to ${timeoutDuration}ms (tool: ${this.lastToolUsed || 'default'})`)
       timeout = setTimeout(() => {
-        console.error('[CuratorProcess] Inactivity timeout, killing process')
+        console.error(`[CuratorProcess] Inactivity timeout after ${timeoutDuration}ms, killing process`)
         claude.kill()
-      }, this.config.inactivityTimeout)
+      }, timeoutDuration)
     }
     
     resetTimeout()
@@ -482,6 +513,7 @@ export class CuratorProcessService implements CoreService {
                   this.writeToActivityLog(msg)
                 } else if (item.type === 'tool_use') {
                   // Tool use in content
+                  this.lastToolUsed = item.name // Track the tool being used
                   const toolInfo = this.formatToolUse(item.name, item.input)
                   const msg = `🔧 ${toolInfo}`
                   console.error(`[Curator Claude] ${msg}`)

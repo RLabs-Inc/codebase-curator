@@ -1,13 +1,15 @@
-# Smart Grep Tool - Semantic Indexing for Codebase Understanding
+# Smart Grep Tool - Semantic Indexing with Cross-Reference Tracking
 
 ## Core Concept
-A language-agnostic semantic search tool that indexes meaningful human-readable information from codebases and provides intelligent, contextual search capabilities.
+A language-agnostic semantic search tool that indexes meaningful human-readable information from codebases, tracks cross-references between code elements, and provides intelligent, contextual search capabilities with usage analysis.
 
 ## Why This Is Revolutionary
 - **Universal**: Works across all programming languages and codebases
 - **Semantic**: Finds concepts, not just string matches
 - **Contextual**: Shows where and how terms are used
 - **Intelligent**: Groups related terms and provides rich context
+- **Cross-Referenced**: Tracks function calls, class usage, and dependencies
+- **Impact Analysis**: Shows what would be affected by changes
 
 ## What Gets Indexed
 
@@ -30,9 +32,15 @@ A language-agnostic semantic search tool that indexes meaningful human-readable 
 - **Explanatory comments**: `// Handle Stripe webhook for payments`
 - **Documentation comments**: `/** Validates user credentials */`
 
+### 4. Cross-References (NEW!)
+- **Function calls**: `authenticateUser()` → tracks where it's called
+- **Class instantiations**: `new CuratorService()` → tracks usage
+- **Inheritance**: `class AuthService extends BaseService` → tracks hierarchy
+- **Imports**: `import { User } from './models'` → tracks dependencies
+
 ## Index Structure
 
-Each indexed entry contains:
+### Semantic Information Entry
 ```json
 {
   "term": "authenticateUser",
@@ -48,6 +56,20 @@ Each indexed entry contains:
   ],
   "related_terms": ["email", "password", "User", "findByEmail"],
   "language": "typescript"
+}
+```
+
+### Cross-Reference Entry (NEW!)
+```json
+{
+  "targetTerm": "authenticateUser",
+  "referenceType": "call",
+  "fromLocation": {
+    "file": "routes/auth.ts",
+    "line": 25,
+    "column": 12
+  },
+  "context": "const user = await authenticateUser(email, password);"
 }
 ```
 
@@ -148,47 +170,146 @@ interface SearchIndex {
 - Add semantic extraction to the streaming pipeline
 - Store index alongside other codebase analysis data
 
-## Predefined Concept Groups
+## Predefined Concept Groups (Extended!)
 
 ```typescript
 const CONCEPT_GROUPS = {
+  // Original groups
   auth: ["auth", "authenticate", "login", "signin", "credential", "token", "oauth", "jwt"],
   database: ["db", "database", "query", "sql", "mongo", "redis", "orm", "migration"],
   api: ["api", "endpoint", "route", "request", "response", "controller", "handler"],
   error: ["error", "exception", "fail", "invalid", "warning", "catch", "throw"],
-  user: ["user", "account", "profile", "member", "customer", "person"],
-  payment: ["payment", "billing", "charge", "invoice", "transaction", "stripe", "paypal"],
-  config: ["config", "setting", "environment", "env", "constant", "variable"],
-  test: ["test", "spec", "mock", "fixture", "assert", "expect", "describe"]
+  
+  // NEW architectural groups
+  service: ["service", "provider", "manager", "orchestrator", "handler", "processor"],
+  flow: ["flow", "stream", "pipeline", "process", "workflow", "sequence", "chain"],
+  architecture: ["architecture", "pattern", "structure", "design", "layer", "module"],
+  
+  // NEW code organization groups
+  import: ["import", "export", "require", "module", "dependency", "package"],
+  interface: ["interface", "type", "contract", "protocol", "schema", "definition"],
+  
+  // ... and many more!
 };
 ```
 
-## CLI Interface
+## CLI Interface (Fully Enhanced!)
 
+### Search Patterns
 ```bash
-# Basic search
-smartgrep "authentication"
+# Basic search with usage counts
+smartgrep "authenticateUser"  # Shows: authenticateUser (12 uses)
 
-# Group search
-smartgrep --group auth
+# OR pattern - find any of these
+smartgrep "addCrossReference|getReferences|getImpactAnalysis"
 
-# Filtered search
-smartgrep "user" --type function --file "*.service.*"
+# AND pattern - must contain all
+smartgrep "error&handler&async"
 
-# Context search
-smartgrep "error" --context validation
+# NOT pattern - exclude results
+smartgrep "!test" --type function
 
-# Export results
-smartgrep "api" --output json > api-analysis.json
+# Regex pattern
+smartgrep "/add.*Reference/" --regex
+
+# Exact match
+smartgrep "CuratorService" --exact
 ```
+
+### Advanced Options
+```bash
+# Type filtering (supports multiple)
+smartgrep "process" --type function,class
+
+# File filtering
+smartgrep "auth" --file "*.service.*,*.controller.*"
+
+# Sorting options
+smartgrep "service" --sort usage      # By usage count
+smartgrep "error" --sort name         # Alphabetically
+
+# Output formats
+smartgrep "auth" --json              # JSON output
+smartgrep "api" --compact            # One line per result
+smartgrep "user" --no-context        # Hide surrounding code
+
+# Cross-reference analysis
+smartgrep refs "CuratorService"      # Full impact analysis
+
+# Concept groups
+smartgrep auth                        # Pre-defined semantic groups
+smartgrep --groups                    # Show all groups
+```
+
+### Enhanced Output Examples
+
+#### Full Context Display
+```
+📁 FUNCTION (1)
+├── authenticateUser (12 uses)     → auth/service.ts:34:16
+│   export async function authenticateUser(email: string, password: string): Promise<User>
+│   ┌─ Context:
+│   │ // Validates user credentials against database
+│   │ export async function authenticateUser(email: string, password: string): Promise<User> {
+│   │   const user = await User.findByEmail(email);
+│   📎 Related: User, findByEmail, validatePassword, createToken
+│   
+│   📍 Used 12 times:
+│   1. routes/auth.ts:25 (call)
+│      const user = await authenticateUser(req.body.email, req.body.password);
+│   2. middleware/auth.ts:15 (call)
+│      const authenticated = await authenticateUser(email, password);
+│   3. tests/auth.test.ts:45 (call)
+│      expect(await authenticateUser('test@example.com', 'password')).toBeTruthy();
+│      ... and 9 more
+```
+
+#### String with Context
+```
+💬 STRING (1)
+├── "Invalid credentials provided" → auth/errors.ts:23:15
+│   "Invalid credentials provided"
+│   In: throw new AuthError("Invalid credentials provided", 401);
+```
+
+#### Cross-Reference Analysis
+```
+smartgrep refs "CuratorService"
+
+🔍 References for "CuratorService"
+📊 Found 7 references in 3 files
+
+📈 By Type:
+   import: 2
+   instantiation: 3
+   call: 2
+
+📁 mcp/server.ts
+   Line 14: import → import { CuratorService } from '../core/CuratorService';
+   Line 25: instantiation → const curator = new CuratorService(config);
+   Line 47: call → await curator.analyzeCodebase(projectPath);
+```
+
+## Data We Collect and Display
+
+For every search result, smart grep shows:
+
+1. **Term with usage count**: `authenticateUser (12 uses)`
+2. **Exact location**: `auth/service.ts:34:16` (file:line:column)
+3. **Full code context**: The complete line/signature
+4. **Surrounding lines**: 2-3 lines before/after
+5. **Related terms**: Other identifiers found nearby
+6. **Cross-references**: Where it's called with actual code
+7. **Type-specific formatting**: Signatures for functions, context for strings
 
 ## Benefits for Curator Claude
 
-1. **Instant semantic entry points**: Instead of guessing what to grep for
-2. **Contextual understanding**: See how terms are actually used
-3. **Pattern discovery**: Find similar implementations quickly
-4. **Cross-language consistency**: Same interface across all codebases
-5. **Rich context**: Understand surrounding code without reading files
+1. **One search, complete picture**: No need for multiple grep calls
+2. **Semantic understanding**: Finds concepts, not just text matches
+3. **Impact analysis**: Instantly see what uses what
+4. **Rich context**: Understand code without opening files
+5. **Advanced patterns**: OR, AND, NOT, regex in one tool
+6. **No more fallback to grep**: Everything semantic is indexed
 
 ## Benefits for Human Developers
 

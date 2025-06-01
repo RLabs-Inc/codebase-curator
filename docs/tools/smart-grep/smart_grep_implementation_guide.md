@@ -1,21 +1,26 @@
-# Smart Grep Tool - Implementation Guide for Claude Code
+# Smart Grep Tool - Implementation Guide with Cross-References
 
 > **For Claude Developer**: This guide is written specifically for you. It assumes you're working in Claude Code and provides step-by-step implementation details with real code examples.
 
 ## Overview: What You're Building 🎯
 
-You're building a semantic indexing system that extracts meaningful information from codebases and makes it searchable. Think "grep but understands code structure and semantics."
+You're building a semantic indexing system that:
+1. Extracts meaningful information from codebases
+2. **Tracks cross-references** between code elements (who calls what)
+3. Provides smart search with usage analysis
+4. Shows impact of potential changes
 
-**Core Concept**: Parse every file → Extract semantic info → Index for fast search → Provide smart CLI interface
+**Core Concept**: Parse every file → Extract definitions AND references → Index both → Provide smart CLI with impact analysis
 
 ## Architecture Overview
 
 ```
-Codebase Files → Language Parsers → Semantic Extractor → Index → Search Interface
-     ↓              ↓                    ↓              ↓           ↓
-   *.ts, *.py    Babel, AST           Functions,     JSON/DB    smartgrep CLI
-   *.go, *.js    Tree-sitter         Classes,                      ↓
-                                     Strings                   Rich Results
+Codebase Files → Language Parsers → Semantic Extractor → Dual Index → Search Interface
+     ↓              ↓                    ↓                  ↓           ↓
+   *.ts, *.py    Babel, AST        Definitions +      Terms Index   smartgrep CLI
+   *.go, *.js    Tree-sitter       References        X-Ref Index   "func (5 uses)"
+                                        ↓                  ↓             ↓
+                                 Cross-Reference     Impact Analysis  Where Used
 ```
 
 ## Implementation Plan
@@ -26,23 +31,45 @@ Codebase Files → Language Parsers → Semantic Extractor → Index → Search 
 3. **Basic CLI** - Simple search interface
 4. **TypeScript/JavaScript support** - First language implementation
 
-### Phase 2: Language Expansion
-5. **Python support** - Second language
-6. **Go support** - Third language  
-7. **Generic fallback** - For unsupported languages
+### Phase 2: Cross-Reference Tracking (NEW!)
+5. **Cross-reference types** - Function calls, instantiations, imports
+6. **Bidirectional indexing** - Track both definitions and usages
+7. **Impact analysis** - Show what would be affected by changes
 
-### Phase 3: Advanced Features
-8. **Concept groups** - Predefined search clusters
-9. **Smart filtering** - Type-based and context-based filters
-10. **Integration** - Connect with existing curator system
+### Phase 3: Language Expansion
+8. **Python support** - Second language
+9. **Go support** - Third language  
+10. **Generic fallback** - For unsupported languages
+
+### Phase 4: Advanced Features
+11. **Extended concept groups** - Architecture, flow, state patterns
+12. **Type signature tracking** - Parameter and return types
+13. **Incremental indexing** - Only reindex changed files
 
 ## Detailed Implementation
+
+### Version 3.0 Updates - Advanced Search & Display
+
+The latest version adds powerful search patterns and utilizes all collected data:
+
+**New Search Patterns**:
+- OR: `term1|term2|term3`
+- AND: `term1&term2`
+- NOT: `!term`
+- Regex: `/pattern/`
+
+**Enhanced Display**:
+- Shows surrounding lines
+- Displays related terms
+- Shows exact column positions
+- Includes cross-reference context
 
 ### 1. Core Interfaces
 
 Create `src/semantic/types.ts`:
 
 ```typescript
+// Information about code definitions
 export interface SemanticInfo {
   term: string;
   type: 'function' | 'class' | 'variable' | 'constant' | 'string' | 'comment' | 'import' | 'file';
@@ -56,11 +83,27 @@ export interface SemanticInfo {
   relatedTerms: string[]; // Other terms found nearby
   language: string;
   metadata?: Record<string, any>; // Language-specific extra info
+  references?: CrossReference[]; // NEW! Where this term is used
+}
+
+// NEW! Information about code usage
+export interface CrossReference {
+  targetTerm: string; // What is being referenced
+  referenceType: 'call' | 'import' | 'extends' | 'implements' | 'instantiation' | 'type-reference';
+  fromLocation: {
+    file: string;
+    line: number;
+    column: number;
+  };
+  context: string; // The line making the reference
 }
 
 export interface LanguageExtractor {
   canHandle(filePath: string): boolean;
-  extract(content: string, filePath: string): SemanticInfo[];
+  extract(content: string, filePath: string): {
+    definitions: SemanticInfo[];
+    references: CrossReference[]; // NEW! Extract both definitions and usages
+  };
 }
 
 export interface SemanticIndex {
@@ -251,8 +294,9 @@ export class TypeScriptExtractor implements LanguageExtractor {
     return /\.(ts|tsx|js|jsx)$/.test(filePath);
   }
 
-  extract(content: string, filePath: string): SemanticInfo[] {
-    const results: SemanticInfo[] = [];
+  extract(content: string, filePath: string): { definitions: SemanticInfo[]; references: CrossReference[] } {
+    const definitions: SemanticInfo[] = [];
+    const references: CrossReference[] = []; // NEW!
     const lines = content.split('\n');
 
     try {
@@ -268,7 +312,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
         // Function declarations and expressions
         FunctionDeclaration: (path) => {
           if (path.node.id?.name) {
-            results.push(this.createSemanticInfo(
+            definitions.push(this.createSemanticInfo(
               path.node.id.name,
               'function',
               path.node.loc,
@@ -381,7 +425,7 @@ export class TypeScriptExtractor implements LanguageExtractor {
       return this.fallbackExtraction(content, filePath);
     }
 
-    return results;
+    return { definitions, references }; // Return both!
   }
 
   private createSemanticInfo(
@@ -434,9 +478,10 @@ export class TypeScriptExtractor implements LanguageExtractor {
     return false;
   }
 
-  private fallbackExtraction(content: string, filePath: string): SemanticInfo[] {
+  private fallbackExtraction(content: string, filePath: string): { definitions: SemanticInfo[]; references: CrossReference[] } {
     // Simple regex-based extraction as fallback
-    const results: SemanticInfo[] = [];
+    const definitions: SemanticInfo[] = [];
+    const references: CrossReference[] = [];
     const lines = content.split('\n');
 
     lines.forEach((line, index) => {
@@ -560,24 +605,24 @@ export class SemanticService {
 }
 ```
 
-### 5. CLI Implementation
+### 5. CLI Implementation (Version 3.0)
 
-Create `src/semantic/cli.ts`:
+The CLI now supports advanced patterns and rich output:
 
 ```typescript
 #!/usr/bin/env bun
 
 import { SemanticService } from './SemanticService';
 
+// Extended concept groups
 const CONCEPT_GROUPS = {
   auth: ["auth", "authenticate", "login", "signin", "credential", "token", "oauth", "jwt"],
   database: ["db", "database", "query", "sql", "mongo", "redis", "orm", "migration"],
   api: ["api", "endpoint", "route", "request", "response", "controller", "handler"],
   error: ["error", "exception", "fail", "invalid", "warning", "catch", "throw"],
-  user: ["user", "account", "profile", "member", "customer", "person"],
-  payment: ["payment", "billing", "charge", "invoice", "transaction", "stripe", "paypal"],
-  config: ["config", "setting", "environment", "env", "constant", "variable"],
-  test: ["test", "spec", "mock", "fixture", "assert", "expect", "describe"]
+  service: ["service", "provider", "manager", "orchestrator", "handler", "processor"],
+  flow: ["flow", "stream", "pipeline", "process", "workflow", "sequence", "chain"],
+  // ... many more groups
 };
 
 async function main() {
@@ -608,27 +653,45 @@ async function main() {
 }
 
 async function handleSearch(service: SemanticService, projectPath: string, args: string[]) {
-  // Try to load existing index
+  // Load index
   const loaded = await service.loadIndex(projectPath);
   if (!loaded) {
     console.log('No semantic index found. Building...');
     await service.indexCodebase(projectPath);
   }
 
-  const query = args[0];
-  if (!query) {
-    console.error('Please provide a search query');
-    process.exit(1);
+  // Parse arguments for options
+  let query = '';
+  let searchMode: 'fuzzy' | 'exact' | 'regex' = 'fuzzy';
+  let typeFilter: string[] | undefined;
+  let sortBy: 'relevance' | 'usage' | 'name' | 'file' = 'relevance';
+  // ... parse all options
+
+  // Handle different search patterns
+  let results: SearchResult[] = [];
+  
+  if (query.includes('|')) {
+    // OR pattern
+    const terms = query.split('|').map(t => t.trim());
+    results = service.searchGroup(terms);
+  } else if (query.includes('&')) {
+    // AND pattern
+    const terms = query.split('&').map(t => t.trim());
+    results = await searchWithAnd(service, terms, options);
+  } else if (query.startsWith('!')) {
+    // NOT pattern
+    results = await searchWithNot(service, query.substring(1), options);
+  } else if (searchMode === 'regex') {
+    // Regex pattern
+    results = await searchWithRegex(service, query, options);
+  } else {
+    // Normal search
+    results = service.search(query, { exact: searchMode === 'exact', ...options });
   }
 
-  // Check if it's a concept group
-  const conceptGroup = CONCEPT_GROUPS[query.toLowerCase() as keyof typeof CONCEPT_GROUPS];
-  
-  const results = conceptGroup 
-    ? service.searchGroup(conceptGroup)
-    : service.search(query);
-
-  displayResults(query, results);
+  // Sort and display
+  results = sortResults(results, sortBy);
+  displayResults(query, results, showContext);
 }
 
 function displayResults(query: string, results: any[]) {
@@ -654,8 +717,41 @@ function displayResults(query: string, results: any[]) {
     
     items.slice(0, 10).forEach(result => { // Limit to top 10 per type
       const info = result.info;
-      const relevance = (result.relevanceScore * 100).toFixed(0);
-      console.log(`├── ${info.term.padEnd(25)} → ${info.location.file}:${info.location.line} (${relevance}%)`);
+      const termDisplay = result.usageCount 
+        ? `${info.term} (${result.usageCount} uses)`
+        : info.term;
+      
+      // Show full location with column
+      console.log(`├── ${termDisplay.padEnd(30)} → ${info.location.file}:${info.location.line}:${info.location.column}`);
+      
+      // Show full context for functions/classes
+      if (type === 'function' || type === 'class') {
+        console.log(`│   ${info.context.trim()}`);
+        
+        // Show surrounding lines
+        if (info.surroundingLines && info.surroundingLines.length > 0) {
+          console.log(`│   ┌─ Context:`);
+          info.surroundingLines.slice(0, 3).forEach(line => {
+            console.log(`│   │ ${line.trim()}`);
+          });
+        }
+        
+        // Show related terms
+        if (info.relatedTerms && info.relatedTerms.length > 0) {
+          console.log(`│   📎 Related: ${info.relatedTerms.slice(0, 5).join(', ')}`);
+        }
+        
+        // Show sample usages
+        if (result.sampleUsages && result.sampleUsages.length > 0) {
+          console.log(`│   `);
+          console.log(`│   📍 Used ${result.usageCount} times:`);
+          result.sampleUsages.slice(0, 3).forEach((usage, idx) => {
+            const usageFile = usage.fromLocation.file.split('/').pop();
+            console.log(`│   ${idx + 1}. ${usageFile}:${usage.fromLocation.line} (${usage.referenceType})`);
+            console.log(`│      ${usage.context.trim()}`);
+          });
+        }
+      }
       
       // Show context if it's a string or comment
       if ((type === 'string' || type === 'comment') && info.context) {
@@ -769,6 +865,34 @@ git clone https://github.com/python/cpython.git docs/libraries/cpython
 # Go parser examples  
 git clone https://github.com/golang/tools.git docs/libraries/go-tools
 ```
+
+## Cross-Reference Implementation Summary
+
+### What We Added
+
+1. **Dual Index Structure**
+   - Term index for definitions (existing)
+   - Cross-reference index for usages (NEW!)
+
+2. **Enhanced Language Extractors**
+   - Extract both definitions AND references
+   - Track function calls, class usage, imports
+
+3. **Smart Search Results**
+   - Show usage counts: "functionName (5 uses)"
+   - Include sample usage locations
+   - Enable impact analysis
+
+4. **New CLI Commands**
+   - `smartgrep refs <term>` - Show all references
+   - Usage information in search results
+
+### Benefits
+
+- **Impact Analysis**: Know what breaks if you change something
+- **Better Understanding**: See how code is actually used
+- **Smarter Search**: Results ranked by usage frequency
+- **Curator Efficiency**: One search gives complete picture
 
 ## Testing Strategy
 
