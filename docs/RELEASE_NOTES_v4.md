@@ -1,95 +1,150 @@
-# Codebase Curator v4.0 - Multi-Language Revolution 🌐
+# 🚀 Codebase Curator v4.0 Release Notes
 
-## What's New
+## 🎉 Major Language Expansion
 
-### 🌍 Multi-Language Support
+We're thrilled to announce Codebase Curator v4.0, featuring **massive language support expansion** from 4 to 10 languages! This release brings comprehensive semantic understanding to more programming languages and configuration file types.
 
-Codebase Curator now understands **4 major programming languages**:
+## ✨ What's New
 
-- **TypeScript/JavaScript** - Full support including JSX/TSX
-- **Python** - Classes, functions, decorators, docstrings  
-- **Go** - Functions, types, interfaces, channels
-- **Rust** - Structs, traits, impls, macros
+### 🌍 New Language Support
 
-### 🎯 Language-Aware Features
+#### Programming Languages Added:
+- **Swift** - Full support for iOS/macOS development
+  - SwiftUI property wrappers (`@State`, `@Binding`, etc.)
+  - Protocol conformance tracking
+  - Extension context awareness
+  - Interface Builder annotations
 
-Each language extractor understands the unique patterns of its language:
+- **Shell Scripts** - Bash, Zsh, and more
+  - Shebang detection for extensionless scripts
+  - Function and alias extraction
+  - Variable exports and trap commands
+  - Here-doc support
 
-#### Python
-- Recognizes `@decorators` and magic methods like `__init__`
-- Extracts docstrings as documentation
-- Understands class inheritance and type hints
-- Tracks async functions and dataclasses
+#### Configuration File Types Added:
+- **JSON** - Smart configuration parsing
+  - Special handling for `package.json` and `tsconfig.json`
+  - Hierarchical key extraction
+  - JSONC comment support
 
-#### Go
-- Identifies receiver methods and interface implementations
-- Tracks goroutines and channel operations
-- Recognizes struct embedding
-- Parses package-level declarations
+- **YAML** - Context-aware parsing
+  - GitLab CI/GitHub Actions workflow understanding
+  - Docker Compose service extraction
+  - Kubernetes manifest detection
 
-#### Rust
-- Understands trait implementations and derive macros
-- Tracks ownership patterns and lifetimes
-- Recognizes macro definitions and usage
-- Parses module structure
+- **TOML** - Modern config format
+  - Cargo.toml and pyproject.toml special handling
+  - Table and nested table support
 
-### 🔍 Cross-Language Search
+- **Environment Files** - Secure configuration
+  - Sensitive value masking
+  - Variable categorization (database, auth, API, etc.)
+  - Multi-line value support
 
-Smart Grep now searches seamlessly across all languages:
+### 🔧 Bug Fixes
 
+- **Fixed .env exclusion bug** - Previously `.env` files were incorrectly excluded from indexing. Now only `.env/` directories are excluded.
+- **Bun compatibility fix** - Resolved crash with `Object.entries().forEach()` in JsonExtractor
+
+### 🛠️ New Tools & Features
+
+- **MCP Tool: `remind_about_task_smartgrep`** - Reminds developers to include explicit smartgrep instructions when using Task agents
+- **Comprehensive test files** - Added test files for all new language types
+- **Language support documentation** - New guide at `docs/LANGUAGE_SUPPORT.md`
+
+## 📊 By The Numbers
+
+- **Languages**: 4 → 10 (150% increase!)
+- **File types supported**: Now includes `.swift`, `.sh`, `.json`, `.yaml`, `.toml`, `.env`
+- **Semantic entries indexed**: ~4200+ in typical projects
+- **Cross-language search**: Works seamlessly across all languages
+
+## 🔍 Enhanced Search Capabilities
+
+### Cross-Language Concept Groups
 ```bash
-# Find all authenticate functions regardless of language
-smartgrep "authenticate" --type function
-
-# Search concept groups across languages
+# Find authentication patterns in ANY language
 smartgrep group auth
 
-# Language-specific searches
-smartgrep "impl" --file "*.rs"    # Rust implementations
-smartgrep "def" --file "*.py"     # Python functions
-smartgrep "func" --file "*.go"    # Go functions
+# Results span:
+# - TypeScript: authenticate(), AuthProvider
+# - Python: @login_required, auth_user()
+# - Swift: AuthenticationService
+# - Config: JWT_SECRET, AUTH_URL
 ```
 
-### 🛠️ Additional Improvements
+### Language-Specific Patterns
+```bash
+# Swift protocols
+smartgrep "protocol" --file "*.swift"
 
-1. **Human-Friendly Curator CLI**
-   - Interactive chat mode for conversations
-   - Memory management commands
-   - Natural language syntax
+# Shell functions
+smartgrep "function" --file "*.sh"
 
-2. **Professional Shell Completions**
-   - Bash, Zsh, and Fish support for all tools
-   - Context-aware suggestions
-   - Man pages for each tool
+# Environment variables
+smartgrep "DATABASE" --file ".env*"
+```
 
-3. **Enhanced Monitoring**
-   - Live dashboard with code distribution
-   - Real-time file change tracking
-   - Architectural pattern detection
+## 🚀 Performance Improvements
 
-## Breaking Changes
+- Incremental indexing handles new file types efficiently
+- Parallel extraction for faster initial indexing
+- Smart caching preserves semantic understanding between runs
 
-None! All existing functionality remains intact.
+## 📝 Migration Guide
 
-## Migration Guide
+### For Existing Users
 
-Simply rebuild your semantic index to enable multi-language support:
+1. **Rebuild your semantic index** to include new languages:
+   ```bash
+   bun run smartgrep index
+   ```
+
+2. **Update your CLAUDE.md** if you have language-specific instructions
+
+3. **Check `.curatorconfig.json`** if you have custom exclusions that might affect new file types
+
+### For New Users
+
+Just run the standard setup - all new languages are automatically supported!
+
+## 🙏 Acknowledgments
+
+This release was a collaborative effort between human developers and Claude. Special thanks to the Anthropic team for making such powerful AI-assisted development possible.
+
+## 🔮 What's Next
+
+We're exploring support for:
+- Java/Kotlin
+- C#/.NET
+- Ruby
+- PHP
+- More configuration formats
+
+## 📦 Installation
 
 ```bash
-smartgrep index
+# Via npm (when published)
+npm install -g codebase-curator
+
+# Via source
+git clone https://github.com/RLabs-Inc/codebase-curator
+cd codebase-curator
+bun install
 ```
 
-## What's Next
+## 🐛 Known Issues
 
-- More languages: Java, C#, Ruby, PHP
-- Performance optimizations for large codebases
-- Enhanced cross-reference analysis
-- Language-specific concept groups
+- Shell script extraction may miss complex heredoc patterns
+- YAML anchors and aliases have limited support
+- Very large JSON files (>10MB) may need streaming parser improvements
 
-## Contributors
+## 📚 Documentation
 
-This release was made possible by the incredible partnership between RLabs Inc. and Claude. Special thanks to Rusty for the vision and endless enthusiasm! 🎉
+- [Language Support Guide](./LANGUAGE_SUPPORT.md)
+- [Smart Grep Guide](./SMART_GREP_GUIDE.md)
+- [Architecture Overview](./ARCHITECTURE.md)
 
 ---
 
-_"Your code speaks many languages. Now Codebase Curator understands them all."_ 🌐
+Happy coding with your newly multilingual Codebase Curator! 🎉
