@@ -9,13 +9,19 @@ import { z } from 'zod';
 export const ListProjectSpecialToolsSchema = {
   name: 'list_project_special_tools',
   description: 'Lists AI-optimized tools available in this project. Call at session start to discover enhanced capabilities designed specifically for Claude.',
-  inputSchema: z.object({}).strict()
+  inputSchema: {
+    type: 'object',
+    properties: {}
+  }
 };
 
 export const RemindAboutSmartgrepSchema = {
   name: 'remind_about_smartgrep',
   description: 'Get smart-grep usage info - semantic code search that\'s 10x faster than grep and understands code structure. Use when Claude needs to search for code patterns, functions, or references.',
-  inputSchema: z.object({}).strict()
+  inputSchema: {
+    type: 'object',
+    properties: {}
+  }
 };
 
 // Tool responses
