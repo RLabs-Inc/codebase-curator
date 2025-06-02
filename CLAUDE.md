@@ -18,31 +18,40 @@ Codebase Curator is an AI-powered codebase analysis system that enables Claude t
 
 ### Architecture
 
-The project is structured into three main layers:
+The project is now organized as a monorepo with packages:
 
-- **Core Services**: Contains the business logic and analysis algorithms
+- **Packages** (for distribution):
+  - `src/packages/semantic-core/` - Core semantic indexing engine
+    - Semantic analysis and indexing
+    - File change detection (HashTree)
+    - Incremental indexing
+    - Configuration management (exclusions, patterns)
+    - Language extractors (TypeScript, more coming)
+  - `src/packages/smartgrep/` - Standalone semantic search package
+  - `src/packages/codebase-curator/` - Full suite package (future)
 
-  - `src/core/CuratorService.ts` - Main orchestration service
-  - `src/core/CuratorProcessService.ts` - Manages Claude CLI processes
-  - `src/core/CuratorPrompts.ts` - Contains prompts for Curator Claude
-  - `src/core/SessionService.ts` - Handles conversation history and sessions (corruption issue FIXED!)
-  - `src/core/CodebaseStreamerBun.ts` - Efficient file streaming implementation
+- **Services** (shared business logic):
+  - `src/services/curator/` - Curator-specific services
+    - `CuratorService.ts` - Main orchestration service
+    - `CuratorProcessService.ts` - Manages Claude CLI processes
+    - `CuratorPrompts.ts` - Contains prompts for Curator Claude
+  - `src/services/session/` - Session management
+    - `SessionService.ts` - Handles conversation history (corruption issue FIXED!)
+  - `src/services/indexing/` - Now part of semantic-core package
+  - `src/services/semantic/` - Now part of semantic-core package
 
-- **Semantic Analysis & Monitoring**: High-performance incremental indexing system
+- **Tools** (CLI interfaces):
+  - `src/tools/smartgrep/` - Smart grep CLI with completions and man page
+  - `src/tools/monitor/` - Real-time monitoring CLI
+  - `src/tools/curator-cli/` - Curator command-line interface
 
-  - `src/semantic/HashTree.ts` - Hierarchical hash tree for file change tracking
-  - `src/semantic/IncrementalIndexer.ts` - Orchestrates incremental semantic indexing
-  - `src/semantic/monitor.ts` - Real-time monitoring CLI with live overview dashboard
-  - `src/semantic/SemanticService.ts` - Enhanced with incremental update capabilities
+- **MCP Servers** (AI interfaces):
+  - `src/mcp-servers/codebase-curator/` - MCP server for Coding Claude
 
-- **Presentation Layer**: Thin UI layers that delegate to core services
-
-  - `src/cli/app.ts` - Command-line interface
-  - `src/mcp/server.ts` - MCP server (how coding claude interacts with the curator claude)
-
-- **Configuration files**: Contains all configuration and metadata
-  - `src/util/config.ts` - Configuration file loading and management, folder exclusions patterns, and other settings
-  - `.curatorconfig.json` - Codebase curator app configuration file
+- **Shared** (common utilities):
+  - `src/shared/config/` - Configuration management
+  - `src/shared/types/` - Shared TypeScript types
+  - `src/shared/utils/` - Common utilities
 
 ### Important Implementation Notes
 
@@ -73,6 +82,7 @@ The project is structured into three main layers:
    - **HashTree.ts**: Bun.hash() for fast file change detection with 500ms debouncing
    - **IncrementalIndexer.ts**: Only reprocesses changed files, silent mode for clean output
    - **Live Monitoring**: Real-time dashboard showing unique files changed (not duplicate events)
+   - Now part of `@codebase-curator/semantic-core` package for reusability
    
    ```bash
    # Live monitoring with codebase overview
@@ -151,6 +161,33 @@ The project is structured into three main layers:
 1. **Multi-Language Support**: Python, Go, Rust extractors
 2. **Enhanced Monitoring**: More detailed code metrics
 3. **Performance Optimization**: Parallel indexing
+
+## Package Structure & Distribution
+
+### Monorepo with Bun Workspaces
+```json
+// Root package.json
+{
+  "workspaces": ["src/packages/*"]
+}
+```
+
+### Available Packages
+1. **@codebase-curator/semantic-core** - Core indexing engine
+2. **@codebase-curator/smartgrep** - Semantic search CLI
+3. **@codebase-curator/codebase-curator** - Full suite (coming soon)
+
+### Installation Options
+```bash
+# NPM Package (when published)
+npm install -g @codebase-curator/smartgrep
+
+# Standalone Binary (future releases)
+curl -L https://github.com/RLabs-Inc/codebase-curator/releases/latest/download/smartgrep-macos-arm64
+
+# Development
+bun install  # Installs workspace dependencies
+```
 
 ## Smart Grep Usage Guide
 

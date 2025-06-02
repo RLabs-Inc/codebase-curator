@@ -5,11 +5,11 @@
  * Semantic search tool for codebases
  */
 
-import { SemanticService } from '../../services/semantic/SemanticService'
+import { SemanticService } from '@codebase-curator/semantic-core'
 import type {
   SearchResult,
   CrossReference,
-} from '../../services/semantic/types'
+} from '@codebase-curator/semantic-core'
 
 const CONCEPT_GROUPS: Record<string, string[]> = {
   // Authentication & Security

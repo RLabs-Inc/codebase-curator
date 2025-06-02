@@ -1,0 +1,211 @@
+.\" Manpage for smartgrep
+.\" Contact the maintainers to correct errors or typos
+.TH SMARTGREP 1 "January 2025" "smartgrep 3.0" "User Commands"
+
+.SH NAME
+smartgrep \- semantic code search with cross-references and usage analysis
+
+.SH SYNOPSIS
+.B smartgrep
+[\fIquery\fR] [\fIoptions\fR]
+.br
+.B smartgrep group
+\fIname\fR [\fIoptions\fR]
+.br
+.B smartgrep index
+.br
+.B smartgrep refs
+\fIterm\fR
+.br
+.B smartgrep
+\-\-list\-groups
+
+.SH DESCRIPTION
+.B smartgrep
+is a semantic code search tool that understands code structure and relationships.
+Unlike traditional grep, it provides:
+.IP \(bu 2
+Usage counts showing how often code is referenced
+.IP \(bu 2
+Cross-references showing actual calling code
+.IP \(bu 2
+20+ concept groups for semantic pattern matching
+.IP \(bu 2
+Type-aware filtering (functions, classes, variables, etc.)
+.IP \(bu 2
+Advanced search patterns (AND, OR, NOT, regex)
+
+.SH COMMANDS
+.TP
+.B query
+Search for a term or pattern in the codebase. Supports advanced patterns:
+.RS
+.IP \(bu 2
+\fIterm1\fR|\fIterm2\fR - OR search
+.IP \(bu 2
+\fIterm1\fR&\fIterm2\fR - AND search
+.IP \(bu 2
+!\fIterm\fR - NOT search (exclude term)
+.IP \(bu 2
+/\fIregex\fR/ - Regular expression search
+.RE
+
+.TP
+.B group \fIname\fR
+Search using a predefined concept group. Available groups include:
+.B auth, api, error, database, cache, user, payment, config, test, async,
+.B service, flow, architecture, import, interface, state, event, logging,
+.B security, build, deploy
+
+.TP
+.B index
+Rebuild the semantic index. Run this after significant code changes or when
+first using smartgrep on a new codebase.
+
+.TP
+.B refs \fIterm\fR
+Show all references to a specific term, including cross-references and
+impact analysis.
+
+.SH OPTIONS
+.TP
+.B \-\-help, \-h
+Display help information and exit.
+
+.TP
+.B \-\-list\-groups
+Show all available concept groups with their keywords.
+
+.TP
+.B \-\-type \fItypes\fR
+Filter results by declaration type. Can specify multiple types separated by commas.
+Available types: \fBfunction\fR, \fBclass\fR, \fBvariable\fR, \fBstring\fR,
+\fBcomment\fR, \fBimport\fR
+
+.TP
+.B \-\-file \fIpatterns\fR
+Filter by file patterns (supports wildcards). Example: *.service.*
+
+.TP
+.B \-\-max \fInumber\fR
+Maximum number of results to show (default: 50).
+
+.TP
+.B \-\-exact
+Exact match only (disable fuzzy matching).
+
+.TP
+.B \-\-regex
+Treat the search query as a regular expression.
+
+.TP
+.B \-\-no\-context
+Hide surrounding code context in results.
+
+.TP
+.B \-\-sort \fIby\fR
+Sort results by: \fBrelevance\fR (default), \fBusage\fR, \fBname\fR, or \fBfile\fR.
+
+.TP
+.B \-\-json
+Output results as JSON for machine processing.
+
+.TP
+.B \-\-compact
+Use compact output format (one line per result).
+
+.SH EXAMPLES
+.TP
+.B smartgrep "handleAuth"
+Find all occurrences of handleAuth with usage information.
+
+.TP
+.B smartgrep group auth
+Search for all authentication-related patterns.
+
+.TP
+.B smartgrep "error&string"
+Find strings containing "error" (AND search).
+
+.TP
+.B smartgrep "login|signin|auth"
+Find any of these terms (OR search).
+
+.TP
+.B smartgrep "!test" \-\-type function
+Find functions that don't contain "test".
+
+.TP
+.B smartgrep group api \-\-type class \-\-max 10
+Find top 10 API-related classes.
+
+.TP
+.B smartgrep refs "PaymentService"
+Show all references to PaymentService.
+
+.TP
+.B smartgrep group error \-\-sort usage
+Find error handling patterns sorted by usage.
+
+.SH CONCEPT GROUPS
+Concept groups provide semantic pattern matching:
+
+.TP
+.B auth
+Authentication patterns: login, jwt, token, oauth, permission, role
+
+.TP
+.B api
+API patterns: endpoint, route, controller, REST, GraphQL
+
+.TP
+.B error
+Error handling: exception, catch, throw, fail, invalid
+
+.TP
+.B database
+Database patterns: query, model, repository, migration, ORM
+
+Use \fB\-\-list\-groups\fR to see all available groups.
+
+.SH FILES
+.TP
+.I .curator/semantic-index.json
+Cached semantic index for fast searching.
+
+.SH ENVIRONMENT
+.TP
+.B SMARTGREP_MAX_RESULTS
+Override default maximum results (default: 50).
+
+.TP
+.B NO_COLOR
+Disable colored output.
+
+.SH EXIT STATUS
+.TP
+.B 0
+Success
+.TP
+.B 1
+General error or no results found
+.TP
+.B 2
+Invalid arguments or options
+
+.SH SEE ALSO
+.BR grep (1),
+.BR ripgrep (1),
+.BR ag (1)
+
+.SH BUGS
+Report bugs at: https://github.com/RLabs-Inc/codebase-curator/issues
+
+.SH AUTHOR
+Written by RLabs Inc. and Claude.
+
+.SH COPYRIGHT
+Copyright © 2025 RLabs Inc. License: MIT
+.br
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.

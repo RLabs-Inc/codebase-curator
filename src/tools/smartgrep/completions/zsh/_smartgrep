@@ -1,0 +1,126 @@
+#compdef smartgrep
+# Zsh completion for smartgrep
+# Install: Place in a directory in your $fpath (e.g., /usr/local/share/zsh/site-functions/)
+
+_smartgrep() {
+    local -a commands groups options types sorts
+    
+    commands=(
+        'group:Search using a concept group'
+        'index:Rebuild the semantic index'
+        'refs:Show where a term is referenced'
+        'references:Show where a term is referenced (alias for refs)'
+    )
+    
+    groups=(
+        'auth:Authentication & security patterns'
+        'database:Database patterns (query, model, repository)'
+        'cache:Caching patterns'
+        'api:API patterns (endpoint, route, controller)'
+        'error:Error handling patterns'
+        'user:User & account patterns'
+        'payment:Payment & billing patterns'
+        'config:Configuration patterns'
+        'test:Testing patterns'
+        'async:Async & concurrency patterns'
+        'service:Service classes and patterns'
+        'flow:Data flow and streaming'
+        'architecture:Architecture patterns'
+        'import:Import/export patterns'
+        'interface:Interface & type patterns'
+        'state:State management patterns'
+        'event:Event handling patterns'
+        'logging:Logging patterns'
+        'security:Security patterns'
+        'build:Build & compilation patterns'
+        'deploy:Deployment patterns'
+    )
+    
+    options=(
+        '--help[Show help information]'
+        '--list-groups[Show all available concept groups]'
+        '--type[Filter by type]:type:_smartgrep_types'
+        '--file[Filter by file patterns]:pattern:'
+        '--max[Maximum results to show]:number:(10 20 50 100)'
+        '--exact[Exact match only]'
+        '--regex[Treat query as regex pattern]'
+        '--no-context[Hide surrounding context]'
+        '--sort[Sort results by]:sort:_smartgrep_sorts'
+        '--json[Output as JSON]'
+        '--compact[Compact output format]'
+    )
+    
+    types=(
+        'function:Functions'
+        'class:Classes'
+        'variable:Variables'
+        'string:String literals'
+        'comment:Comments'
+        'import:Imports'
+    )
+    
+    sorts=(
+        'relevance:Sort by relevance'
+        'usage:Sort by usage count'
+        'name:Sort by name'
+        'file:Sort by file path'
+    )
+    
+    # Main completion logic
+    case $state in
+        '')
+            if (( CURRENT == 2 )); then
+                # First argument
+                _describe -t commands 'smartgrep commands' commands
+                _arguments $options
+            elif (( CURRENT == 3 )) && [[ ${words[2]} == "group" ]]; then
+                # After 'group' command
+                _describe -t groups 'concept groups' groups
+            elif (( CURRENT > 2 )); then
+                # Subsequent arguments
+                _arguments $options
+            fi
+            ;;
+    esac
+}
+
+# Helper function for type completion (supports comma-separated values)
+_smartgrep_types() {
+    local -a type_values
+    type_values=(
+        'function:Functions'
+        'class:Classes'
+        'variable:Variables'
+        'string:String literals'
+        'comment:Comments'
+        'import:Imports'
+    )
+    
+    # Handle comma-separated values
+    if [[ $PREFIX == *,* ]]; then
+        local prefix="${PREFIX%,*},"
+        local suffix="${PREFIX##*,}"
+        _describe -t types "types" type_values -P "$prefix" -S ','
+    else
+        _describe -t types "types" type_values -S ','
+    fi
+}
+
+# Helper function for sort completion
+_smartgrep_sorts() {
+    local -a sort_values
+    sort_values=(
+        'relevance:Sort by relevance'
+        'usage:Sort by usage count'
+        'name:Sort by name'
+        'file:Sort by file path'
+    )
+    _describe -t sorts "sort options" sort_values
+}
+
+# Advanced pattern matching
+_smartgrep_patterns() {
+    _message "Search patterns: term, term1|term2 (OR), term1&term2 (AND), !term (NOT), /regex/"
+}
+
+_smartgrep "$@"

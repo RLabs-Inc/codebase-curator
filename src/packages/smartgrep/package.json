@@ -1,0 +1,59 @@
+{
+  "name": "@codebase-curator/smartgrep",
+  "version": "3.0.0",
+  "description": "Semantic code search that understands your code - with usage counts, cross-references, and 20+ concept groups",
+  "type": "module",
+  "module": "./src/index.ts",
+  "bin": {
+    "smartgrep": "./src/index.ts"
+  },
+  "files": [
+    "dist",
+    "completions",
+    "man",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "bun build ./src/cli.ts --outdir ./dist --target bun",
+    "build:binary": "bun build --compile --minify --sourcemap ./src/cli.ts --outfile smartgrep",
+    "build:binary:all": "bun run build:binary:linux && bun run build:binary:macos && bun run build:binary:windows",
+    "build:binary:linux": "bun build --compile --minify --sourcemap --target=bun-linux-x64 ./src/cli.ts --outfile dist/smartgrep-linux-x64",
+    "build:binary:macos": "bun build --compile --minify --sourcemap --target=bun-darwin-x64 ./src/cli.ts --outfile dist/smartgrep-macos-x64",
+    "build:binary:macos-arm": "bun build --compile --minify --sourcemap --target=bun-darwin-arm64 ./src/cli.ts --outfile dist/smartgrep-macos-arm64",
+    "build:binary:windows": "bun build --compile --minify --sourcemap --target=bun-windows-x64 ./src/cli.ts --outfile dist/smartgrep-windows-x64.exe",
+    "postinstall": "bun run ./scripts/install-completions.js",
+    "prepack": "bun run build",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@codebase-curator/semantic-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "keywords": [
+    "semantic-search",
+    "code-search",
+    "grep",
+    "cross-references",
+    "usage-analysis",
+    "developer-tools",
+    "cli"
+  ],
+  "author": "RLabs Inc. and Claude",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RLabs-Inc/codebase-curator.git",
+    "directory": "src/packages/smartgrep"
+  },
+  "homepage": "https://github.com/RLabs-Inc/codebase-curator/tree/main/src/packages/smartgrep",
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "preferGlobal": true,
+  "trustedDependencies": [
+    "@codebase-curator/smartgrep"
+  ]
+}

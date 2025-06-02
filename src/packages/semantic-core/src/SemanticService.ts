@@ -3,7 +3,7 @@
  * Orchestrates semantic indexing using the CodebaseStreamer
  */
 
-import { CodebaseStreamer } from '../indexing/CodebaseStreamer'
+import { CodebaseStreamer } from './indexing/CodebaseStreamer'
 import { SemanticIndexImpl } from './SemanticIndexImpl'
 import { TypeScriptExtractor } from './extractors/TypeScriptExtractor'
 import type {

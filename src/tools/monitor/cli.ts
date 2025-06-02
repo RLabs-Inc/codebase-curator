@@ -8,8 +8,8 @@
 import {
   IncrementalIndexer,
   type IndexingStatus,
-} from '../../services/indexing/IncrementalIndexer.js'
-import { type HashTreeDiff } from '../../services/indexing/HashTree.js'
+  type HashTreeDiff
+} from '@codebase-curator/semantic-core'
 import * as path from 'path'
 
 interface MonitorStats {

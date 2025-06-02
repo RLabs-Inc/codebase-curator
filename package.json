@@ -18,6 +18,9 @@
   ],
   "module": "index.ts",
   "type": "module",
+  "workspaces": [
+    "src/packages/*"
+  ],
   "bin": {
     "codebase-curator": "./src/tools/curator-cli/cli.ts",
     "codebase-curator-mcp": "./src/mcp-servers/codebase-curator/server.ts",

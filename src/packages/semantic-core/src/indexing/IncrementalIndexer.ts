@@ -1,5 +1,5 @@
 import { HashTree, type HashTreeDiff } from './HashTree.js'
-import { SemanticService } from '../semantic/SemanticService.js'
+import { SemanticService } from '../SemanticService.js'
 import * as path from 'path'
 import * as fs from 'fs/promises'
 

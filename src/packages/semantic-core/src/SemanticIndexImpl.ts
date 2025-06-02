@@ -9,7 +9,7 @@ import type {
   SearchOptions,
   SearchResult,
   CrossReference,
-} from '../../services/semantic/types'
+} from './types'
 
 export class SemanticIndexImpl implements SemanticIndex {
   private entries: Map<string, SemanticInfo[]> = new Map()

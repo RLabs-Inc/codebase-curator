@@ -1,0 +1,39 @@
+{
+  "name": "@codebase-curator/semantic-core",
+  "version": "1.0.0",
+  "description": "Core semantic indexing and search engine for codebase analysis",
+  "type": "module",
+  "module": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "@babel/parser": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
+    "@babel/types": "^7.23.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/babel__parser": "^7.1.1",
+    "@types/babel__traverse": "^7.20.2"
+  },
+  "keywords": [
+    "semantic-analysis",
+    "code-indexing",
+    "ast",
+    "code-search"
+  ],
+  "author": "RLabs Inc. and Claude",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RLabs-Inc/codebase-curator.git",
+    "directory": "src/packages/semantic-core"
+  }
+}

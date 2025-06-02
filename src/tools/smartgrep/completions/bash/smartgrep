@@ -1,0 +1,85 @@
+#!/bin/bash
+# Bash completion for smartgrep
+# Install: source this file or add to ~/.bash_completion.d/
+
+_smartgrep() {
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    
+    # Main commands
+    local commands="group index refs references"
+    
+    # Concept groups
+    local groups="auth database cache api error user payment config test async service flow architecture import interface state event logging security build deploy"
+    
+    # Options
+    local options="--help --list-groups --type --file --max --exact --regex --no-context --sort --json --compact"
+    
+    # Type values
+    local types="function class variable string comment import"
+    
+    # Sort values
+    local sorts="relevance usage name file"
+    
+    # Handle different contexts
+    case "${prev}" in
+        smartgrep)
+            # First argument - could be command, option, or search query
+            COMPREPLY=( $(compgen -W "${commands} ${options}" -- ${cur}) )
+            ;;
+            
+        group)
+            # After 'group', complete with concept groups
+            COMPREPLY=( $(compgen -W "${groups}" -- ${cur}) )
+            ;;
+            
+        --type)
+            # After --type, complete with type values
+            # Support comma-separated values
+            if [[ ${cur} == *,* ]]; then
+                local prefix="${cur%,*},"
+                local last="${cur##*,}"
+                COMPREPLY=( $(compgen -W "${types}" -P "${prefix}" -- ${last}) )
+            else
+                COMPREPLY=( $(compgen -W "${types}" -- ${cur}) )
+            fi
+            ;;
+            
+        --sort)
+            # After --sort, complete with sort values
+            COMPREPLY=( $(compgen -W "${sorts}" -- ${cur}) )
+            ;;
+            
+        --max)
+            # After --max, suggest some common values
+            COMPREPLY=( $(compgen -W "10 20 50 100" -- ${cur}) )
+            ;;
+            
+        refs|references)
+            # After refs/references, no specific completion (user will type term)
+            COMPREPLY=()
+            ;;
+            
+        *)
+            # Check if we're in a group command context
+            if [[ ${COMP_WORDS[1]} == "group" ]] && [[ ${COMP_CWORD} -gt 2 ]]; then
+                # After 'group <name>', offer options
+                COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+            elif [[ ${cur} == -* ]]; then
+                # Current word is an option
+                COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+            else
+                # Default to commands and options
+                COMPREPLY=( $(compgen -W "${commands} ${options}" -- ${cur}) )
+            fi
+            ;;
+    esac
+    
+    return 0
+}
+
+# Register the completion function
+complete -F _smartgrep smartgrep
+complete -F _smartgrep bun run smartgrep

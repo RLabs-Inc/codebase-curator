@@ -156,7 +156,10 @@ Use implement_change: "Fix the login timeout bug"
 ### Smart Grep CLI - Now with Concept Groups!
 
 ```bash
-# Install globally
+# Install globally (coming soon)
+npm install -g @codebase-curator/smartgrep
+
+# For development
 bun link
 
 # Concept groups - search semantic patterns
@@ -184,6 +187,20 @@ smartgrep "api" --json               # Machine-readable output
 
 ## 🏗️ Architecture
 
+### Monorepo Structure
+
+```
+src/
+├── packages/               # Distributable packages
+│   ├── semantic-core/      # Core indexing engine
+│   ├── smartgrep/          # Semantic search CLI
+│   └── codebase-curator/   # Full suite
+├── services/               # Shared business logic
+├── tools/                  # CLI interfaces
+├── mcp-servers/            # AI interfaces
+└── shared/                 # Common utilities
+```
+
 ### Two-Claude System
 
 - **Coding Claude**: You, working in Claude Code
@@ -199,6 +216,7 @@ smartgrep "api" --json               # Machine-readable output
 - **Live Monitoring**: Real-time dashboard shows code evolution as you work
 - **Cross-References**: Shows not just where code is defined, but who uses it
 - **Streaming Architecture**: Handles massive codebases efficiently
+- **Package Distribution**: Each tool can be installed independently
 
 ## 🤝 Contributing
 
@@ -207,19 +225,27 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ### Development
 
 ```bash
+# Install workspace dependencies
+bun install
+
 # Run tests
 bun test
 
 # Run MCP server locally
-bun run src/mcp/server.ts
+bun run mcp
 
 # Run CLI tools
-bun run src/cli/app.ts            # Curator CLI
+bun run start                     # Curator CLI
 bun run smartgrep [query]         # Smart grep
 bun run monitor watch --overview  # Live monitoring
 
 # Build semantic index
 bun run smartgrep index
+
+# Work with packages
+cd src/packages/smartgrep
+bun run build                     # Build for distribution
+bun run build:binary              # Create standalone binary
 ```
 
 ### MCP Tools Available

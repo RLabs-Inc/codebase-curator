@@ -4,8 +4,8 @@ import {
   shouldExclude,
   loadConfig,
   mergeExclusions,
-} from '../../shared/config/config'
-import { DEFAULT_EXCLUSIONS } from '../../shared/types/config'
+} from '../config/config'
+import { DEFAULT_EXCLUSIONS } from '../types/config'
 
 export interface StreamBatch {
   files: Map<string, string>
