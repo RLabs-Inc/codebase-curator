@@ -38,10 +38,10 @@ export const DEFAULT_EXCLUSIONS = [
   '*.pyo', // Python optimized compiled files
   '.pytest_cache', // pytest cache
   '.mypy_cache', // mypy type checker cache
-  'venv', // virtual environment
-  'env', // virtual environment
-  '.env', // virtual environment
-  'virtualenv', // virtual environment
+  'venv/', // virtual environment directory
+  'env/', // virtual environment directory
+  '.env/', // virtual environment directory  
+  'virtualenv/', // virtual environment directory
   '.Python', // Python build artifacts
   'pip-log.txt', // pip logs
   'pip-delete-this-directory.txt', // pip temp

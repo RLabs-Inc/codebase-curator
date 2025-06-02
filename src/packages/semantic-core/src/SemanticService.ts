@@ -6,6 +6,15 @@
 import { CodebaseStreamer } from './indexing/CodebaseStreamer'
 import { SemanticIndexImpl } from './SemanticIndexImpl'
 import { TypeScriptExtractor } from './extractors/TypeScriptExtractor'
+import { PythonExtractor } from './extractors/PythonExtractor'
+import { GoExtractor } from './extractors/GoExtractor'
+import { RustExtractor } from './extractors/RustExtractor'
+import { SwiftExtractor } from './extractors/SwiftExtractor'
+import { ShellExtractor } from './extractors/ShellExtractor'
+import { JsonExtractor } from './extractors/JsonExtractor'
+import { YamlExtractor } from './extractors/YamlExtractor'
+import { TomlExtractor } from './extractors/TomlExtractor'
+import { EnvExtractor } from './extractors/EnvExtractor'
 import type {
   LanguageExtractor,
   SemanticInfo,
@@ -19,8 +28,18 @@ import { join, dirname } from 'path'
 export class SemanticService {
   private index = new SemanticIndexImpl()
   private extractors: LanguageExtractor[] = [
+    // Programming languages
     new TypeScriptExtractor(),
-    // Add more extractors here as you implement them
+    new PythonExtractor(),
+    new GoExtractor(),
+    new RustExtractor(),
+    new SwiftExtractor(),
+    new ShellExtractor(),
+    // Configuration files
+    new JsonExtractor(),
+    new YamlExtractor(),
+    new TomlExtractor(),
+    new EnvExtractor(),
   ]
   private projectPath: string
   private silentMode = false

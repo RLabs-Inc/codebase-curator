@@ -10,6 +10,15 @@ export * from './types'
 
 // Re-export extractors
 export * from './extractors/TypeScriptExtractor'
+export * from './extractors/PythonExtractor'
+export * from './extractors/GoExtractor'
+export * from './extractors/RustExtractor'
+export * from './extractors/SwiftExtractor'
+export * from './extractors/ShellExtractor'
+export * from './extractors/JsonExtractor'
+export * from './extractors/YamlExtractor'
+export * from './extractors/TomlExtractor'
+export * from './extractors/EnvExtractor'
 
 // Re-export indexing services
 export * from './indexing/CodebaseStreamer'

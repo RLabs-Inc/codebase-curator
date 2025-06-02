@@ -1,0 +1,43 @@
+{
+  "name": "@codebase-curator/monitor",
+  "version": "1.0.0",
+  "description": "Real-time incremental indexing monitor for codebase analysis",
+  "author": "RLabs Inc. and Claude",
+  "license": "MIT",
+  "type": "module",
+  "module": "./src/cli.ts",
+  "bin": {
+    "monitor": "./src/cli.ts"
+  },
+  "scripts": {
+    "postinstall": "node scripts/install-completions.js",
+    "build": "bun build ./src/cli.ts --compile --outfile=dist/monitor",
+    "build:all": "npm run build:macos && npm run build:linux && npm run build:windows",
+    "build:macos": "bun build ./src/cli.ts --compile --target=darwin-arm64 --outfile=dist/monitor-macos-arm64 && bun build ./src/cli.ts --compile --target=darwin-x64 --outfile=dist/monitor-macos-x64",
+    "build:linux": "bun build ./src/cli.ts --compile --target=linux-x64 --outfile=dist/monitor-linux-x64",
+    "build:windows": "bun build ./src/cli.ts --compile --target=win32-x64 --outfile=dist/monitor-windows-x64.exe"
+  },
+  "dependencies": {
+    "@codebase-curator/semantic-core": "workspace:*"
+  },
+  "files": [
+    "src",
+    "completions",
+    "man",
+    "scripts",
+    "README.md"
+  ],
+  "keywords": [
+    "monitor",
+    "file-watcher",
+    "incremental-indexing",
+    "codebase-analysis",
+    "real-time",
+    "dashboard"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RLabs-Inc/codebase-curator.git",
+    "directory": "src/packages/monitor"
+  }
+}

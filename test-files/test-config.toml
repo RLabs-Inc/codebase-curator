@@ -1,0 +1,80 @@
+# Codebase Curator Package Configuration
+
+[package]
+name = "codebase-curator"
+version = "1.0.0"
+description = "AI-powered codebase analysis system"
+authors = ["RLabs Inc <contact@rlabs.dev>"]
+license = "MIT"
+repository = "https://github.com/RLabs-Inc/codebase-curator"
+
+[dependencies]
+typescript = "^5.0.0"
+bun = "^1.0.0"
+zod = "^3.22.0"
+
+[dev-dependencies]
+vitest = "^1.0.0"
+eslint = "^8.0.0"
+prettier = "^3.0.0"
+
+[scripts]
+dev = "bun run --watch src/index.ts"
+build = "bun build src/index.ts --outdir=dist"
+test = "vitest"
+lint = "eslint src/**/*.ts"
+format = "prettier --write src/**/*.ts"
+
+# Curator-specific configuration
+[curator]
+max_file_size = 1048576  # 1MB in bytes
+index_threads = 4
+cache_ttl = 3600  # 1 hour in seconds
+
+  [curator.exclusions]
+  patterns = [
+    "node_modules",
+    ".git",
+    "dist",
+    "*.log",
+    "*.tmp"
+  ]
+  
+  [curator.languages]
+  typescript = { enabled = true, extensions = [".ts", ".tsx"] }
+  javascript = { enabled = true, extensions = [".js", ".jsx"] }
+  python = { enabled = false, extensions = [".py"] }
+  go = { enabled = false, extensions = [".go"] }
+
+# Semantic search configuration
+[semantic]
+embedding_model = "text-embedding-3-small"
+similarity_threshold = 0.75
+max_results = 50
+
+  [semantic.concept_groups]
+  auth = ["login", "signin", "authenticate", "jwt", "token"]
+  error = ["error", "exception", "throw", "catch", "fail"]
+  api = ["endpoint", "route", "request", "response", "REST"]
+
+# MCP server configuration
+[mcp]
+port = 3000
+host = "localhost"
+protocol = "stdio"
+
+  [mcp.tools]
+  overview = { timeout = 600 }
+  ask = { timeout = 300 }
+  search = { timeout = 120 }
+
+# Monitoring configuration
+[monitoring]
+enabled = true
+refresh_interval = 1000  # milliseconds
+
+  [monitoring.metrics]
+  file_count = true
+  index_size = true
+  change_rate = true
+  memory_usage = true

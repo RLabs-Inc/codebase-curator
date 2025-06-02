@@ -26,7 +26,7 @@ The project is now organized as a monorepo with packages:
     - File change detection (HashTree)
     - Incremental indexing
     - Configuration management (exclusions, patterns)
-    - Language extractors (TypeScript, more coming)
+    - Language extractors (TypeScript, Python, Go, Rust)
   - `src/packages/smartgrep/` - Standalone semantic search package
   - `src/packages/codebase-curator/` - Full suite package (future)
 
@@ -156,11 +156,14 @@ The project is now organized as a monorepo with packages:
 - MCP tool discovery helpers
 - .curator directory exclusion
 - Unique file tracking (vs event counts)
+- Multi-language support (TypeScript, Python, Go, Rust)
+- Professional shell completions for all CLI tools
+- Human-friendly curator CLI with chat mode
 
 ### 🚀 Next Up
-1. **Multi-Language Support**: Python, Go, Rust extractors
-2. **Enhanced Monitoring**: More detailed code metrics
-3. **Performance Optimization**: Parallel indexing
+1. **Enhanced Monitoring**: More detailed code metrics
+2. **Performance Optimization**: Parallel indexing
+3. **More Languages**: Java, C#, Ruby, PHP, etc.
 
 ## Package Structure & Distribution
 

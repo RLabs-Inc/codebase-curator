@@ -41,12 +41,15 @@ You get → Specific guidance that fits YOUR patterns
 - **Persistent Sessions**: Remembers context between questions
 - **Instant Follow-ups**: First question takes 2 minutes, rest are instant
 
-### 🔍 Smart Grep - Semantic Code Search
+### 🔍 Smart Grep - Multi-Language Semantic Search
 
 ```bash
-# Don't just search - understand
+# Don't just search - understand (works across all languages!)
 smartgrep group auth            # Search ALL auth patterns
-smartgrep "handleAuth"         # Search specific term
+smartgrep "handleAuth"         # TypeScript/JavaScript
+smartgrep "def authenticate"   # Python functions
+smartgrep "func NewAuth"       # Go functions
+smartgrep "impl Auth"          # Rust implementations
 
 # Returns organized results:
 # → Functions: authenticate() (12 uses), validateUser() (5 uses)
@@ -59,6 +62,13 @@ smartgrep "error&handler"       # AND search
 smartgrep "login|signin|auth"   # OR search
 smartgrep "!test" --type function # Exclude tests
 ```
+
+### 🌐 Multi-Language Support
+
+- **TypeScript/JavaScript** - Full support including JSX/TSX, decorators
+- **Python** - Classes, functions, decorators, docstrings, type hints
+- **Go** - Functions, types, interfaces, channels, goroutines
+- **Rust** - Structs, traits, impls, macros, lifetimes
 
 ### 🎯 Live Monitoring Dashboard
 

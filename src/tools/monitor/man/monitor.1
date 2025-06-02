@@ -1,0 +1,179 @@
+.\" Manpage for monitor
+.\" Contact the maintainers to correct errors or typos
+.TH MONITOR 1 "January 2025" "monitor 1.0" "User Commands"
+
+.SH NAME
+monitor \- real-time incremental indexing monitor for codebase analysis
+
+.SH SYNOPSIS
+.B monitor
+.I command
+[\fIoptions\fR] [\fIproject-path\fR]
+
+.SH DESCRIPTION
+.B monitor
+is a real-time monitoring tool that tracks file changes and maintains an
+incremental semantic index of your codebase. It provides live dashboards,
+codebase analytics, and detailed status reporting.
+
+The tool watches for file system changes and automatically updates the
+semantic index, providing instant feedback about code modifications and
+maintaining an up-to-date view of your codebase structure.
+
+.SH COMMANDS
+.TP
+.B watch [\-\-overview] [\fIproject-path\fR]
+Start real-time monitoring of file changes. Shows basic change statistics
+by default. With \fB\-\-overview\fR flag, displays a live dashboard with
+codebase analytics that updates on file changes.
+
+.TP
+.B monitor [\-\-overview] [\fIproject-path\fR]
+Alias for the \fBwatch\fR command. Provides the same functionality.
+
+.TP
+.B overview [\fIproject-path\fR]
+Generate a static snapshot of the codebase structure and analytics.
+Shows code distribution, complexity metrics, architectural patterns,
+and identifies code hotspots.
+
+.TP
+.B status [\fIproject-path\fR]
+Display detailed technical status including index integrity, storage
+statistics, and activity metrics.
+
+.TP
+.B rebuild [\fIproject-path\fR]
+Force a complete rebuild of the semantic index. Useful after major
+refactoring or if index corruption is suspected.
+
+.SH OPTIONS
+.TP
+.B \-\-overview, \-o
+When used with \fBwatch\fR or \fBmonitor\fR commands, enables the live
+overview dashboard that shows real-time codebase analytics alongside
+file change monitoring.
+
+.TP
+.B \-\-help
+Display help information and usage examples.
+
+.SH OVERVIEW DASHBOARD
+The live overview dashboard (enabled with \fB\-\-overview\fR) displays:
+
+.IP \(bu 2
+Real-time file change tracking with unique file counts
+.IP \(bu 2
+Code distribution by declaration type (functions, classes, etc.)
+.IP \(bu 2
+Files ranked by semantic complexity
+.IP \(bu 2
+Recent change activity log
+.IP \(bu 2
+Automatic refresh every 2 seconds
+
+.SH CODEBASE ANALYSIS
+The \fBoverview\fR command provides insights including:
+
+.IP \(bu 2
+Total indexed entries and file counts
+.IP \(bu 2
+Distribution of code by type (functions, classes, variables, etc.)
+.IP \(bu 2
+Most complex files by declaration count
+.IP \(bu 2
+Architectural pattern detection
+.IP \(bu 2
+Code hotspots (most referenced items)
+.IP \(bu 2
+Potential entry points identification
+
+.SH EXAMPLES
+.TP
+.B monitor watch
+Start basic real-time monitoring of the current directory.
+
+.TP
+.B monitor watch \-\-overview
+Start monitoring with live dashboard showing codebase analytics.
+
+.TP
+.B monitor watch \-o /path/to/project
+Monitor a specific project with live overview enabled.
+
+.TP
+.B monitor overview
+Generate a static analysis snapshot of the current directory.
+
+.TP
+.B monitor status
+Show detailed technical status and integrity information.
+
+.TP
+.B monitor rebuild
+Force rebuild the semantic index from scratch.
+
+.SH FILES
+.TP
+.I .curator/semantic-index.json
+The semantic index containing analyzed code information.
+
+.TP
+.I .curator/semantic/hashtree.json
+Hash tree for efficient file change detection.
+
+.SH STATISTICS
+The monitor tracks various metrics:
+
+.IP \(bu 2
+Total file change events
+.IP \(bu 2
+Unique files modified/added/deleted
+.IP \(bu 2
+Runtime duration
+.IP \(bu 2
+Reindex operations count
+.IP \(bu 2
+Index integrity status
+
+.SH ARCHITECTURE DETECTION
+The tool can identify common architectural patterns:
+
+.IP \(bu 2
+Object-oriented (high class to function ratio)
+.IP \(bu 2
+Functional programming (high function to class ratio)
+.IP \(bu 2
+Strong TypeScript typing (many interfaces/types)
+
+.SH EXIT STATUS
+.TP
+.B 0
+Success
+.TP
+.B 1
+General error
+.TP
+.B 130
+Interrupted by user (Ctrl+C)
+
+.SH ENVIRONMENT
+.TP
+.B NO_COLOR
+Disable colored output in the dashboard.
+
+.SH SEE ALSO
+.BR smartgrep (1),
+.BR codebase-curator (1)
+
+.SH BUGS
+Report bugs at: https://github.com/RLabs-Inc/codebase-curator/issues
+
+.SH AUTHOR
+Written by RLabs Inc. and Claude.
+
+.SH COPYRIGHT
+Copyright © 2025 RLabs Inc. License: MIT
+.br
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.

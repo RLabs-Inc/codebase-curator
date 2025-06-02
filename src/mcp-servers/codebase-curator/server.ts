@@ -17,8 +17,10 @@ import { getCompactSystemExplanation } from '../../services/curator/CuratorPromp
 import {
   ListProjectSpecialToolsSchema,
   RemindAboutSmartgrepSchema,
+  RemindAboutTaskSmartgrepSchema,
   PROJECT_SPECIAL_TOOLS,
   SMARTGREP_REMINDER,
+  TASK_SMARTGREP_REMINDER,
 } from './tools.js'
 
 // Server metadata
@@ -226,6 +228,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       description: RemindAboutSmartgrepSchema.description,
       inputSchema: RemindAboutSmartgrepSchema.inputSchema,
     },
+    {
+      name: RemindAboutTaskSmartgrepSchema.name,
+      description: RemindAboutTaskSmartgrepSchema.description,
+      inputSchema: RemindAboutTaskSmartgrepSchema.inputSchema,
+    },
   ],
 }))
 
@@ -399,6 +406,35 @@ ${SMARTGREP_REMINDER.pro_features.map((f) => f).join('\n')}
 **${SMARTGREP_REMINDER.game_changer}**
 
 💡 **Tip:** ${SMARTGREP_REMINDER.quick_tip}`
+
+        return {
+          content: [{ type: 'text', text: formattedResponse }],
+        }
+      }
+
+      case 'remind_about_task_smartgrep': {
+        const formattedResponse = `${TASK_SMARTGREP_REMINDER.title}
+
+${TASK_SMARTGREP_REMINDER.discovery}
+
+**The Problem:**
+${TASK_SMARTGREP_REMINDER.the_problem}
+
+**Best Practices:**
+${TASK_SMARTGREP_REMINDER.best_practices.join('\n')}
+
+**❌ Bad Example:**
+Prompt: "${TASK_SMARTGREP_REMINDER.bad_example.prompt}"
+Problem: ${TASK_SMARTGREP_REMINDER.bad_example.problem}
+
+**✅ Good Example:**
+Prompt: "${TASK_SMARTGREP_REMINDER.good_example.prompt}"
+Benefit: ${TASK_SMARTGREP_REMINDER.good_example.benefit}
+
+**📝 Template to Include:**
+${TASK_SMARTGREP_REMINDER.template}
+
+${TASK_SMARTGREP_REMINDER.reminder}`
 
         return {
           content: [{ type: 'text', text: formattedResponse }],

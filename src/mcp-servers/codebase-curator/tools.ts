@@ -24,6 +24,15 @@ export const RemindAboutSmartgrepSchema = {
   }
 };
 
+export const RemindAboutTaskSmartgrepSchema = {
+  name: 'remind_about_task_smartgrep',
+  description: 'IMPORTANT: Get reminder about including explicit smartgrep instructions when using Task agents. Task agents have Bash access and can use smartgrep, but need explicit instructions. Call this before creating search-related Task prompts.',
+  inputSchema: {
+    type: 'object',
+    properties: {}
+  }
+};
+
 // Tool responses
 export const PROJECT_SPECIAL_TOOLS = {
   overview: `🛠️ AI-Optimized Tools Available in This Project:
@@ -109,4 +118,50 @@ export const SMARTGREP_REMINDER = {
   game_changer: '💡 This isn\'t just faster grep - it understands your code structure and relationships!',
   
   quick_tip: 'Add to CLAUDE.md: "Use `bun run smartgrep` instead of grep. For concepts: `smartgrep group auth`. For types: `smartgrep --type function`"'
+};
+
+export const TASK_SMARTGREP_REMINDER = {
+  title: '🚨 IMPORTANT: Task Agents & Smartgrep Usage',
+  
+  discovery: `We discovered that Task agents have access to Bash and CAN use smartgrep, 
+but they don't know about it unless you explicitly tell them!`,
+
+  the_problem: `Task agents won't use smartgrep unless you specifically mention:
+  1. That smartgrep exists
+  2. How to run it (via Bash tool)
+  3. Why it's better than regular grep`,
+
+  best_practices: [
+    '✅ ALWAYS mention smartgrep explicitly in search-related Task prompts',
+    '✅ Include specific smartgrep command examples',
+    '✅ Explain that it\'s available via the Bash tool',
+    '✅ Mention it\'s semantic search, not just text matching'
+  ],
+
+  bad_example: {
+    prompt: "Search for all authentication implementations in the codebase",
+    problem: "Agent will likely use regular grep or Glob, missing semantic connections"
+  },
+
+  good_example: {
+    prompt: `Search for all authentication implementations in the codebase. 
+    
+IMPORTANT: Use the Bash tool to run smartgrep for semantic search:
+- 'bun run smartgrep group auth' - finds ALL auth patterns
+- 'bun run smartgrep "authenticate" --type function' - finds auth functions
+- 'bun run smartgrep refs "AuthService"' - finds all references
+
+Smartgrep understands code structure and is much more effective than grep.`,
+    benefit: "Agent now knows to use smartgrep and how to use it effectively!"
+  },
+
+  template: `When creating Task prompts for code searching, include:
+
+"Use the Bash tool to run smartgrep commands for semantic code search:
+- 'bun run smartgrep [pattern]' for literal searches
+- 'bun run smartgrep group [concept]' for semantic pattern groups
+- 'bun run smartgrep refs [term]' for cross-references
+This is much more effective than regular grep as it understands code structure."`,
+
+  reminder: '💡 Task agents are powerful but need explicit guidance about available tools!'
 };

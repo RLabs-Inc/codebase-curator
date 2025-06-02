@@ -1,0 +1,82 @@
+#compdef monitor
+# Zsh completion for monitor
+# Install: Place in a directory in your $fpath (e.g., /usr/local/share/zsh/site-functions/)
+
+_monitor() {
+    local -a commands options
+    
+    commands=(
+        'watch:Monitor file changes in real-time'
+        'monitor:Monitor file changes in real-time (alias for watch)'
+        'overview:Show static codebase analysis'
+        'status:Show detailed technical status'
+        'rebuild:Force rebuild the semantic index'
+    )
+    
+    options=(
+        '--overview[Show live overview dashboard during monitoring]'
+        '-o[Show live overview dashboard (shorthand)]'
+        '--help[Show help information]'
+    )
+    
+    # Main completion logic
+    case $state in
+        '')
+            if (( CURRENT == 2 )); then
+                # First argument - show commands
+                _describe -t commands 'monitor commands' commands
+            elif (( CURRENT == 3 )); then
+                # Second argument - depends on command
+                case ${words[2]} in
+                    watch|monitor)
+                        # Can be options or directory
+                        _arguments $options
+                        _directories
+                        ;;
+                    overview|status|rebuild)
+                        # Only directories
+                        _directories
+                        ;;
+                esac
+            elif (( CURRENT > 3 )); then
+                # Subsequent arguments
+                case ${words[2]} in
+                    watch|monitor)
+                        # Still accept options and directories
+                        _arguments $options
+                        _directories
+                        ;;
+                    *)
+                        # Other commands only accept one directory
+                        ;;
+                esac
+            fi
+            ;;
+    esac
+}
+
+# Helper descriptions for commands
+_monitor_commands() {
+    local -a monitor_commands
+    monitor_commands=(
+        'watch:Monitor file changes in real-time'
+        'monitor:Monitor file changes in real-time (alias)'
+        'overview:Show static codebase analysis'
+        'status:Show detailed technical status'
+        'rebuild:Force rebuild the semantic index'
+    )
+    _describe -t commands 'monitor command' monitor_commands
+}
+
+# Advanced argument handling
+_monitor_arguments() {
+    _arguments -s \
+        '1:command:_monitor_commands' \
+        '--overview[Show live overview dashboard]' \
+        '-o[Show live overview dashboard]' \
+        '--help[Show help information]' \
+        '*:directory:_directories'
+}
+
+# Use the argument handler
+_monitor_arguments

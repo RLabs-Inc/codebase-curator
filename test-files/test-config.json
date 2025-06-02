@@ -1,0 +1,44 @@
+{
+  "name": "codebase-curator-test",
+  "version": "1.0.0",
+  "description": "Test configuration for JSON extractor",
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "name": "curator_db",
+    "credentials": {
+      "username": "curator_user",
+      "password": "secret_password"
+    }
+  },
+  "features": {
+    "authentication": true,
+    "caching": {
+      "enabled": true,
+      "ttl": 3600,
+      "provider": "redis"
+    },
+    "monitoring": {
+      "enabled": false,
+      "endpoints": [
+        "/health",
+        "/metrics"
+      ]
+    }
+  },
+  "api": {
+    "baseUrl": "https://api.example.com",
+    "timeout": 30000,
+    "retries": 3,
+    "endpoints": {
+      "users": "/v1/users",
+      "projects": "/v1/projects",
+      "analytics": "/v1/analytics"
+    }
+  },
+  "logging": {
+    "level": "info",
+    "format": "json",
+    "destinations": ["console", "file"]
+  }
+}

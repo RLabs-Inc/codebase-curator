@@ -1,0 +1,84 @@
+#!/bin/bash
+# Bash completion for monitor
+# Install: source this file or add to ~/.bash_completion.d/
+
+_monitor() {
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    
+    # Main commands
+    local commands="watch monitor overview status rebuild"
+    
+    # Options
+    local options="--overview -o --help"
+    
+    # Handle different contexts
+    case "${prev}" in
+        monitor)
+            # First argument - commands only
+            COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
+            ;;
+            
+        watch|monitor)
+            # After watch/monitor command, offer options and directory completion
+            if [[ ${cur} == -* ]]; then
+                COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+            else
+                # Directory completion
+                COMPREPLY=( $(compgen -d -- ${cur}) )
+            fi
+            ;;
+            
+        overview|status|rebuild)
+            # After these commands, only offer directory completion
+            COMPREPLY=( $(compgen -d -- ${cur}) )
+            ;;
+            
+        --overview|-o)
+            # After overview flag, offer directory completion
+            COMPREPLY=( $(compgen -d -- ${cur}) )
+            ;;
+            
+        *)
+            # Check command context
+            local cmd_index=1
+            local cmd=""
+            while [[ ${cmd_index} -lt ${COMP_CWORD} ]]; do
+                if [[ " ${commands} " =~ " ${COMP_WORDS[cmd_index]} " ]]; then
+                    cmd="${COMP_WORDS[cmd_index]}"
+                    break
+                fi
+                ((cmd_index++))
+            done
+            
+            case "${cmd}" in
+                watch|monitor)
+                    # In watch/monitor context, offer options or directories
+                    if [[ ${cur} == -* ]]; then
+                        COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+                    else
+                        COMPREPLY=( $(compgen -d -- ${cur}) )
+                    fi
+                    ;;
+                    
+                overview|status|rebuild)
+                    # These commands only accept directories
+                    COMPREPLY=( $(compgen -d -- ${cur}) )
+                    ;;
+                    
+                *)
+                    # No command yet, show commands
+                    COMPREPLY=( $(compgen -W "${commands}" -- ${cur}) )
+                    ;;
+            esac
+            ;;
+    esac
+    
+    return 0
+}
+
+# Register the completion function
+complete -F _monitor monitor
+complete -F _monitor bun run monitor
