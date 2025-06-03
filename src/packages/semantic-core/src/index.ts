@@ -29,3 +29,6 @@ export * from './indexing/IncrementalIndexer'
 export * from './config/config'
 export * from './types/config'
 export * from './types/core'
+
+// Re-export concept groups
+export * from './groups'

@@ -9,13 +9,16 @@ _smartgrep() {
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     
     # Main commands
-    local commands="group index refs references"
+    local commands="group refs references"
+    
+    # Group subcommands
+    local group_commands="list add remove rm"
     
     # Concept groups
     local groups="auth database cache api error user payment config test async service flow architecture import interface state event logging security build deploy"
     
     # Options
-    local options="--help --list-groups --type --file --max --exact --regex --no-context --sort --json --compact"
+    local options="--help --index --list-groups --type --file --max --exact --regex --no-context --sort --json --compact"
     
     # Type values
     local types="function class variable string comment import"
@@ -31,8 +34,8 @@ _smartgrep() {
             ;;
             
         group)
-            # After 'group', complete with concept groups
-            COMPREPLY=( $(compgen -W "${groups}" -- ${cur}) )
+            # After 'group', complete with subcommands and concept groups
+            COMPREPLY=( $(compgen -W "${group_commands} ${groups}" -- ${cur}) )
             ;;
             
         --type)
@@ -64,9 +67,23 @@ _smartgrep() {
             
         *)
             # Check if we're in a group command context
-            if [[ ${COMP_WORDS[1]} == "group" ]] && [[ ${COMP_CWORD} -gt 2 ]]; then
-                # After 'group <name>', offer options
-                COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+            if [[ ${COMP_WORDS[1]} == "group" ]]; then
+                if [[ ${COMP_CWORD} == 2 ]]; then
+                    # After 'group', complete with subcommands and concept groups
+                    COMPREPLY=( $(compgen -W "${group_commands} ${groups}" -- ${cur}) )
+                elif [[ ${COMP_WORDS[2]} == "add" ]] && [[ ${COMP_CWORD} == 3 ]]; then
+                    # After 'group add', expect group name (no completion)
+                    COMPREPLY=()
+                elif [[ ${COMP_WORDS[2]} == "remove" || ${COMP_WORDS[2]} == "rm" ]] && [[ ${COMP_CWORD} == 3 ]]; then
+                    # After 'group remove', could complete with custom groups (but we don't know them)
+                    COMPREPLY=()
+                elif [[ ${COMP_WORDS[2]} == "list" ]]; then
+                    # After 'group list', offer options
+                    COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+                elif [[ ${COMP_CWORD} -gt 2 ]]; then
+                    # After 'group <name>', offer options
+                    COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )
+                fi
             elif [[ ${cur} == -* ]]; then
                 # Current word is an option
                 COMPREPLY=( $(compgen -W "${options}" -- ${cur}) )

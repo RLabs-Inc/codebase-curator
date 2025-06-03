@@ -41,7 +41,7 @@ You get → Specific guidance that fits YOUR patterns
 - **Persistent Sessions**: Remembers context between questions
 - **Instant Follow-ups**: First question takes 2 minutes, rest are instant
 
-### 🔍 Smart Grep - Multi-Language Semantic Search
+### 🔍 Smart Grep - Semantic Search Across 10 Languages
 
 ```bash
 # Don't just search - understand (works across all languages!)
@@ -50,11 +50,13 @@ smartgrep "handleAuth"         # TypeScript/JavaScript
 smartgrep "def authenticate"   # Python functions
 smartgrep "func NewAuth"       # Go functions
 smartgrep "impl Auth"          # Rust implementations
+smartgrep "protocol Auth"      # Swift protocols
+smartgrep "function deploy"    # Shell scripts
 
 # Returns organized results:
 # → Functions: authenticate() (12 uses), validateUser() (5 uses)
 # → Classes: AuthService, AuthMiddleware  
-# → Strings: "Login failed", "Invalid token"
+# → Config: JWT_SECRET, AUTH_URL, oauth settings
 # → Cross-references: Shows actual calling code
 
 # Advanced patterns
@@ -63,12 +65,21 @@ smartgrep "login|signin|auth"   # OR search
 smartgrep "!test" --type function # Exclude tests
 ```
 
-### 🌐 Multi-Language Support
+### 🌐 Language Support - Now 10 Languages!
 
-- **TypeScript/JavaScript** - Full support including JSX/TSX, decorators
-- **Python** - Classes, functions, decorators, docstrings, type hints
-- **Go** - Functions, types, interfaces, channels, goroutines
-- **Rust** - Structs, traits, impls, macros, lifetimes
+**Programming Languages:**
+- **TypeScript/JavaScript** - Full AST parsing, JSX/TSX, ES6+
+- **Python** - Classes, decorators, async, type hints, docstrings
+- **Go** - Interfaces, goroutines, channels, embedded types
+- **Rust** - Traits, macros, lifetimes, async, unsafe blocks
+- **Swift** - Protocols, SwiftUI, extensions, property wrappers
+- **Shell** - Functions, aliases, exports, heredocs
+
+**Configuration Files:**
+- **JSON** - package.json, tsconfig.json, hierarchical parsing
+- **YAML** - CI/CD pipelines, Docker Compose, Kubernetes
+- **TOML** - Cargo.toml, pyproject.toml, structured configs
+- **Environment** - .env files with secure value masking
 
 ### 🎯 Live Monitoring Dashboard
 
@@ -113,13 +124,21 @@ bun run monitor watch --overview
 
 ### Quick Start
 
-1. **Clone and install**
+1. **Clone and install globally**
 
 ```bash
 git clone https://github.com/RLabs-Inc/codebase-curator.git
 cd codebase-curator
 bun install
+bun link  # Makes commands available globally
 ```
+
+Now you can use these commands from anywhere:
+- `smartgrep` - Semantic code search
+- `curator-monitor` - Live monitoring
+- `codebase-curator` - Interactive CLI
+
+📚 **[Full Installation Guide](./INSTALL.md)** - Detailed instructions and troubleshooting
 
 2. **Configure Claude Code MCP**
    Add to your `claude_code_config.json`:
@@ -280,6 +299,15 @@ Special thanks to the Claude Code team for making this integration possible.
 ---
 
 _Remember: Your Claude works hard to help you code. Give it the superpower it deserves!_ 🚀
+
+## 📚 Documentation
+
+- **[Installation Guide](./INSTALL.md)** - Detailed setup instructions
+- **[Language Support](./docs/LANGUAGE_SUPPORT.md)** - All 10 supported languages
+- **[Smart Grep Guide](./docs/SMART_GREP_GUIDE.md)** - Advanced search techniques
+- **[Architecture Overview](./docs/ARCHITECTURE.md)** - How it all works
+- **[Troubleshooting](./docs/TROUBLESHOOTING.md)** - Common issues and solutions
+- **[Release Notes v4.0](./docs/RELEASE_NOTES_v4.md)** - Latest updates
 
 ## 🎆 What's New
 

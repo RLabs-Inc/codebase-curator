@@ -5,298 +5,20 @@
  * Semantic search tool for codebases
  */
 
-import { SemanticService } from '@codebase-curator/semantic-core'
+import {
+  SemanticService,
+  loadConfig,
+  parseCustomGroups,
+  getGroupTerms,
+  groupExists,
+  getFormattedGroupList,
+} from '@codebase-curator/semantic-core'
 import type {
   SearchResult,
   CrossReference,
+  ConceptGroupDefinition,
 } from '@codebase-curator/semantic-core'
 
-const CONCEPT_GROUPS: Record<string, string[]> = {
-  // Authentication & Security
-  auth: [
-    'auth',
-    'authenticate',
-    'login',
-    'signin',
-    'credential',
-    'token',
-    'oauth',
-    'jwt',
-    'session',
-    'password',
-    'permission',
-    'role',
-    'access',
-  ],
-
-  // Data & Storage
-  database: [
-    'db',
-    'database',
-    'query',
-    'sql',
-    'mongo',
-    'redis',
-    'orm',
-    'migration',
-    'schema',
-    'model',
-    'repository',
-    'storage',
-  ],
-  cache: [
-    'cache',
-    'memo',
-    'store',
-    'persist',
-    'temporary',
-    'ttl',
-    'expire',
-    'invalidate',
-    'buffer',
-    'memory',
-  ],
-
-  // API & Communication
-  api: [
-    'api',
-    'endpoint',
-    'route',
-    'request',
-    'response',
-    'controller',
-    'handler',
-    'rest',
-    'graphql',
-    'webhook',
-    'rpc',
-  ],
-
-  // Error & Status
-  error: [
-    'error',
-    'exception',
-    'fail',
-    'invalid',
-    'warning',
-    'catch',
-    'throw',
-    'reject',
-    'status',
-    'bug',
-    'issue',
-    'problem',
-  ],
-
-  // Users & Entities
-  user: [
-    'user',
-    'account',
-    'profile',
-    'member',
-    'customer',
-    'person',
-    'client',
-    'subscriber',
-    'admin',
-    'guest',
-  ],
-
-  // Business Logic
-  payment: [
-    'payment',
-    'billing',
-    'charge',
-    'invoice',
-    'transaction',
-    'stripe',
-    'paypal',
-    'subscription',
-    'refund',
-    'price',
-  ],
-
-  // Configuration & Settings
-  config: [
-    'config',
-    'setting',
-    'environment',
-    'env',
-    'constant',
-    'variable',
-    'option',
-    'preference',
-    'parameter',
-    'flag',
-  ],
-
-  // Testing & Quality
-  test: [
-    'test',
-    'spec',
-    'mock',
-    'fixture',
-    'assert',
-    'expect',
-    'describe',
-    'it',
-    'jest',
-    'vitest',
-    'unit',
-    'integration',
-  ],
-
-  // Async & Concurrency
-  async: [
-    'async',
-    'await',
-    'promise',
-    'then',
-    'catch',
-    'finally',
-    'callback',
-    'resolve',
-    'reject',
-    'concurrent',
-    'parallel',
-  ],
-
-  // Architecture & Structure (NEW - based on curator's usage)
-  service: [
-    'service',
-    'provider',
-    'manager',
-    'orchestrator',
-    'handler',
-    'processor',
-    'worker',
-    'helper',
-    'utility',
-  ],
-  flow: [
-    'flow',
-    'stream',
-    'pipeline',
-    'process',
-    'workflow',
-    'sequence',
-    'chain',
-    'step',
-    'stage',
-    'phase',
-  ],
-  architecture: [
-    'architecture',
-    'pattern',
-    'structure',
-    'design',
-    'layer',
-    'module',
-    'component',
-    'system',
-    'framework',
-  ],
-
-  // Code Organization (NEW)
-  import: [
-    'import',
-    'export',
-    'require',
-    'module',
-    'dependency',
-    'package',
-    'library',
-    'from',
-    'default',
-  ],
-  interface: [
-    'interface',
-    'type',
-    'contract',
-    'protocol',
-    'schema',
-    'definition',
-    'spec',
-    'api',
-    'abstract',
-  ],
-
-  // State & Data Flow (NEW)
-  state: [
-    'state',
-    'store',
-    'redux',
-    'context',
-    'global',
-    'local',
-    'session',
-    'memory',
-    'data',
-  ],
-  event: [
-    'event',
-    'emit',
-    'listen',
-    'subscribe',
-    'publish',
-    'trigger',
-    'dispatch',
-    'broadcast',
-    'handler',
-  ],
-
-  // Infrastructure & Operations (NEW)
-  logging: [
-    'log',
-    'logger',
-    'console',
-    'debug',
-    'info',
-    'warn',
-    'error',
-    'trace',
-    'monitor',
-    'telemetry',
-  ],
-  security: [
-    'security',
-    'encrypt',
-    'decrypt',
-    'hash',
-    'salt',
-    'certificate',
-    'ssl',
-    'tls',
-    'cors',
-    'xss',
-    'csrf',
-  ],
-
-  // Development Workflow (NEW)
-  build: [
-    'build',
-    'compile',
-    'bundle',
-    'webpack',
-    'rollup',
-    'vite',
-    'esbuild',
-    'transpile',
-    'minify',
-  ],
-  deploy: [
-    'deploy',
-    'release',
-    'publish',
-    'ci',
-    'cd',
-    'docker',
-    'kubernetes',
-    'server',
-    'host',
-    'production',
-  ],
-}
 
 async function main() {
   const args = process.argv.slice(2)
@@ -307,60 +29,200 @@ async function main() {
   }
 
   const projectPath = process.cwd()
-  const service = new SemanticService()
+  const service = new SemanticService(projectPath)
 
   // Parse command and options
   const command = args[0]
 
-  switch (command) {
-    case 'index':
-      await handleIndex(service, projectPath)
-      break
-
-    case '--groups':
-    case '--list-groups':
-      showConceptGroups()
-      break
-
-    case 'group':
-      // Handle concept group search
-      if (args.length < 2) {
-        console.error('Please specify a concept group. Available groups:')
-        showConceptGroups()
+  // Handle flag-based commands first
+  if (command.startsWith('--')) {
+    switch (command) {
+      case '--index':
+        await handleIndex(service, projectPath)
+        break
+      
+      case '--list-groups': // Keep this for backward compatibility
+        await handleGroupCommand(projectPath, ['list'])
+        break
+        
+      default:
+        console.error(`Unknown command: ${command}`)
+        showHelp()
         process.exit(1)
-      }
-      const groupName = args[1].toLowerCase()
-      const conceptGroup = CONCEPT_GROUPS[groupName]
-      if (!conceptGroup) {
-        console.error(`Unknown concept group: "${groupName}"`)
-        console.error('\nAvailable groups:')
-        showConceptGroups()
-        process.exit(1)
-      }
-      // Search using the concept group
-      await handleGroupSearch(
-        service,
-        projectPath,
-        groupName,
-        conceptGroup,
-        args.slice(2)
-      )
-      break
-
-    case 'refs':
-    case 'references':
-      // Show references for a specific term
-      if (args.length < 2) {
-        console.error('Please provide a term to find references for')
-        process.exit(1)
-      }
-      await handleReferences(service, projectPath, args[1])
-      break
-
-    default:
-      // Default to search
-      await handleSearch(service, projectPath, args)
+    }
+    return
   }
+
+  // Handle group subcommands
+  if (command === 'group') {
+    await handleGroupCommand(projectPath, args.slice(1), service)
+    return
+  }
+
+  // Handle refs/references
+  if (command === 'refs' || command === 'references') {
+    if (args.length < 2) {
+      console.error('Please provide a term to find references for')
+      process.exit(1)
+    }
+    await handleReferences(service, projectPath, args[1])
+    return
+  }
+
+  // Default: treat everything else as search
+  await handleSearch(service, projectPath, args)
+}
+
+/**
+ * Handle all group-related commands
+ */
+async function handleGroupCommand(
+  projectPath: string, 
+  args: string[], 
+  service?: SemanticService
+) {
+  if (args.length === 0) {
+    console.error('Please specify a group action: list, add, remove, or <group-name>')
+    console.error('\nExamples:')
+    console.error('  smartgrep group list')
+    console.error('  smartgrep group auth')
+    console.error('  smartgrep group add mygroup term1,term2,term3')
+    console.error('  smartgrep group remove mygroup')
+    process.exit(1)
+  }
+
+  const action = args[0].toLowerCase()
+  
+  switch (action) {
+    case 'list':
+      await handleGroupList(projectPath)
+      break
+      
+    case 'add':
+      await handleGroupAdd(projectPath, args.slice(1))
+      break
+      
+    case 'remove':
+    case 'rm':
+      await handleGroupRemove(projectPath, args.slice(1))
+      break
+      
+    default:
+      // Treat as group search
+      if (!service) {
+        console.error('Service not available for group search')
+        process.exit(1)
+      }
+      await handleGroupSearchCommand(service, projectPath, action, args.slice(1))
+  }
+}
+
+async function handleGroupList(projectPath: string) {
+  const config = loadConfig(projectPath)
+  const customGroups = parseCustomGroups(config.customGroups || {})
+  console.log(getFormattedGroupList(customGroups))
+}
+
+async function handleGroupAdd(projectPath: string, args: string[]) {
+  if (args.length < 2) {
+    console.error('Usage: smartgrep group add <name> <term1,term2,term3...>')
+    console.error('Example: smartgrep group add payments charge,bill,invoice,transaction')
+    process.exit(1)
+  }
+
+  const groupName = args[0].toLowerCase()
+  const termsString = args[1]
+  const terms = termsString.split(',').map(t => t.trim()).filter(t => t)
+
+  if (terms.length === 0) {
+    console.error('Please provide at least one term for the group')
+    process.exit(1)
+  }
+
+  // Load existing config
+  const config = loadConfig(projectPath)
+  
+  // Initialize customGroups if not exists
+  if (!config.customGroups) {
+    config.customGroups = {}
+  }
+
+  // Add the new group
+  config.customGroups[groupName] = terms
+
+  // Save config using Bun's API
+  const configPath = getConfigPath(projectPath)
+  await Bun.write(configPath, JSON.stringify(config, null, 2))
+
+  console.log(`✅ Added custom group "${groupName}" with ${terms.length} terms:`)
+  console.log(`   Terms: ${terms.join(', ')}`)
+  console.log(`   Usage: smartgrep group ${groupName}`)
+}
+
+async function handleGroupRemove(projectPath: string, args: string[]) {
+  if (args.length < 1) {
+    console.error('Usage: smartgrep group remove <name>')
+    console.error('Example: smartgrep group remove payments')
+    process.exit(1)
+  }
+
+  const groupName = args[0].toLowerCase()
+  
+  // Load existing config
+  const config = loadConfig(projectPath)
+  
+  if (!config.customGroups || !config.customGroups[groupName]) {
+    console.error(`❌ Custom group "${groupName}" not found`)
+    console.error('Use "smartgrep group list" to see available groups')
+    process.exit(1)
+  }
+
+  // Remove the group
+  delete config.customGroups[groupName]
+
+  // Clean up empty customGroups object
+  if (Object.keys(config.customGroups).length === 0) {
+    delete config.customGroups
+  }
+
+  // Save config using Bun's API
+  const configPath = getConfigPath(projectPath)
+  await Bun.write(configPath, JSON.stringify(config, null, 2))
+
+  console.log(`✅ Removed custom group "${groupName}"`)
+}
+
+function getConfigPath(projectPath: string): string {
+  return `${projectPath}/.curatorconfig.json`
+}
+
+async function handleGroupSearchCommand(
+  service: SemanticService,
+  projectPath: string,
+  groupName: string,
+  extraArgs: string[]
+) {
+  const config = loadConfig(projectPath)
+  const customGroups = parseCustomGroups(config.customGroups || {})
+  
+  if (!groupExists(groupName, customGroups)) {
+    console.error(`Unknown concept group: "${groupName}"`)
+    console.error('\nAvailable groups:')
+    const formattedList = getFormattedGroupList(customGroups)
+    console.log(formattedList)
+    process.exit(1)
+  }
+  
+  const conceptGroup = getGroupTerms(groupName, customGroups)
+  
+  // Search using the concept group
+  await handleGroupSearch(
+    service,
+    projectPath,
+    groupName,
+    conceptGroup,
+    extraArgs
+  )
 }
 
 // Helper functions for advanced search patterns
@@ -759,7 +621,7 @@ function displayResultsBody(
   showContext: boolean = true
 ) {
   if (results.length === 0) {
-    console.log(`No results found for "${query}"`)
+    console.log('No results found')
     return
   }
 
@@ -897,10 +759,14 @@ function showHelp() {
 
 Usage:
   smartgrep <query>                Search for a term or pattern
-  smartgrep group <name>           Search using a concept group
-  smartgrep index                  Rebuild the semantic index
+  smartgrep --index                Rebuild the semantic index
   smartgrep refs <term>            Show where a term is referenced
-  smartgrep --list-groups          Show available concept groups
+
+🏷️ Group Commands:
+  smartgrep group list             List all available concept groups
+  smartgrep group <name>           Search using a concept group
+  smartgrep group add <name> <terms>   Add custom concept group
+  smartgrep group remove <name>    Remove custom concept group
 
 🎯 Search Patterns:
   term1|term2|term3               OR search - find any of these terms
@@ -934,7 +800,12 @@ Usage:
   smartgrep group service     Service classes and patterns
   smartgrep group error       Error handling patterns
   smartgrep group flow        Data flow and streaming
-  ...and more! Use --list-groups to see all available groups
+  ...and more! Use "smartgrep group list" to see all available groups
+
+🎨 Custom Groups:
+  smartgrep group add payments charge,bill,invoice,transaction
+  smartgrep group payments --type function    # Search your custom group
+  smartgrep group remove payments             # Remove when no longer needed
 
 💡 Examples:
   smartgrep "authenticateUser"                  # Find function with usage info
@@ -946,31 +817,21 @@ Usage:
   smartgrep "CuratorService" --json             # Machine-readable output
   smartgrep refs "processPayment"               # Full impact analysis
   smartgrep group service --type class --max 10 # Top 10 service classes
+  smartgrep group add api endpoint,route,handler,controller  # Add custom group
 
 📍 Pro Tips:
   • The tool shows function signatures, surrounding context, and related code
   • Cross-references include the actual code making the reference
   • Use --no-context for a cleaner view when browsing many results
   • Combine filters for precise searches: --type function --file "*.service.*"
+  • Create project-specific groups to match your domain and architecture
 
 The tool indexes your entire codebase on first use.
 Subsequent searches are instant using the cached semantic index.
+Custom groups are saved to .curatorconfig.json in your project root.
 `)
 }
 
-function showConceptGroups() {
-  console.log('\n📚 Available Concept Groups:\n')
-
-  for (const [group, terms] of Object.entries(CONCEPT_GROUPS)) {
-    console.log(`${getGroupIcon(group)} ${group}`)
-    console.log(
-      `   Terms: ${terms.slice(0, 5).join(', ')}${
-        terms.length > 5 ? ', ...' : ''
-      }`
-    )
-    console.log(`   Usage: smartgrep group ${group}\n`)
-  }
-}
 
 function getReferenceIcon(type: string): string {
   const icons: Record<string, string> = {

@@ -12,7 +12,14 @@ import * as readline from 'readline'
 
 interface CLIArgs {
   path: string
-  command: 'overview' | 'ask' | 'feature' | 'change' | 'chat' | 'memory' | 'clear'
+  command:
+    | 'overview'
+    | 'ask'
+    | 'feature'
+    | 'change'
+    | 'chat'
+    | 'memory'
+    | 'clear'
   output?: 'json' | 'summary' | 'detailed'
   help?: boolean
   question?: string
@@ -96,9 +103,13 @@ function parseArgs(): CLIArgs {
       if (positionalArgs.length > 1) {
         // Check if second arg is a path or part of the command input
         const secondArg = positionalArgs[1]
-        
+
         // If it looks like a path (starts with ./ or / or exists as directory)
-        if (secondArg.startsWith('./') || secondArg.startsWith('/') || existsSync(secondArg)) {
+        if (
+          secondArg.startsWith('./') ||
+          secondArg.startsWith('/') ||
+          existsSync(secondArg)
+        ) {
           result.path = secondArg
           // Remaining args are the input
           if (positionalArgs.length > 2) {
@@ -138,7 +149,15 @@ function parseArgs(): CLIArgs {
 }
 
 function isValidCommand(cmd: string): boolean {
-  return ['overview', 'ask', 'feature', 'change', 'chat', 'memory', 'clear'].includes(cmd)
+  return [
+    'overview',
+    'ask',
+    'feature',
+    'change',
+    'chat',
+    'memory',
+    'clear',
+  ].includes(cmd)
 }
 
 function showHelp() {
@@ -213,22 +232,30 @@ async function saveToCurator(
   return filepath
 }
 
-async function startInteractiveChat(curator: any, projectPath: string, newSession: boolean = false) {
+async function startInteractiveChat(
+  curator: any,
+  projectPath: string,
+  newSession: boolean = false
+) {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: '\n💬 You: '
+    prompt: '\n💬 You: ',
   })
 
   console.log('\n🤖 Curator Chat Session')
   console.log('═'.repeat(50))
-  console.log('Type your questions, "exit" to quit, or "clear" to start fresh\n')
+  console.log(
+    'Type your questions, "exit" to quit, or "clear" to start fresh\n'
+  )
 
   // Get initial overview if new session
   if (newSession) {
     console.log('📊 Getting codebase overview...')
-    const overview = await curator.getCodebaseOverview({ projectPath, newSession: true })
-    console.log('\n🤖 Curator: I\'ve analyzed your codebase. Here\'s what I found:')
+    const overview = await curator.getOverview(projectPath, true)
+    console.log(
+      "\n🤖 Curator: I've analyzed your codebase. Here's what I found:"
+    )
     console.log(overview.slice(0, 500) + '...')
     console.log('\nFeel free to ask me anything about your code!')
   }
@@ -237,7 +264,7 @@ async function startInteractiveChat(curator: any, projectPath: string, newSessio
 
   rl.on('line', async (line) => {
     const input = line.trim()
-    
+
     if (input.toLowerCase() === 'exit') {
       console.log('\n👋 Thanks for chatting! Your session has been saved.')
       rl.close()
@@ -257,11 +284,14 @@ async function startInteractiveChat(curator: any, projectPath: string, newSessio
         const response = await curator.askCurator({
           question: input,
           projectPath,
-          newSession: false
+          newSession: false,
         })
         console.log('\n' + response.content)
       } catch (error) {
-        console.error('\n❌ Error:', error instanceof Error ? error.message : error)
+        console.error(
+          '\n❌ Error:',
+          error instanceof Error ? error.message : error
+        )
       }
     }
 
@@ -302,10 +332,7 @@ async function main() {
     switch (args.command) {
       case 'overview':
         console.log(`\n🔍 Analyzing ${resolvedPath}...\n`)
-        output = await curator.getCodebaseOverview({ 
-          projectPath: resolvedPath,
-          newSession: args.newSession 
-        })
+        output = await curator.getOverview(resolvedPath, args.newSession)
         console.log(output)
         break
 
@@ -341,7 +368,9 @@ async function main() {
       case 'change':
         if (!args.change) {
           console.error('❌ Error: Please provide a change description')
-          console.log('\nExample: curator change "Fix memory leak in data processing"')
+          console.log(
+            '\nExample: curator change "Fix memory leak in data processing"'
+          )
           process.exit(1)
         }
         console.log(`\n🔍 Planning change for ${resolvedPath}...\n`)
@@ -358,13 +387,13 @@ async function main() {
 
       case 'memory':
         console.log(`\n🧠 Curator Memory for ${resolvedPath}\n`)
-        const memory = await curator.getCuratorMemory({ projectPath: resolvedPath })
+        const memory = await curator.getCuratorMemory(resolvedPath)
         console.log(memory)
         break
 
       case 'clear':
         console.log(`\n🧹 Clearing curator memory for ${resolvedPath}...`)
-        await curator.clearCuratorSession({ projectPath: resolvedPath })
+        await curator.clearSession(resolvedPath)
         console.log('✅ Memory cleared! Next interaction will start fresh.')
         break
 
@@ -377,7 +406,11 @@ async function main() {
     // Save output if requested
     if (output && args.output === 'json') {
       const saved = await saveToCurator(
-        { data: output, command: args.command, timestamp: new Date().toISOString() },
+        {
+          data: output,
+          command: args.command,
+          timestamp: new Date().toISOString(),
+        },
         args.command,
         resolvedPath
       )

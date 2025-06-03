@@ -199,14 +199,29 @@ bun install  # Installs workspace dependencies
 # Search for literal term
 bun run smartgrep "handleAuth"
 
-# Search concept group
-bun run smartgrep group auth
-
-# List all concept groups
-bun run smartgrep --list-groups
+# Rebuild semantic index
+bun run smartgrep --index
 
 # Find references
 bun run smartgrep refs "apiClient"
+```
+
+### Group Commands (Built-in + Custom)
+```bash
+# List all available groups
+bun run smartgrep group list
+
+# Search built-in concept group
+bun run smartgrep group auth
+
+# Add custom concept group
+bun run smartgrep group add payments charge,bill,invoice,transaction
+
+# Search your custom group
+bun run smartgrep group payments --type function
+
+# Remove custom group
+bun run smartgrep group remove payments
 ```
 
 ### Advanced Patterns
@@ -245,6 +260,25 @@ bun run smartgrep "service" --file "*.ts" --max 10
 
 # Compact output for scanning
 bun run smartgrep group api --compact
+
+# Custom group with filters
+bun run smartgrep group myapi --type class,function --sort usage
+```
+
+### Custom Groups Configuration
+Custom groups are saved to `.curatorconfig.json` in your project root:
+```json
+{
+  "customGroups": {
+    "payments": ["charge", "bill", "invoice", "transaction"],
+    "frontend": {
+      "name": "frontend",
+      "description": "Frontend-specific patterns",
+      "emoji": "🎨",
+      "terms": ["component", "props", "state", "render", "ui"]
+    }
+  }
+}
 ```
 
 Remember: The goal is to help AI assistants write code that truly fits into existing codebases, not just syntactically correct code in isolation.

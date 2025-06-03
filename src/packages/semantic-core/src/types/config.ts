@@ -1,9 +1,15 @@
+import type { ConceptGroupDefinition } from '../groups/ConceptGroups'
+
 export interface CuratorConfig {
   // Patterns to exclude from analysis (in addition to defaults)
   exclude?: string[]
 
   // Patterns to explicitly include (overrides defaults but not user excludes)
   include?: string[]
+
+  // Custom concept groups for this project
+  // Can be either a simple array of terms or a full group definition
+  customGroups?: Record<string, string[] | ConceptGroupDefinition>
 
   // Output preferences
   output?: {

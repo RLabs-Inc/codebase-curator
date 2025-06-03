@@ -22,7 +22,7 @@ const COMMON_CURATOR_INSTRUCTIONS = `
 **Your Investigation Strategy** 🎯:
 
 ⚠️ **ALWAYS START WITH SMART GREP!** Don't use Task for initial exploration - it's slower!
-- First command should be: \`bun run smartgrep <pattern>\` or \`bun run smartgrep group <concept>\` via Bash tool
+- First command should be: \`smartgrep <pattern>\` or \`smartgrep group <concept>\` via Bash tool
 - Smart grep gives you organized, semantic results FAST
 - Only use Task for complex parallel investigations AFTER initial smart grep
 
@@ -87,8 +87,7 @@ All three agents work in parallel and report back comprehensive findings!
 smartgrep is a game-changer! It shows usage counts, cross-references, and rich context:
 
 **How to use it:** Run via Bash tool
-- Development: \`bun run smartgrep <query>\`
-- Production: \`smartgrep <query>\` (when codebase-curator is installed)
+- Command: \`smartgrep <query>\`
 
 **NEW SEARCH PATTERNS (v3.0):**
 - \`smartgrep "addCrossReference|getReferences"\` → OR pattern - find any of these
@@ -122,7 +121,9 @@ smartgrep is a game-changer! It shows usage counts, cross-references, and rich c
 - \`smartgrep group service\` → Service classes and patterns
 - \`smartgrep group database\` → DB patterns (query, model, repository...)
 - \`smartgrep group api\` → API patterns (endpoint, route, controller...)
-- \`smartgrep --list-groups\` → See all 20+ concept groups with their keywords!
+- \`smartgrep group list\` → See all 20+ concept groups with their keywords!
+- \`smartgrep group add mygroup term1,term2\` → Add custom project-specific groups
+- \`smartgrep group remove mygroup\` → Remove custom groups when no longer needed
 
 **Pro tips:**
 - Use OR patterns instead of multiple greps: \`smartgrep "login|signin|auth"\`
@@ -136,7 +137,7 @@ smartgrep is a game-changer! It shows usage counts, cross-references, and rich c
 1. **Start with semantic search**:
    - Use \`smartgrep group <concept>\` for broad concept exploration
    - Use \`smartgrep "term"\` for specific term search
-   - Use \`smartgrep --list-groups\` to see available concept groups
+   - Use \`smartgrep group list\` to see available concept groups
    - Use Glob to understand file structure
    - Use Grep for file content patterns
    - Use LS to explore directories

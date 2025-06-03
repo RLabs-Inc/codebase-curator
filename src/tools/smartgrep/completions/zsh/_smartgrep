@@ -6,10 +6,16 @@ _smartgrep() {
     local -a commands groups options types sorts
     
     commands=(
-        'group:Search using a concept group'
-        'index:Rebuild the semantic index'
+        'group:Group operations (list, add, remove, search)'
         'refs:Show where a term is referenced'
         'references:Show where a term is referenced (alias for refs)'
+    )
+    
+    group_commands=(
+        'list:List all available concept groups'
+        'add:Add custom concept group'
+        'remove:Remove custom concept group'
+        'rm:Remove custom concept group (alias)'
     )
     
     groups=(
@@ -38,7 +44,8 @@ _smartgrep() {
     
     options=(
         '--help[Show help information]'
-        '--list-groups[Show all available concept groups]'
+        '--index[Rebuild the semantic index]'
+        '--list-groups[Show all available concept groups (deprecated, use group list)]'
         '--type[Filter by type]:type:_smartgrep_types'
         '--file[Filter by file patterns]:pattern:'
         '--max[Maximum results to show]:number:(10 20 50 100)'
@@ -70,14 +77,21 @@ _smartgrep() {
     case $state in
         '')
             if (( CURRENT == 2 )); then
-                # First argument
+                # First argument - commands or options
                 _describe -t commands 'smartgrep commands' commands
                 _arguments $options
             elif (( CURRENT == 3 )) && [[ ${words[2]} == "group" ]]; then
-                # After 'group' command
+                # After 'group' command - subcommands and group names
+                _describe -t group_commands 'group subcommands' group_commands
                 _describe -t groups 'concept groups' groups
+            elif (( CURRENT == 4 )) && [[ ${words[2]} == "group" ]] && [[ ${words[3]} == "remove" || ${words[3]} == "rm" ]]; then
+                # After 'group remove' - would need custom groups, but we can't easily get them
+                _message "custom group name to remove"
+            elif (( CURRENT == 4 )) && [[ ${words[2]} == "group" ]] && [[ ${words[3]} == "add" ]]; then
+                # After 'group add' - new group name
+                _message "new custom group name"
             elif (( CURRENT > 2 )); then
-                # Subsequent arguments
+                # Subsequent arguments - options
                 _arguments $options
             fi
             ;;

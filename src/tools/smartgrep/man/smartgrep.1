@@ -9,10 +9,19 @@ smartgrep \- semantic code search with cross-references and usage analysis
 .B smartgrep
 [\fIquery\fR] [\fIoptions\fR]
 .br
+.B smartgrep
+\-\-index
+.br
+.B smartgrep group list
+.br
 .B smartgrep group
 \fIname\fR [\fIoptions\fR]
 .br
-.B smartgrep index
+.B smartgrep group add
+\fIname\fR \fIterm1,term2,...\fR
+.br
+.B smartgrep group remove
+\fIname\fR
 .br
 .B smartgrep refs
 \fIterm\fR
@@ -29,7 +38,7 @@ Usage counts showing how often code is referenced
 .IP \(bu 2
 Cross-references showing actual calling code
 .IP \(bu 2
-20+ concept groups for semantic pattern matching
+20+ built-in concept groups plus custom project-specific groups
 .IP \(bu 2
 Type-aware filtering (functions, classes, variables, etc.)
 .IP \(bu 2
@@ -51,16 +60,29 @@ Search for a term or pattern in the codebase. Supports advanced patterns:
 .RE
 
 .TP
+.B \-\-index
+Rebuild the semantic index. Run this after significant code changes or when
+first using smartgrep on a new codebase.
+
+.TP
+.B group list
+List all available concept groups (both built-in and custom).
+
+.TP
 .B group \fIname\fR
-Search using a predefined concept group. Available groups include:
+Search using a concept group. Available built-in groups include:
 .B auth, api, error, database, cache, user, payment, config, test, async,
 .B service, flow, architecture, import, interface, state, event, logging,
 .B security, build, deploy
 
 .TP
-.B index
-Rebuild the semantic index. Run this after significant code changes or when
-first using smartgrep on a new codebase.
+.B group add \fIname\fR \fIterm1,term2,...\fR
+Add a custom concept group with the specified terms. Custom groups are saved
+to \fI.curatorconfig.json\fR in your project root.
+
+.TP
+.B group remove \fIname\fR
+Remove a custom concept group.
 
 .TP
 .B refs \fIterm\fR
@@ -73,8 +95,12 @@ impact analysis.
 Display help information and exit.
 
 .TP
+.B \-\-index
+Rebuild the semantic index. Use this after significant code changes.
+
+.TP
 .B \-\-list\-groups
-Show all available concept groups with their keywords.
+Show all available concept groups with their keywords (deprecated, use 'group list').
 
 .TP
 .B \-\-type \fItypes\fR
@@ -147,6 +173,22 @@ Show all references to PaymentService.
 .B smartgrep group error \-\-sort usage
 Find error handling patterns sorted by usage.
 
+.TP
+.B smartgrep group add payments charge,bill,invoice,transaction
+Add a custom concept group for payment-related terms.
+
+.TP
+.B smartgrep group payments \-\-type function
+Search for payment-related functions using your custom group.
+
+.TP
+.B smartgrep group list
+Show all available concept groups (built-in and custom).
+
+.TP
+.B smartgrep group remove payments
+Remove the custom payments group.
+
 .SH CONCEPT GROUPS
 Concept groups provide semantic pattern matching:
 
@@ -172,6 +214,10 @@ Use \fB\-\-list\-groups\fR to see all available groups.
 .TP
 .I .curator/semantic-index.json
 Cached semantic index for fast searching.
+
+.TP
+.I .curatorconfig.json
+Project configuration file containing custom concept groups and other settings.
 
 .SH ENVIRONMENT
 .TP

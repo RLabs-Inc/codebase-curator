@@ -274,13 +274,102 @@ export class SemanticIndexImpl implements SemanticIndex {
   }
 
   async save(path: string): Promise<void> {
-    const data = {
-      entries: Array.from(this.entries.entries()),
-      termIndex: Array.from(this.termIndex.entries()),
-      crossReferences: Array.from(this.crossReferences.entries()),
-      fileReferences: Array.from(this.fileReferences.entries()),
+    const stats = this.getStats()
+    
+    // For massive codebases (>50K entries), use a lightweight summary format
+    if (stats.totalEntries > 50000) {
+      console.log(`💾 Large index detected (${stats.totalEntries} entries) - using summary format`)
+      
+      const summary = {
+        type: 'large_index_summary',
+        stats,
+        timestamp: Date.now(),
+        note: 'Full index too large for JSON serialization. Search functionality remains active in memory.',
+        // Save just the most important data
+        topTerms: this.getTopTerms(100),
+        fileCount: this.entries.size,
+        version: '1.0'
+      }
+      
+      await Bun.write(path, JSON.stringify(summary, null, 2))
+      console.log(`✅ Summary saved to ${path}`)
+      return
     }
-    await Bun.write(path, JSON.stringify(data, null, 2))
+
+    // For smaller indexes, use full serialization with streaming
+    const file = Bun.file(path)
+    const writer = file.writer({ highWaterMark: 256 * 1024 })
+
+    try {
+      writer.write('{\n  "entries": [')
+      await this.streamSerializeMap(writer, this.entries, true)
+      
+      writer.write('\n  ],\n  "termIndex": [')
+      await this.streamSerializeMap(writer, this.termIndex, true)
+      
+      writer.write('\n  ],\n  "crossReferences": [')
+      await this.streamSerializeMap(writer, this.crossReferences, true)
+      
+      writer.write('\n  ],\n  "fileReferences": [')
+      await this.streamSerializeMap(writer, this.fileReferences, true)
+      
+      writer.write('\n  ]\n}')
+    } finally {
+      await writer.end()
+    }
+  }
+
+  private getTopTerms(limit: number): Array<{term: string, count: number}> {
+    const termCounts = new Map<string, number>()
+    
+    for (const [term, infos] of this.termIndex.entries()) {
+      termCounts.set(term, infos.length)
+    }
+    
+    return Array.from(termCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, limit)
+      .map(([term, count]) => ({ term, count }))
+  }
+
+  private async streamSerializeMap(
+    writer: any,
+    map: Map<any, any>,
+    isFirst: boolean
+  ): Promise<void> {
+    let count = 0
+    const CHUNK_SIZE = 10 // Process in small chunks
+    
+    for (const [key, value] of map.entries()) {
+      if (!isFirst || count > 0) writer.write(',')
+      
+      // Serialize individual items, not arrays
+      writer.write('\n    [')
+      writer.write(JSON.stringify(key))
+      writer.write(', ')
+      
+      // For arrays of SemanticInfo, serialize each item separately
+      if (Array.isArray(value)) {
+        writer.write('[')
+        let arrayFirst = true
+        for (const item of value) {
+          if (!arrayFirst) writer.write(',')
+          writer.write(JSON.stringify(item))
+          arrayFirst = false
+        }
+        writer.write(']')
+      } else {
+        writer.write(JSON.stringify(value))
+      }
+      
+      writer.write(']')
+      count++
+      
+      // Flush periodically to prevent memory buildup
+      if (count % CHUNK_SIZE === 0) {
+        await writer.flush()
+      }
+    }
   }
 
   async load(path: string): Promise<void> {

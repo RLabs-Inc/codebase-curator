@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 import type { CuratorConfig } from '../types/config'
 import { DEFAULT_EXCLUSIONS } from '../types/config'
+import type { ConceptGroupDefinition } from '../groups/ConceptGroups'
 
 export function loadConfig(projectPath: string): CuratorConfig {
   // Look for config file in project directory
@@ -61,6 +62,38 @@ export function shouldExclude(
     // For now, just do simple wildcard matching
     return minimatch(filePath, pattern)
   })
+}
+
+/**
+ * Parse and normalize custom groups from config
+ * Supports both simple arrays and full group definitions
+ */
+export function parseCustomGroups(
+  customGroups: Record<string, string[] | ConceptGroupDefinition> = {}
+): Record<string, ConceptGroupDefinition> {
+  const normalized: Record<string, ConceptGroupDefinition> = {}
+
+  for (const [name, group] of Object.entries(customGroups)) {
+    if (Array.isArray(group)) {
+      // Simple array format: { "mygroup": ["term1", "term2"] }
+      normalized[name] = {
+        name,
+        description: `Custom group: ${name}`,
+        emoji: '🎨',
+        terms: group,
+      }
+    } else {
+      // Full group definition format
+      normalized[name] = {
+        name,
+        description: group.description || `Custom group: ${name}`,
+        emoji: group.emoji || '🎨',
+        terms: group.terms,
+      }
+    }
+  }
+
+  return normalized
 }
 
 // Simple minimatch implementation for basic patterns

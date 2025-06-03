@@ -38,17 +38,17 @@ export const PROJECT_SPECIAL_TOOLS = {
   overview: `🛠️ AI-Optimized Tools Available in This Project:
 
 1. **Smart Grep** - Semantic code search that understands your code
-   Command: \`bun run smartgrep [pattern]\`
+   Command: \`smartgrep [pattern]\`
    
    • 10x faster than regular grep
    • Understands code structure (functions, classes, etc.)
    • Shows usage counts and cross-references
    • Supports concept groups (auth, api, error, etc.)
    
-   Try: \`bun run smartgrep --help\` for full capabilities
+   Try: \`smartgrep --help\` for full capabilities
 
 2. **Incremental Monitor** - Real-time codebase insights
-   Command: \`bun run monitor watch --overview\`
+   Command: \`curator-monitor watch --overview\`
    
    • Live dashboard of code changes
    • Shows code distribution and complexity
@@ -58,28 +58,34 @@ export const PROJECT_SPECIAL_TOOLS = {
 };
 
 export const SMARTGREP_REMINDER = {
-  quickstart: 'bun run smartgrep [pattern]  # or: smartgrep group [concept]',
+  quickstart: 'smartgrep [pattern]  # or: smartgrep group [concept] | smartgrep group list',
   
   killer_examples: [
     // Basic searches that blow grep away
-    'bun run smartgrep "handleAuth"              # Finds function + shows who calls it!',
-    'bun run smartgrep refs "apiClient"          # Full impact analysis - see all usages',
-    'bun run smartgrep "TODO|FIXME"              # OR search - finds any of these',
+    'smartgrep "handleAuth"              # Finds function + shows who calls it!',
+    'smartgrep refs "apiClient"          # Full impact analysis - see all usages',
+    'smartgrep "TODO|FIXME"              # OR search - finds any of these',
     
     // Concept groups - this is magical
-    'bun run smartgrep group auth                # Finds ALL auth patterns (login, token, jwt...)',
-    'bun run smartgrep group error               # Finds ALL error handling patterns',
-    'bun run smartgrep group service             # Finds service classes and patterns',
+    'smartgrep group auth                # Finds ALL auth patterns (login, token, jwt...)',
+    'smartgrep group error               # Finds ALL error handling patterns',
+    'smartgrep group service             # Finds service classes and patterns',
     
     // Advanced patterns that grep can't do
-    'bun run smartgrep "error&string"            # AND search - error-related strings',
-    'bun run smartgrep "!test" --type function   # Functions NOT containing "test"',
-    'bun run smartgrep "/handle.*Event/" --regex # Regex with code understanding',
+    'smartgrep "error&string"            # AND search - error-related strings',
+    'smartgrep "!test" --type function   # Functions NOT containing "test"',
+    'smartgrep "/handle.*Event/" --regex # Regex with code understanding',
     
     // Filtered searches - surgical precision
-    'bun run smartgrep group auth --type function    # Only auth-related functions',
-    'bun run smartgrep "user" --file "*.service.*"   # Only in service files',
-    'bun run smartgrep group error --sort usage      # Sorted by how often it\'s used!'
+    'smartgrep group auth --type function    # Only auth-related functions',
+    'smartgrep "user" --file "*.service.*"   # Only in service files',
+    'smartgrep group error --sort usage      # Sorted by how often it\'s used!',
+    
+    '🎨 CUSTOM GROUPS (game-changer for project-specific patterns!):',
+    'smartgrep group add payments charge,bill,invoice,transaction  # Add custom group',
+    'smartgrep group payments --type function                     # Use your custom group',
+    'smartgrep group list                                         # See all groups',
+    'smartgrep group remove payments                              # Clean up when done'
   ],
   
   concept_groups: {
@@ -91,7 +97,7 @@ export const SMARTGREP_REMINDER = {
       'error    → finds: exception, catch, throw, fail...',
       'async    → finds: promise, await, callback, concurrent...'
     ],
-    see_all: 'bun run smartgrep --list-groups'
+    see_all: 'smartgrep group list'
   },
   
   type_filters: {
@@ -117,7 +123,7 @@ export const SMARTGREP_REMINDER = {
   
   game_changer: '💡 This isn\'t just faster grep - it understands your code structure and relationships!',
   
-  quick_tip: 'Add to CLAUDE.md: "Use `bun run smartgrep` instead of grep. For concepts: `smartgrep group auth`. For types: `smartgrep --type function`"'
+  quick_tip: 'Add to CLAUDE.md: "Use `smartgrep` instead of grep. For concepts: `smartgrep group auth`. For types: `smartgrep --type function`"'
 };
 
 export const TASK_SMARTGREP_REMINDER = {
@@ -147,9 +153,11 @@ but they don't know about it unless you explicitly tell them!`,
     prompt: `Search for all authentication implementations in the codebase. 
     
 IMPORTANT: Use the Bash tool to run smartgrep for semantic search:
-- 'bun run smartgrep group auth' - finds ALL auth patterns
-- 'bun run smartgrep "authenticate" --type function' - finds auth functions
-- 'bun run smartgrep refs "AuthService"' - finds all references
+- 'smartgrep group auth' - finds ALL auth patterns
+- 'smartgrep "authenticate" --type function' - finds auth functions
+- 'smartgrep refs "AuthService"' - finds all references
+- 'smartgrep group list' - see all available concept groups
+- 'smartgrep group add mygroup term1,term2' - add project-specific groups
 
 Smartgrep understands code structure and is much more effective than grep.`,
     benefit: "Agent now knows to use smartgrep and how to use it effectively!"
@@ -158,9 +166,11 @@ Smartgrep understands code structure and is much more effective than grep.`,
   template: `When creating Task prompts for code searching, include:
 
 "Use the Bash tool to run smartgrep commands for semantic code search:
-- 'bun run smartgrep [pattern]' for literal searches
-- 'bun run smartgrep group [concept]' for semantic pattern groups
-- 'bun run smartgrep refs [term]' for cross-references
+- 'smartgrep [pattern]' for literal searches
+- 'smartgrep group [concept]' for semantic pattern groups
+- 'smartgrep group list' to see all available groups
+- 'smartgrep group add name terms' to add custom groups
+- 'smartgrep refs [term]' for cross-references
 This is much more effective than regular grep as it understands code structure."`,
 
   reminder: '💡 Task agents are powerful but need explicit guidance about available tools!'
