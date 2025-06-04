@@ -2,6 +2,8 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { watch, type FSWatcher } from 'fs';
 import { Glob } from 'bun';
+import { shouldExclude, loadConfig, mergeExclusions } from '../config/config';
+import { DEFAULT_EXCLUSIONS } from '../types/config';
 
 export interface HashNode {
   path: string;
@@ -39,10 +41,20 @@ export class HashTree {
     this.watchCallbacks.add(callback);
     
     if (!this.watcher) {
+      // Load exclusions
+      const config = loadConfig(this.root.path);
+      const exclusions = mergeExclusions(DEFAULT_EXCLUSIONS, config.exclude);
+      
       this.watcher = watch(this.root.path, { recursive: true }, async (eventType, filename) => {
         if (!filename) return;
         
         const fullPath = path.join(this.root.path, filename);
+        const relativePath = path.relative(this.root.path, fullPath);
+        
+        // Skip excluded files
+        if (shouldExclude(relativePath, exclusions)) {
+          return;
+        }
         
         // Skip .curator directory files (hash tree, indexes, etc.)
         if (fullPath.includes('/.curator/') || fullPath.includes('\\.curator\\')) {
@@ -103,11 +115,19 @@ export class HashTree {
   private async buildWithGlob(patterns: string[]): Promise<void> {
     this.root.children = new Map();
     const allFiles = new Set<string>();
+    
+    // Load exclusions from config
+    const config = loadConfig(this.root.path);
+    const exclusions = mergeExclusions(DEFAULT_EXCLUSIONS, config.exclude);
 
     for (const pattern of patterns) {
       const glob = new Glob(pattern);
       for await (const file of glob.scan(this.root.path)) {
-        allFiles.add(path.resolve(this.root.path, file));
+        const relativePath = path.relative(this.root.path, file);
+        // Skip excluded files
+        if (!shouldExclude(relativePath, exclusions)) {
+          allFiles.add(path.resolve(this.root.path, file));
+        }
       }
     }
 

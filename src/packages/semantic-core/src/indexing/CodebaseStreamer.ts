@@ -1,5 +1,6 @@
 import { Glob } from 'bun'
-import { join } from 'path'
+import { join, dirname } from 'path'
+import * as fs from 'fs/promises'
 import {
   shouldExclude,
   loadConfig,
@@ -8,13 +9,18 @@ import {
 import { DEFAULT_EXCLUSIONS } from '../types/config'
 
 export interface StreamBatch {
-  files: Map<string, string>
+  files: Map<string, string>         // Changed/new files with content
+  stats: Map<string, { size: number; mtime: number }>  // Stats for changed/new files
+  unchanged: string[]                // Files skipped (stats matched)
+  deleted?: string[]                 // Files that were deleted (only in final batch)
+  processedStats?: Map<string, { size: number; mtime: number }>  // All file stats (only in final batch)
   metadata: {
     totalFiles: number
     currentBatch: number
     totalBatches: number
     memoryUsed: number
     filesInBatch: string[]
+    type?: 'content' | 'final'
   }
 }
 
@@ -24,6 +30,7 @@ export interface StreamOptions {
   priorityPattern?: string // Process these files first (e.g., "*.ts")
   filePattern?: string // Which files to include (default: "**/*")
   chunkSize?: number // Size for streaming large files (default: 64KB)
+  skipUnchanged?: boolean // Skip files with matching stats
 }
 
 /**
@@ -37,20 +44,47 @@ export interface StreamOptions {
 export class CodebaseStreamer {
   private rootPath: string
   private processedFiles = new Set<string>()
+  private statsCache?: Map<string, { size: number; mtime: number }>
+  private statsCachePath: string
 
   constructor(rootPath: string) {
     this.rootPath = rootPath
+    this.statsCachePath = join(rootPath, '.curator', 'semantic', 'statscache.json')
+  }
+  
+  private async loadStatsCache(): Promise<void> {
+    if (!this.statsCache) {
+      try {
+        const cacheFile = Bun.file(this.statsCachePath)
+        const cache = await cacheFile.json()
+        this.statsCache = new Map(Object.entries(cache))
+      } catch {
+        // Cache missing or corrupted, start fresh
+        this.statsCache = new Map()
+      }
+    }
+  }
+  
+  private async saveStatsCache(stats: Map<string, { size: number; mtime: number }>): Promise<void> {
+    const dir = dirname(this.statsCachePath)
+    await fs.mkdir(dir, { recursive: true })
+    const cacheObj = Object.fromEntries(stats)
+    await Bun.write(this.statsCachePath, JSON.stringify(cacheObj, null, 2))
   }
 
   /**
    * Stream files with TRUE streaming - even individual files are streamed!
+   * Now with integrated hash calculation and tree building in a single pass!
    *
    * @example
    * ```typescript
-   * const streamer = new CodebaseStreamerBun(projectPath);
-   * for await (const batch of streamer.streamFiles()) {
-   *   // Process batch - memory usage stays LOW!
-   *   await analyzers.processBatch(batch);
+   * const streamer = new CodebaseStreamer(projectPath);
+   * for await (const batch of streamer.streamFiles({ statsCache, skipUnchanged: true })) {
+   *   if (batch.metadata.type === 'final') {
+   *     // Use batch.processedStats - complete file stats
+   *   } else {
+   *     // Process changed files in batch.files
+   *   }
    * }
    * ```
    */
@@ -61,7 +95,17 @@ export class CodebaseStreamer {
       chunkSize = 64 * 1024, // 64KB chunks for large files
       priorityPattern,
       filePattern = '**/*',
+      skipUnchanged = false,
     } = options
+
+    // Load cache if we're skipping unchanged files
+    if (skipUnchanged) {
+      await this.loadStatsCache()
+    }
+    
+    // Track all processed file stats, starting with cache
+    const processedStats = this.statsCache ? new Map(this.statsCache) : new Map<string, { size: number; mtime: number }>()
+    
 
     // Discover all files
     const allFiles = await this.discoverFiles(filePattern)
@@ -74,12 +118,15 @@ export class CodebaseStreamer {
     const totalFiles = sortedFiles.length
     const totalBatches = Math.ceil(totalFiles / batchSize)
     let currentBatch = 0
+    let skippedCount = 0
 
     // Process files in batches
     for (let i = 0; i < sortedFiles.length; i += batchSize) {
       currentBatch++
       const batchFiles = sortedFiles.slice(i, i + batchSize)
       const batch = new Map<string, string>()
+      const batchStats = new Map<string, { size: number; mtime: number }>()
+      const batchUnchanged: string[] = []
       let batchMemory = 0
 
       for (const filePath of batchFiles) {
@@ -88,42 +135,71 @@ export class CodebaseStreamer {
         try {
           const file = Bun.file(filePath)
           const fileSize = file.size
+          const relativePath = filePath.replace(this.rootPath + '/', '')
 
-          // For small files, read normally
+          // Quick size check first (instant from Bun.file)
+          if (skipUnchanged && this.statsCache) {
+            const cached = this.statsCache.get(relativePath)
+            if (cached && cached.size === fileSize) {
+              // Size matches, now check mtime
+              const stat = await fs.stat(filePath)
+              if (cached.mtime === stat.mtimeMs) {
+                // Stats unchanged, skip content read entirely
+                processedStats.set(relativePath, cached)
+                batchUnchanged.push(relativePath)
+                this.processedFiles.add(filePath)
+                skippedCount++
+                continue
+              }
+              // Size matched but mtime changed, update stats for later
+              const currentStats = { size: fileSize, mtime: stat.mtimeMs }
+              processedStats.set(relativePath, currentStats)
+            }
+          }
+
+          // File is new or changed - read content
+          let content: string
           if (fileSize < chunkSize) {
-            const content = await file.text()
-            const relativePath = filePath.replace(this.rootPath + '/', '')
-            batch.set(relativePath, content)
-            batchMemory += fileSize
-            this.processedFiles.add(filePath)
+            content = await file.text()
           } else {
-            // For large files, stream them!
-            const content = await this.streamLargeFile(
+            content = await this.streamLargeFile(
               file,
               chunkSize,
               memoryLimit - batchMemory
             )
-            const relativePath = filePath.replace(this.rootPath + '/', '')
-            batch.set(relativePath, content)
-            batchMemory += Buffer.byteLength(content)
-            this.processedFiles.add(filePath)
           }
+
+          // Get stats for new/changed files
+          const stat = await fs.stat(filePath)
+          const currentStats = { size: fileSize, mtime: stat.mtimeMs }
+          
+          // Track stats and include in batch
+          processedStats.set(relativePath, currentStats)
+          batch.set(relativePath, content)
+          batchStats.set(relativePath, currentStats)
+          batchMemory += fileSize
+          this.processedFiles.add(filePath)
 
           // Check memory limit
           if (batchMemory >= memoryLimit && batch.size > 0) {
             yield {
               files: batch,
+              stats: batchStats,
+              unchanged: batchUnchanged,
               metadata: {
                 totalFiles,
                 currentBatch,
                 totalBatches,
                 memoryUsed: batchMemory,
                 filesInBatch: Array.from(batch.keys()),
+                type: 'content',
               },
             }
 
             // Reset for next batch
             batch.clear()
+            batchStats.clear()
+            batchUnchanged.length = 0
             batchMemory = 0
           }
         } catch (error) {
@@ -131,19 +207,55 @@ export class CodebaseStreamer {
         }
       }
 
-      // Yield remaining files
-      if (batch.size > 0) {
+      // Yield remaining files if any
+      if (batch.size > 0 || batchUnchanged.length > 0) {
         yield {
           files: batch,
+          stats: batchStats,
+          unchanged: batchUnchanged,
           metadata: {
             totalFiles,
             currentBatch,
             totalBatches,
             memoryUsed: batchMemory,
             filesInBatch: Array.from(batch.keys()),
+            type: 'content',
           },
         }
       }
+    }
+
+    // Detect deletions if we have a cache
+    const deletedFiles: string[] = []
+    if (this.statsCache) {
+      for (const [cachedPath] of this.statsCache) {
+        if (!processedStats.has(cachedPath)) {
+          deletedFiles.push(cachedPath)
+        }
+      }
+    }
+
+    
+    // Save stats cache if we're tracking changes
+    if (skipUnchanged && processedStats.size > 0) {
+      await this.saveStatsCache(processedStats)
+    }
+    
+    // Final batch with complete stats and deletions
+    yield {
+      files: new Map(),
+      stats: new Map(),
+      unchanged: [],
+      deleted: deletedFiles,
+      processedStats: processedStats,
+      metadata: {
+        totalFiles: processedStats.size,
+        currentBatch: currentBatch + 1,
+        totalBatches: totalBatches + 1,
+        memoryUsed: 0,
+        filesInBatch: [],
+        type: 'final',
+      },
     }
   }
 

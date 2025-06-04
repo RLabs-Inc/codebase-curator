@@ -9,6 +9,7 @@ _smartgrep() {
         'group:Group operations (list, add, remove, search)'
         'refs:Show where a term is referenced'
         'references:Show where a term is referenced (alias for refs)'
+        'changes:Analyze impact of uncommitted changes'
     )
     
     group_commands=(
@@ -84,6 +85,9 @@ _smartgrep() {
                 # After 'group' command - subcommands and group names
                 _describe -t group_commands 'group subcommands' group_commands
                 _describe -t groups 'concept groups' groups
+            elif [[ ${words[2]} == "changes" ]]; then
+                # After 'changes' command - only compact option
+                _arguments '--compact[One-line risk assessment]' '-c[One-line risk assessment]'
             elif (( CURRENT == 4 )) && [[ ${words[2]} == "group" ]] && [[ ${words[3]} == "remove" || ${words[3]} == "rm" ]]; then
                 # After 'group remove' - would need custom groups, but we can't easily get them
                 _message "custom group name to remove"

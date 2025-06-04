@@ -1,0 +1,362 @@
+{
+  "LICENSE": {
+    "size": 1077,
+    "mtime": 1748353512760.958
+  },
+  "bun.lockb": {
+    "size": 45500,
+    "mtime": 1748828134394.2605
+  },
+  "INSTALL.md": {
+    "size": 4266,
+    "mtime": 1748888718993.0217
+  },
+  "README.md": {
+    "size": 11632,
+    "mtime": 1748982089764.889
+  },
+  "package.json": {
+    "size": 1819,
+    "mtime": 1748979991428.2288
+  },
+  "CONTRIBUTING.md": {
+    "size": 5344,
+    "mtime": 1748802453085.258
+  },
+  "tsconfig.json": {
+    "size": 696,
+    "mtime": 1748367848453.2893
+  },
+  "CLAUDE.md": {
+    "size": 9913,
+    "mtime": 1748979770964.4966
+  },
+  "src/services/session/SessionService.ts": {
+    "size": 7117,
+    "mtime": 1748826561684.4214
+  },
+  "src/services/curator/CuratorProcessService.ts": {
+    "size": 21623,
+    "mtime": 1748826561682.0525
+  },
+  "src/services/curator/CuratorService.ts": {
+    "size": 11418,
+    "mtime": 1748826561682.6228
+  },
+  "src/services/curator/CuratorPrompts.ts": {
+    "size": 19859,
+    "mtime": 1748923580159.9282
+  },
+  "src/mcp-servers/codebase-curator/README.md": {
+    "size": 6953,
+    "mtime": 1748826561681.5298
+  },
+  "src/mcp-servers/codebase-curator/tools.ts": {
+    "size": 7655,
+    "mtime": 1748980077689.668
+  },
+  "src/mcp-servers/codebase-curator/server.ts": {
+    "size": 13732,
+    "mtime": 1748838985413.3484
+  },
+  "src/packages/smartgrep/README.md": {
+    "size": 5039,
+    "mtime": 1748829873164.381
+  },
+  "src/packages/smartgrep/package.json": {
+    "size": 2108,
+    "mtime": 1748829873164.6711
+  },
+  "src/packages/smartgrep/src/index.ts": {
+    "size": 233,
+    "mtime": 1748829873164.982
+  },
+  "src/packages/smartgrep/scripts/install-completions.js": {
+    "size": 4447,
+    "mtime": 1748829873164.8472
+  },
+  "src/packages/monitor/README.md": {
+    "size": 5821,
+    "mtime": 1748830954296.1443
+  },
+  "src/packages/monitor/package.json": {
+    "size": 1411,
+    "mtime": 1748830760917.3188
+  },
+  "src/packages/monitor/src/cli.ts": {
+    "size": 62,
+    "mtime": 1748830963199.4922
+  },
+  "src/packages/monitor/scripts/install-completions.js": {
+    "size": 4710,
+    "mtime": 1748830903579.147
+  },
+  "src/packages/monitor/completions/fish/monitor.fish": {
+    "size": 1373,
+    "mtime": 1748830971722.209
+  },
+  "src/packages/monitor/completions/zsh/_monitor": {
+    "size": 2662,
+    "mtime": 1748830971721.7373
+  },
+  "src/packages/monitor/completions/bash/monitor": {
+    "size": 2640,
+    "mtime": 1748830971721.4216
+  },
+  "src/packages/monitor/man/monitor.1": {
+    "size": 4386,
+    "mtime": 1748830971724.9387
+  },
+  "src/packages/semantic-core/package.json": {
+    "size": 901,
+    "mtime": 1748829873162.477
+  },
+  "src/packages/semantic-core/src/SemanticService.ts": {
+    "size": 9373,
+    "mtime": 1748995515897.1458
+  },
+  "src/packages/semantic-core/src/SemanticIndexImpl.ts": {
+    "size": 11887,
+    "mtime": 1748983898916.5415
+  },
+  "src/packages/semantic-core/src/types.ts": {
+    "size": 2229,
+    "mtime": 1748829873163.9512
+  },
+  "src/packages/semantic-core/src/index.ts": {
+    "size": 1048,
+    "mtime": 1748917675517.7637
+  },
+  "src/packages/semantic-core/src/extractors/RustExtractor.ts": {
+    "size": 14851,
+    "mtime": 1748832401354.2607
+  },
+  "src/packages/semantic-core/src/extractors/TomlExtractor.ts": {
+    "size": 13987,
+    "mtime": 1748834746389.1057
+  },
+  "src/packages/semantic-core/src/extractors/SwiftExtractor.ts": {
+    "size": 15094,
+    "mtime": 1748834864906.0894
+  },
+  "src/packages/semantic-core/src/extractors/TypeScriptExtractor.ts": {
+    "size": 15617,
+    "mtime": 1748829873163.1277
+  },
+  "src/packages/semantic-core/src/extractors/YamlExtractor.ts": {
+    "size": 14102,
+    "mtime": 1748834646488.1335
+  },
+  "src/packages/semantic-core/src/extractors/PythonExtractor.ts": {
+    "size": 13147,
+    "mtime": 1748832052233.5132
+  },
+  "src/packages/semantic-core/src/extractors/EnvExtractor.ts": {
+    "size": 9583,
+    "mtime": 1748836258949.4727
+  },
+  "src/packages/semantic-core/src/extractors/JsonExtractor.ts": {
+    "size": 10819,
+    "mtime": 1748836567549.4473
+  },
+  "src/packages/semantic-core/src/extractors/ShellExtractor.ts": {
+    "size": 11927,
+    "mtime": 1748983157145.5115
+  },
+  "src/packages/semantic-core/src/extractors/GoExtractor.ts": {
+    "size": 13115,
+    "mtime": 1748832287879.1763
+  },
+  "src/packages/semantic-core/src/indexing/FileWatcher.ts": {
+    "size": 0,
+    "mtime": 1748968080654.176
+  },
+  "src/packages/semantic-core/src/indexing/HashTree.ts": {
+    "size": 14509,
+    "mtime": 1748972177071.1116
+  },
+  "src/packages/semantic-core/src/indexing/IncrementalIndexer.ts": {
+    "size": 4759,
+    "mtime": 1748829873163.8381
+  },
+  "src/packages/semantic-core/src/indexing/CodebaseStreamer.ts": {
+    "size": 14847,
+    "mtime": 1748995434866.94
+  },
+  "src/packages/semantic-core/src/groups/ConceptGroups.ts": {
+    "size": 9209,
+    "mtime": 1748917576734.3816
+  },
+  "src/packages/semantic-core/src/groups/index.ts": {
+    "size": 378,
+    "mtime": 1748917654457.8594
+  },
+  "src/packages/semantic-core/src/config/config.ts": {
+    "size": 3794,
+    "mtime": 1748917644009.6523
+  },
+  "src/packages/semantic-core/src/types/core.ts": {
+    "size": 2222,
+    "mtime": 1748829873164.2134
+  },
+  "src/packages/semantic-core/src/types/config.ts": {
+    "size": 2590,
+    "mtime": 1748917599409.6372
+  },
+  "src/shared/utils/languages/README.md": {
+    "size": 0,
+    "mtime": 1748826561685.1035
+  },
+  "src/shared/types/core.ts": {
+    "size": 2222,
+    "mtime": 1748826561684.9595
+  },
+  "src/tools/smartgrep/cli.ts": {
+    "size": 39453,
+    "mtime": 1748979143377.2642
+  },
+  "src/tools/smartgrep/INSTALL.md": {
+    "size": 2559,
+    "mtime": 1748829873165.3352
+  },
+  "src/tools/smartgrep/completions/fish/smartgrep.fish": {
+    "size": 4186,
+    "mtime": 1748980176147.94
+  },
+  "src/tools/smartgrep/completions/zsh/_smartgrep": {
+    "size": 5059,
+    "mtime": 1748980268915.7585
+  },
+  "src/tools/smartgrep/completions/bash/smartgrep": {
+    "size": 4066,
+    "mtime": 1748980138491.2341
+  },
+  "src/tools/smartgrep/man/smartgrep.1": {
+    "size": 6004,
+    "mtime": 1748980402753.0334
+  },
+  "src/tools/curator-cli/cli.ts": {
+    "size": 12087,
+    "mtime": 1748889306252.4187
+  },
+  "src/tools/curator-cli/completions/fish/curator.fish": {
+    "size": 2964,
+    "mtime": 1748831480155.2249
+  },
+  "src/tools/curator-cli/completions/zsh/_curator": {
+    "size": 3382,
+    "mtime": 1748831410302.9277
+  },
+  "src/tools/curator-cli/completions/bash/curator": {
+    "size": 3721,
+    "mtime": 1748831382332.3528
+  },
+  "src/tools/curator-cli/man/curator.1": {
+    "size": 5757,
+    "mtime": 1748831799740.4775
+  },
+  "src/tools/monitor/cli.ts": {
+    "size": 26655,
+    "mtime": 1748829873165.1873
+  },
+  "src/tools/monitor/completions/fish/monitor.fish": {
+    "size": 1373,
+    "mtime": 1748830675268.1455
+  },
+  "src/tools/monitor/completions/zsh/_monitor": {
+    "size": 2662,
+    "mtime": 1748830628495.0718
+  },
+  "src/tools/monitor/completions/bash/monitor": {
+    "size": 2640,
+    "mtime": 1748830609310.523
+  },
+  "src/tools/monitor/man/monitor.1": {
+    "size": 4386,
+    "mtime": 1748830734972.5679
+  },
+  "test-files/test.rs": {
+    "size": 2764,
+    "mtime": 1748833418868.1165
+  },
+  "test-files/test.swift": {
+    "size": 3066,
+    "mtime": 1748836328156.876
+  },
+  "test-files/test.go": {
+    "size": 2163,
+    "mtime": 1748833349317.776
+  },
+  "test-files/test-env-debug.ts": {
+    "size": 3786,
+    "mtime": 1748838386975.491
+  },
+  "test-files/test-config.toml": {
+    "size": 1829,
+    "mtime": 1748837209959.3552
+  },
+  "test-files/test.py": {
+    "size": 1651,
+    "mtime": 1748833320240.545
+  },
+  "test-files/deploy.sh": {
+    "size": 3960,
+    "mtime": 1748836366404.3196
+  },
+  "test-files/test-config.yaml": {
+    "size": 1898,
+    "mtime": 1748837178465.2217
+  },
+  "test-files/test-config.json": {
+    "size": 885,
+    "mtime": 1748837137450.4434
+  },
+  "docs/ARCHITECTURE.md": {
+    "size": 6204,
+    "mtime": 1748802312593.3823
+  },
+  "docs/TROUBLESHOOTING.md": {
+    "size": 5292,
+    "mtime": 1748802583042.4373
+  },
+  "docs/SMART_GREP_GUIDE.md": {
+    "size": 7834,
+    "mtime": 1748982236274.733
+  },
+  "docs/RELEASE_NOTES_v4.md": {
+    "size": 5611,
+    "mtime": 1748982149825.963
+  },
+  "docs/LANGUAGE_SUPPORT.md": {
+    "size": 6834,
+    "mtime": 1748887958456.757
+  },
+  "docs/QUICK_START.md": {
+    "size": 3451,
+    "mtime": 1748802515158.4167
+  },
+  "docs/tools/smart-grep/CHANGELOG.md": {
+    "size": 5020,
+    "mtime": 1748791732925.6167
+  },
+  "docs/tools/smart-grep/smart_grep_tool_spec.md": {
+    "size": 12160,
+    "mtime": 1748791678967.9392
+  },
+  "docs/tools/smart-grep/smart_grep_implementation_guide.md": {
+    "size": 29555,
+    "mtime": 1748791798907.5066
+  },
+  "docs/tools/smart-grep/language_expansion_guide.md": {
+    "size": 20612,
+    "mtime": 1748788228452.736
+  },
+  "docs/tools/curator-cli/HUMAN_INTERFACE.md": {
+    "size": 3441,
+    "mtime": 1748831862007.5547
+  },
+  "docs/tools/monitor/COMPLETIONS.md": {
+    "size": 2494,
+    "mtime": 1748831017317.4412
+  }
+}

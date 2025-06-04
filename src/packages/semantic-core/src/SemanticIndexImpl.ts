@@ -36,32 +36,37 @@ export class SemanticIndexImpl implements SemanticIndex {
 
   private indexPartialMatches(info: SemanticInfo): void {
     const term = info.term.toLowerCase()
+    const partsToIndex = new Set<string>()
 
     // Index camelCase parts: "getUserName" → ["get", "user", "name"]
     const camelParts = term.split(/(?=[A-Z])/).map((s) => s.toLowerCase())
     camelParts.forEach((part) => {
-      if (part.length > 2) {
-        const entries = this.termIndex.get(part) || []
-        entries.push(info)
-        this.termIndex.set(part, entries)
+      if (part.length > 2 && part !== term) {
+        partsToIndex.add(part)
       }
     })
 
     // Index snake_case parts: "user_name" → ["user", "name"]
     const snakeParts = term.split('_')
     snakeParts.forEach((part) => {
-      if (part.length > 2) {
-        const entries = this.termIndex.get(part) || []
-        entries.push(info)
-        this.termIndex.set(part, entries)
+      if (part.length > 2 && part !== term) {
+        partsToIndex.add(part)
       }
     })
 
     // Index kebab-case parts: "user-name" → ["user", "name"]
     const kebabParts = term.split('-')
     kebabParts.forEach((part) => {
-      if (part.length > 2) {
-        const entries = this.termIndex.get(part) || []
+      if (part.length > 2 && part !== term) {
+        partsToIndex.add(part)
+      }
+    })
+
+    // Add to index only once per unique part
+    partsToIndex.forEach((part) => {
+      const entries = this.termIndex.get(part) || []
+      // Only add if not already present (avoid duplicates)
+      if (!entries.some(e => e.term === info.term && e.location.line === info.location.line)) {
         entries.push(info)
         this.termIndex.set(part, entries)
       }
@@ -296,27 +301,15 @@ export class SemanticIndexImpl implements SemanticIndex {
       return
     }
 
-    // For smaller indexes, use full serialization with streaming
-    const file = Bun.file(path)
-    const writer = file.writer({ highWaterMark: 256 * 1024 })
-
-    try {
-      writer.write('{\n  "entries": [')
-      await this.streamSerializeMap(writer, this.entries, true)
-      
-      writer.write('\n  ],\n  "termIndex": [')
-      await this.streamSerializeMap(writer, this.termIndex, true)
-      
-      writer.write('\n  ],\n  "crossReferences": [')
-      await this.streamSerializeMap(writer, this.crossReferences, true)
-      
-      writer.write('\n  ],\n  "fileReferences": [')
-      await this.streamSerializeMap(writer, this.fileReferences, true)
-      
-      writer.write('\n  ]\n}')
-    } finally {
-      await writer.end()
+    // Build JSON in memory for reliability
+    const data = {
+      entries: Array.from(this.entries.entries()),
+      termIndex: Array.from(this.termIndex.entries()),
+      crossReferences: Array.from(this.crossReferences.entries()),
+      fileReferences: Array.from(this.fileReferences.entries()),
     }
+    
+    await Bun.write(path, JSON.stringify(data, null, 2))
   }
 
   private getTopTerms(limit: number): Array<{term: string, count: number}> {
@@ -341,7 +334,7 @@ export class SemanticIndexImpl implements SemanticIndex {
     const CHUNK_SIZE = 10 // Process in small chunks
     
     for (const [key, value] of map.entries()) {
-      if (!isFirst || count > 0) writer.write(',')
+      if (count > 0) writer.write(',')
       
       // Serialize individual items, not arrays
       writer.write('\n    [')
@@ -369,6 +362,11 @@ export class SemanticIndexImpl implements SemanticIndex {
       if (count % CHUNK_SIZE === 0) {
         await writer.flush()
       }
+    }
+    
+    // Final flush to ensure all data is written
+    if (count % CHUNK_SIZE !== 0) {
+      await writer.flush()
     }
   }
 

@@ -48,6 +48,14 @@ We're thrilled to announce Codebase Curator v4.0, featuring **massive language s
 
 ### 🛠️ New Tools & Features
 
+- **Git Changes Impact Analysis** - `smartgrep changes` shows which files are affected by uncommitted changes
+  - Full cross-reference analysis in ~1 second
+  - Risk assessment before committing
+  - Compact mode for quick safety checks
+- **Custom Concept Groups** - Create project-specific semantic patterns
+  - Add groups: `smartgrep group add payments charge,bill,invoice`
+  - Persistent storage in `.curatorconfig.json`
+  - Full integration with type filters and sorting
 - **MCP Tool: `remind_about_task_smartgrep`** - Reminds developers to include explicit smartgrep instructions when using Task agents
 - **Comprehensive test files** - Added test files for all new language types
 - **Language support documentation** - New guide at `docs/LANGUAGE_SUPPORT.md`
@@ -58,6 +66,8 @@ We're thrilled to announce Codebase Curator v4.0, featuring **massive language s
 - **File types supported**: Now includes `.swift`, `.sh`, `.json`, `.yaml`, `.toml`, `.env`
 - **Semantic entries indexed**: ~4200+ in typical projects
 - **Cross-language search**: Works seamlessly across all languages
+- **Performance**: Git impact analysis 37x faster than standalone tools (1s vs 37.5s)
+- **Concept Groups**: 20+ built-in groups plus unlimited custom groups
 
 ## 🔍 Enhanced Search Capabilities
 
@@ -83,6 +93,28 @@ smartgrep "function" --file "*.sh"
 
 # Environment variables
 smartgrep "DATABASE" --file ".env*"
+```
+
+### Git Impact Analysis
+```bash
+# Analyze uncommitted changes
+smartgrep changes
+# Shows: Files changed, symbols modified, and all affected files
+
+# Quick risk assessment
+smartgrep changes --compact
+# Returns: ✅ Low Risk or ⚠️ Medium Risk based on impact
+```
+
+### Custom Concept Groups
+```bash
+# Add project-specific groups
+smartgrep group add payments charge,bill,invoice,transaction
+smartgrep group add frontend component,props,state,render
+
+# Search with your groups
+smartgrep group payments --type function
+smartgrep group frontend --sort usage
 ```
 
 ## 🚀 Performance Improvements

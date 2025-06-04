@@ -8,6 +8,7 @@ complete -c smartgrep -f
 complete -c smartgrep -n __fish_use_subcommand -a group -d "Group operations (list, add, remove, search)"
 complete -c smartgrep -n __fish_use_subcommand -a refs -d "Show where a term is referenced"
 complete -c smartgrep -n __fish_use_subcommand -a references -d "Show where a term is referenced"
+complete -c smartgrep -n __fish_use_subcommand -a changes -d "Analyze impact of uncommitted changes"
 
 # Group subcommands
 complete -c smartgrep -n "__fish_seen_subcommand_from group" -a list -d "List all available concept groups"
@@ -66,6 +67,10 @@ complete -c smartgrep -l type -a "import" -d "Imports"
 
 # Sort value completions
 complete -c smartgrep -l sort -a "relevance" -d "Sort by relevance"
+
+# Options specific to changes command
+complete -c smartgrep -n "__fish_seen_subcommand_from changes" -l compact -d "One-line risk assessment"
+complete -c smartgrep -n "__fish_seen_subcommand_from changes" -s c -d "One-line risk assessment (short)"
 complete -c smartgrep -l sort -a "usage" -d "Sort by usage count"
 complete -c smartgrep -l sort -a "name" -d "Sort by name"
 complete -c smartgrep -l sort -a "file" -d "Sort by file path"

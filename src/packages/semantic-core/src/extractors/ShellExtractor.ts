@@ -172,20 +172,46 @@ export class ShellExtractor implements LanguageExtractor {
         })
       }
 
-      // Command execution in various forms
-      const commandPatterns = [
-        /\b([a-zA-Z_][a-zA-Z0-9_-]*)\s+/g,  // Regular commands
-        /\$\(([^)]+)\)/g,                    // Command substitution
-        /`([^`]+)`/g,                        // Backtick substitution
+      // Track function calls - look for custom functions (not builtins)
+      const funcCallPatterns = [
+        /^\s*([a-zA-Z_][a-zA-Z0-9_-]+)\s*\(\s*\)/, // Function with parens
+        /^\s*([a-zA-Z_][a-zA-Z0-9_-]+)\s*$/, // Function on its own line
+        /^\s*([a-zA-Z_][a-zA-Z0-9_-]+)\s+[^=|&<>]/, // Command at start of line
       ]
+      
+      for (const pattern of funcCallPatterns) {
+        const match = line.match(pattern)
+        if (match && match[1].length > 2 && 
+            !this.isShellBuiltin(match[1]) && 
+            !this.isCommonCommand(match[1]) &&
+            !match[1].match(/^(if|then|else|elif|fi|do|done|in|is|it|be|to|of|on|at|by|for|with|from|into|over|after|before)$/)) {
+          references.push({
+            targetTerm: match[1],
+            referenceType: 'call',
+            fromLocation: {
+              file: filePath,
+              line: index + 1,
+              column: 0,
+            },
+            context: line.trim(),
+          })
+          break // Only one reference per line
+        }
+      }
 
-      commandPatterns.forEach(pattern => {
+      // Track command substitutions - these are important
+      const cmdSubPatterns = [
+        /\$\(([a-zA-Z_][a-zA-Z0-9_-]+)(?:\s|\))/g, // $(command ...)
+        /`([a-zA-Z_][a-zA-Z0-9_-]+)(?:\s|`)/g, // `command ...`
+      ]
+      
+      cmdSubPatterns.forEach(pattern => {
         const matches = [...line.matchAll(pattern)]
         matches.forEach(match => {
-          const command = match[1].split(/\s+/)[0] // Get first word
-          if (command && !this.isShellBuiltin(command) && !this.isCommonCommand(command)) {
+          const cmd = match[1]
+          if (cmd.length > 3 && !this.isShellBuiltin(cmd) && !this.isCommonCommand(cmd)) {
             references.push({
-              targetTerm: command,
+              targetTerm: cmd,
               referenceType: 'call',
               fromLocation: {
                 file: filePath,
@@ -196,6 +222,27 @@ export class ShellExtractor implements LanguageExtractor {
             })
           }
         })
+      })
+
+      // Track variable usage - both uppercase and lowercase meaningful variables
+      const varUsagePattern = /\$\{?([A-Za-z_][A-Za-z0-9_]+)\}?/g
+      const varMatches = [...line.matchAll(varUsagePattern)]
+      varMatches.forEach(match => {
+        const varName = match[1]
+        // Track if it's meaningful (length > 3) and not a common env var
+        if (varName.length > 3 && 
+            !varName.match(/^(PATH|HOME|USER|SHELL|TERM|LANG|PWD|OLDPWD|SHLVL|HOSTNAME|OSTYPE|MACHTYPE|BASH_.*|ZSH_.*|PS[1-4]|IFS|OPTARG|OPTIND|REPLY|PIPESTATUS|PPID|EUID|UID|GROUPS|SHELLOPTS|BASHOPTS|HISTFILE|HISTSIZE|HISTFILESIZE|HISTCONTROL|PROMPT_COMMAND|IGNOREEOF|TMOUT|MAILCHECK|MAIL|MAILPATH|GLOBIGNORE|CDPATH|DIRSTACK|RANDOM|SECONDS|LINENO|COLUMNS|LINES|FUNCNAME|LC_.*|LESS.*|EDITOR|VISUAL|PAGER|MANPATH|INFOPATH|XDG_.*|\d+)$/)) {
+          references.push({
+            targetTerm: varName,
+            referenceType: 'usage',
+            fromLocation: {
+              file: filePath,
+              line: index + 1,
+              column: match.index || 0,
+            },
+            context: line.trim(),
+          })
+        }
       })
 
       // Case statements
@@ -313,12 +360,41 @@ export class ShellExtractor implements LanguageExtractor {
 
   private isCommonCommand(command: string): boolean {
     const common = new Set([
-      'ls', 'cp', 'mv', 'rm', 'mkdir', 'rmdir', 'touch',
-      'cat', 'grep', 'sed', 'awk', 'find', 'sort', 'uniq',
-      'head', 'tail', 'wc', 'cut', 'paste', 'tr', 'tee',
-      'chmod', 'chown', 'chgrp', 'ln', 'df', 'du', 'ps',
-      'top', 'htop', 'kill', 'pkill', 'which', 'whereis',
-      'man', 'info', 'date', 'cal', 'bc', 'expr'
+      // File operations
+      'ls', 'cp', 'mv', 'rm', 'mkdir', 'rmdir', 'touch', 'file', 'stat',
+      'cat', 'less', 'more', 'head', 'tail', 'tac', 'nl', 'od', 'base64',
+      // Text processing
+      'grep', 'sed', 'awk', 'find', 'sort', 'uniq', 'cut', 'paste', 'tr',
+      'tee', 'wc', 'split', 'csplit', 'join', 'comm', 'diff', 'patch',
+      // System commands
+      'chmod', 'chown', 'chgrp', 'ln', 'df', 'du', 'ps', 'top', 'htop',
+      'kill', 'pkill', 'killall', 'pgrep', 'jobs', 'fg', 'bg', 'nohup',
+      // Network
+      'ssh', 'scp', 'rsync', 'curl', 'wget', 'ping', 'nc', 'netcat',
+      'telnet', 'ftp', 'sftp', 'netstat', 'ss', 'ip', 'ifconfig',
+      // Package managers
+      'apt', 'apt-get', 'yum', 'dnf', 'pacman', 'zypper', 'brew', 'npm',
+      'yarn', 'pip', 'gem', 'cargo', 'go', 'composer', 'bundler',
+      // Development tools
+      'git', 'make', 'gcc', 'g++', 'clang', 'python', 'python3', 'node',
+      'java', 'javac', 'ruby', 'perl', 'php', 'rustc', 'go', 'swift',
+      // Archive tools
+      'tar', 'gzip', 'gunzip', 'zip', 'unzip', 'bzip2', 'bunzip2', 'xz',
+      // Other common tools
+      'which', 'whereis', 'man', 'info', 'date', 'cal', 'bc', 'expr',
+      'sleep', 'wait', 'time', 'timeout', 'watch', 'cron', 'crontab',
+      'systemctl', 'service', 'journalctl', 'dmesg', 'lsof', 'strace',
+      'env', 'printenv', 'export', 'source', 'alias', 'history',
+      'clear', 'reset', 'exit', 'logout', 'reboot', 'shutdown', 'su',
+      'sudo', 'passwd', 'useradd', 'userdel', 'groupadd', 'groups',
+      'id', 'who', 'whoami', 'last', 'lastlog', 'w', 'finger',
+      'xargs', 'parallel', 'nproc', 'nice', 'renice', 'nohup', 'disown',
+      'umask', 'ulimit', 'mount', 'umount', 'fsck', 'mkfs', 'fdisk',
+      'dd', 'sync', 'md5sum', 'sha1sum', 'sha256sum', 'sha512sum',
+      'base64', 'uname', 'hostname', 'hostnamectl', 'timedatectl',
+      'locale', 'localectl', 'update-alternatives', 'ldconfig',
+      // Bun/Node specific
+      'bun', 'bunx', 'npx', 'pnpm', 'pnpx'
     ])
     return common.has(command)
   }

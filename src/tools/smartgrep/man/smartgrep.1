@@ -26,6 +26,9 @@ smartgrep \- semantic code search with cross-references and usage analysis
 .B smartgrep refs
 \fIterm\fR
 .br
+.B smartgrep changes
+[\-\-compact]
+.br
 .B smartgrep
 \-\-list\-groups
 
@@ -89,6 +92,12 @@ Remove a custom concept group.
 Show all references to a specific term, including cross-references and
 impact analysis.
 
+.TP
+.B changes
+Analyze the impact of uncommitted changes in your git repository. Shows which
+symbols have been modified and what files depend on them, helping assess risk
+before committing.
+
 .SH OPTIONS
 .TP
 .B \-\-help, \-h
@@ -137,7 +146,7 @@ Sort results by: \fBrelevance\fR (default), \fBusage\fR, \fBname\fR, or \fBfile\
 Output results as JSON for machine processing.
 
 .TP
-.B \-\-compact
+.B \-\-compact, \-c
 Use compact output format (one line per result).
 
 .SH EXAMPLES
@@ -188,6 +197,14 @@ Show all available concept groups (built-in and custom).
 .TP
 .B smartgrep group remove payments
 Remove the custom payments group.
+
+.TP
+.B smartgrep changes
+Analyze impact of uncommitted changes, showing risk assessment and affected files.
+
+.TP
+.B smartgrep changes \-\-compact
+Get a one-line risk assessment of your changes.
 
 .SH CONCEPT GROUPS
 Concept groups provide semantic pattern matching:

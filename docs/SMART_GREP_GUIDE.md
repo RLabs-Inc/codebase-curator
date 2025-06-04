@@ -114,6 +114,40 @@ Shows every location that references PaymentService:
 └── Tested in payment.test.ts → tests/payment.test.ts:12
 ```
 
+## Git Impact Analysis
+
+Analyze the impact of your uncommitted changes:
+```bash
+# Full impact analysis
+smartgrep changes
+```
+
+Shows:
+```
+📊 Changes Impact Analysis
+📍 Branch: main
+📝 Status: 2 staged, 5 unstaged
+
+📄 Files Changed:
+├── src/services/PaymentService.ts
+│   └── Modified: processPayment, validateCard (2 symbols)
+└── src/controllers/checkout.ts
+    └── Modified: handleCheckout (1 symbol)
+
+🔗 Impact: 3 files will be affected
+├── tests/payment.test.ts:45 - References processPayment
+├── src/api/routes.ts:23 - Imports PaymentService
+└── src/services/order.ts:67 - Calls handleCheckout
+
+⚠️ Risk Level: Medium - Changes affect core payment flow
+```
+
+Quick risk assessment:
+```bash
+smartgrep changes --compact
+# Returns: ⚠️ Medium Risk: 7 files changed → 15 references across 8 files
+```
+
 ## Output Formats
 
 ### Detailed (Default)
@@ -144,24 +178,57 @@ Limit number of results.
 
 Smart Grep understands common programming concepts:
 
+### Built-in Groups
 ```bash
+# List all available groups
+smartgrep group list
+
 # Authentication patterns
-smartgrep auth
+smartgrep group auth
 
 # Error handling
-smartgrep error
+smartgrep group error
 
 # Database operations
-smartgrep database
+smartgrep group database
 
 # API endpoints
-smartgrep api
+smartgrep group api
 
 # State management
-smartgrep state
+smartgrep group state
+```
 
-# View all concept groups
-smartgrep --groups
+### Custom Groups
+Create project-specific semantic patterns:
+
+```bash
+# Add a custom group
+smartgrep group add payments charge,bill,invoice,transaction,payment
+smartgrep group add frontend component,render,props,state,ui
+
+# Search with your custom groups
+smartgrep group payments
+smartgrep group payments --type function
+smartgrep group frontend --sort usage
+
+# Remove a custom group
+smartgrep group remove payments
+```
+
+Custom groups are saved in `.curatorconfig.json`:
+```json
+{
+  "customGroups": {
+    "payments": ["charge", "bill", "invoice", "transaction", "payment"],
+    "frontend": {
+      "name": "frontend",
+      "description": "Frontend UI patterns",
+      "emoji": "🎨",
+      "terms": ["component", "render", "props", "state", "ui"]
+    }
+  }
+}
 ```
 
 ## Real-World Examples
@@ -214,6 +281,21 @@ smartgrep "export" --sort usage | grep "(0 uses)"
 smartgrep "function" --sort length
 ```
 
+### 5. Pre-Commit Safety Check
+```bash
+# Before committing, check impact
+smartgrep changes
+
+# Quick check
+smartgrep changes --compact
+# ✅ Low Risk: 2 files changed → 3 references
+# ⚠️ Medium Risk: Core services affected
+# 🚨 High Risk: Breaking changes detected
+
+# If risky, find all affected tests
+smartgrep refs "modifiedFunction" --file "*test*"
+```
+
 ## Performance Tips
 
 1. **Use specific types**: `--type function` is faster than searching everything
@@ -240,13 +322,13 @@ This is how it quickly understands your patterns and architecture.
 Run in your project root or build the index:
 ```bash
 cd your-project
-smartgrep --build
+smartgrep --index
 ```
 
 ### Results seem outdated
 The index auto-updates, but you can force rebuild:
 ```bash
-smartgrep --rebuild
+smartgrep --index
 ```
 
 ### Too many results

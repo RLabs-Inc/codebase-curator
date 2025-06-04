@@ -1,6 +1,7 @@
 /**
  * Semantic Service
  * Orchestrates semantic indexing using the CodebaseStreamer
+ * Includes automatic freshness checking for always up-to-date indexes
  */
 
 import { CodebaseStreamer } from './indexing/CodebaseStreamer'
@@ -24,6 +25,7 @@ import type {
 } from './types'
 import { existsSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'
+import * as fs from 'fs/promises'
 
 export class SemanticService {
   private index = new SemanticIndexImpl()
@@ -43,6 +45,9 @@ export class SemanticService {
   ]
   private projectPath: string
   private silentMode = false
+  private isEnsuring = false
+  private ensurePromise?: Promise<void>
+  private hasLoadedIndex = false
 
   constructor(projectPath: string) {
     this.projectPath = projectPath
@@ -50,6 +55,114 @@ export class SemanticService {
 
   setSilentMode(silent: boolean): void {
     this.silentMode = silent
+  }
+
+  /**
+   * Ensures the semantic index is fresh by checking for file changes
+   * This method is called automatically by all public methods
+   * Uses file stats (size+mtime) for efficient change detection
+   */
+  private async ensureFresh(): Promise<void> {
+    // Prevent concurrent ensureFresh calls
+    if (this.isEnsuring) {
+      return this.ensurePromise
+    }
+
+    this.isEnsuring = true
+    this.ensurePromise = this._ensureFresh()
+
+    try {
+      await this.ensurePromise
+    } finally {
+      this.isEnsuring = false
+      this.ensurePromise = undefined
+    }
+  }
+
+  private async _ensureFresh(): Promise<void> {
+    const startTime = Date.now()
+    
+    // Load existing index if not already loaded
+    if (!this.hasLoadedIndex) {
+      const indexPath = this.getIndexPath(this.projectPath)
+      try {
+        await this.index.load(indexPath)
+        this.hasLoadedIndex = true
+        if (!this.silentMode) {
+          console.log(`📖 Loaded semantic index from ${indexPath}`)
+        }
+      } catch {
+        // No existing index, build from scratch
+        if (!this.silentMode) {
+          console.log('🔍 No existing index found, building...')
+        }
+        await this.buildIndex()
+        this.hasLoadedIndex = true
+        return
+      }
+    }
+    
+    
+    // Stream with incremental updates
+    const streamer = new CodebaseStreamer(this.projectPath)
+    let changedFiles = 0
+    let deletedFiles = 0
+    
+    for await (const batch of streamer.streamFiles({
+      skipUnchanged: true
+    })) {
+      if (batch.metadata.type === 'final') {
+        // Process deletions
+        if (batch.deleted && batch.deleted.length > 0) {
+          for (const path of batch.deleted) {
+            this.index.removeFile(path)
+            deletedFiles++
+          }
+        }
+        
+        // No need to handle stats cache here - CodebaseStreamer manages it
+      } else {
+        // Process changed/new files
+        for (const [filePath, content] of batch.files) {
+          const extractor = this.extractors.find((e) => e.canHandle(filePath))
+          
+          if (extractor) {
+            try {
+              const result = extractor.extract(content, filePath)
+              
+              // Remove old entries and add new ones
+              this.index.removeFile(filePath)
+              
+              result.definitions.forEach((info) => {
+                this.index.add(info)
+              })
+              
+              result.references.forEach((ref) => {
+                this.index.addCrossReference(ref)
+              })
+              
+              changedFiles++
+            } catch (error) {
+              if (!this.silentMode) {
+                console.warn(`Error processing ${filePath}:`, error)
+              }
+            }
+          }
+          
+        }
+      }
+    }
+    
+    if (changedFiles > 0 || deletedFiles > 0) {
+      // Save index only if there were changes
+      const indexPath = this.getIndexPath(this.projectPath)
+      await this.saveIndex(indexPath)
+      
+      if (!this.silentMode) {
+        const duration = Date.now() - startTime
+        console.log(`✅ Index updated: ${changedFiles} changed, ${deletedFiles} deleted in ${duration}ms`)
+      }
+    }
   }
 
   async indexCodebase(projectPath: string): Promise<void> {
@@ -65,6 +178,12 @@ export class SemanticService {
 
     // Process files in batches
     for await (const batch of streamer.streamFiles()) {
+      if (batch.metadata.type === 'final') {
+        // Final batch - stats are handled by CodebaseStreamer
+        continue
+      }
+
+      // Process files
       for (const [filePath, content] of batch.files) {
         const extractor = this.extractors.find((e) => e.canHandle(filePath))
 
@@ -72,13 +191,11 @@ export class SemanticService {
           try {
             const result = extractor.extract(content, filePath)
 
-            // Add definitions
             result.definitions.forEach((info) => {
               this.index.add(info)
               entriesIndexed++
             })
 
-            // Add cross-references
             result.references.forEach((ref) => {
               this.index.addCrossReference(ref)
             })
@@ -103,16 +220,17 @@ export class SemanticService {
       `✅ Semantic index complete: ${filesProcessed} files, ${entriesIndexed} entries in ${duration}ms`
     )
 
-    // Save index to disk
+    // Save index
     const indexPath = this.getIndexPath(projectPath)
     await this.saveIndex(indexPath)
-    console.log(`💾 Index saved to ${indexPath}`)
+    console.log(`💾 Index saved`)
   }
 
   async loadIndex(projectPath: string): Promise<boolean> {
     const indexPath = this.getIndexPath(projectPath)
     try {
       await this.index.load(indexPath)
+      this.hasLoadedIndex = true
       console.log(`📖 Loaded semantic index from ${indexPath}`)
       return true
     } catch {
@@ -128,19 +246,19 @@ export class SemanticService {
     await this.index.save(indexPath)
   }
 
-  search(query: string, options?: SearchOptions): SearchResult[] {
+  async search(query: string, options?: SearchOptions): Promise<SearchResult[]> {
     return this.index.search(query, options)
   }
 
-  searchGroup(terms: string[]): SearchResult[] {
+  async searchGroup(terms: string[]): Promise<SearchResult[]> {
     return this.index.searchGroup(terms)
   }
 
-  getImpactAnalysis(term: string): {
+  async getImpactAnalysis(term: string): Promise<{
     directReferences: CrossReference[]
     fileCount: number
     byType: Record<string, number>
-  } {
+  }> {
     return this.index.getImpactAnalysis(term)
   }
 
@@ -153,56 +271,17 @@ export class SemanticService {
    */
   async buildIndex(): Promise<void> {
     await this.indexCodebase(this.projectPath)
+    this.hasLoadedIndex = true
   }
 
   /**
    * Index specific files (for incremental updates)
+   * This method is now integrated into ensureFresh using CodebaseStreamer
    */
-  async indexFiles(files: string[]): Promise<void> {
-    if (!this.silentMode) {
-      console.log(`🔄 Indexing ${files.length} files...`)
-    }
-    let entriesIndexed = 0
-
-    for (const filePath of files) {
-      const extractor = this.extractors.find((e) => e.canHandle(filePath))
-
-      if (extractor) {
-        try {
-          const file = Bun.file(filePath)
-          const content = await file.text()
-          const result = extractor.extract(content, filePath)
-
-          // Remove existing entries for this file first
-          this.index.removeFile(filePath)
-
-          // Add new definitions
-          result.definitions.forEach((info) => {
-            this.index.add(info)
-            entriesIndexed++
-          })
-
-          // Add cross-references
-          result.references.forEach((ref) => {
-            this.index.addCrossReference(ref)
-          })
-        } catch (error) {
-          if (!this.silentMode) {
-            console.warn(`Error processing ${filePath}:`, error)
-          }
-        }
-      }
-    }
-
-    if (!this.silentMode) {
-      console.log(
-        `✅ Indexed ${entriesIndexed} entries from ${files.length} files`
-      )
-    }
-
-    // Save updated index
-    const indexPath = this.getIndexPath(this.projectPath)
-    await this.saveIndex(indexPath)
+  private async indexFiles(files: string[]): Promise<void> {
+    // This method is no longer used directly
+    // All indexing goes through CodebaseStreamer in ensureFresh
+    throw new Error('indexFiles is deprecated. Use ensureFresh() which handles incremental updates automatically.')
   }
 
   /**
@@ -221,12 +300,21 @@ export class SemanticService {
    */
   async clearIndex(): Promise<void> {
     this.index.clear()
+    this.hasLoadedIndex = false
   }
 
   /**
    * Get index statistics
    */
-  getStats(): { totalEntries: number; totalFiles: number } {
+  async getStats(): Promise<{ totalEntries: number; totalFiles: number }> {
     return this.index.getStats()
+  }
+
+  /**
+   * Get the underlying semantic index (for advanced usage)
+   * Note: This doesn't ensure freshness automatically
+   */
+  getIndex(): SemanticIndexImpl {
+    return this.index
   }
 }

@@ -66,6 +66,10 @@ export const SMARTGREP_REMINDER = {
     'smartgrep refs "apiClient"          # Full impact analysis - see all usages',
     'smartgrep "TODO|FIXME"              # OR search - finds any of these',
     
+    // 🎯 NEW: Analyze your changes before committing!
+    'smartgrep changes                   # See what your changes will impact',
+    'smartgrep changes --compact         # Quick one-line risk assessment',
+    
     // Concept groups - this is magical
     'smartgrep group auth                # Finds ALL auth patterns (login, token, jwt...)',
     'smartgrep group error               # Finds ALL error handling patterns',

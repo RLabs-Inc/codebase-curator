@@ -18,6 +18,7 @@ import type {
   CrossReference,
   ConceptGroupDefinition,
 } from '@codebase-curator/semantic-core'
+import { execSync } from 'child_process'
 
 
 async function main() {
@@ -66,6 +67,12 @@ async function main() {
       process.exit(1)
     }
     await handleReferences(service, projectPath, args[1])
+    return
+  }
+
+  // Handle changes command for impact analysis
+  if (command === 'changes') {
+    await handleChangesImpact(service, projectPath, args.slice(1))
     return
   }
 
@@ -232,11 +239,14 @@ async function searchWithAnd(
   options: any
 ): Promise<SearchResult[]> {
   // Get results for first term
-  let results = service.search(terms[0], options)
+  process.stdout.write(`🔍 Searching for "${terms[0]}"...`)
+  let results = await service.search(terms[0], options)
+  process.stdout.write(' ✓\n')
 
   // Filter to only include results that match ALL terms
   for (let i = 1; i < terms.length; i++) {
-    const termResults = service.search(terms[i], options)
+    process.stdout.write(`🔍 Filtering by "${terms[i]}"...`)
+    const termResults = await service.search(terms[i], options)
     const termFiles = new Set(
       termResults.map((r) => `${r.info.location.file}:${r.info.location.line}`)
     )
@@ -244,6 +254,7 @@ async function searchWithAnd(
     results = results.filter((r) =>
       termFiles.has(`${r.info.location.file}:${r.info.location.line}`)
     )
+    process.stdout.write(' ✓\n')
   }
 
   return results
@@ -255,8 +266,13 @@ async function searchWithNot(
   options: any
 ): Promise<SearchResult[]> {
   // Get all results without the exclude term
-  const allResults = service.search('', { ...options, maxResults: 1000 })
-  const excludeResults = service.search(excludeTerm, options)
+  process.stdout.write(`🔍 Searching for all items...`)
+  const allResults = await service.search('', { ...options, maxResults: 1000 })
+  process.stdout.write(' ✓\n')
+  
+  process.stdout.write(`🔍 Finding items to exclude ("${excludeTerm}")...`)
+  const excludeResults = await service.search(excludeTerm, options)
+  process.stdout.write(' ✓\n')
 
   const excludeSet = new Set(
     excludeResults.map(
@@ -280,8 +296,11 @@ async function searchWithRegex(
   try {
     const regex = new RegExp(pattern)
     // Search with empty query to get all results, then filter by regex
-    const allResults = service.search('', { ...options, maxResults: 1000 })
-    return allResults.filter((r) => regex.test(r.info.term))
+    process.stdout.write(`🔍 Searching for regex pattern /${pattern}/...`)
+    const allResults = await service.search('', { ...options, maxResults: 1000 })
+    const filtered = allResults.filter((r) => regex.test(r.info.term))
+    process.stdout.write(' ✓\n')
+    return filtered
   } catch (e) {
     console.error(`Invalid regex pattern: ${pattern}`)
     return []
@@ -319,8 +338,29 @@ function displayResultsCompact(query: string, results: SearchResult[]) {
 
 async function handleIndex(service: SemanticService, projectPath: string) {
   console.log(`📂 Indexing codebase at: ${projectPath}`)
-  await service.indexCodebase(projectPath)
-  console.log('✨ Indexing complete!')
+  
+  // Add progress indicator
+  const startTime = Date.now()
+  const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+  let spinnerIndex = 0
+  
+  const interval = setInterval(() => {
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
+    process.stdout.write(`\r${spinner[spinnerIndex]} Indexing... (${elapsed}s)`)
+    spinnerIndex = (spinnerIndex + 1) % spinner.length
+  }, 100)
+  
+  try {
+    await service.indexCodebase(projectPath)
+    clearInterval(interval)
+    const totalTime = ((Date.now() - startTime) / 1000).toFixed(1)
+    process.stdout.write('\r')
+    console.log(`✨ Indexing complete! (${totalTime}s)`)
+  } catch (error) {
+    clearInterval(interval)
+    process.stdout.write('\r')
+    throw error
+  }
 }
 
 async function handleGroupSearch(
@@ -331,10 +371,14 @@ async function handleGroupSearch(
   args: string[]
 ) {
   // Load index
+  process.stdout.write('📚 Loading semantic index...')
   const loaded = await service.loadIndex(projectPath)
   if (!loaded) {
-    console.log('No semantic index found. Building...')
-    await service.indexCodebase(projectPath)
+    process.stdout.write(' not found\n')
+    console.log('🔨 Building new index...')
+    await handleIndex(service, projectPath)
+  } else {
+    process.stdout.write(' ✓\n')
   }
 
   // Parse additional options (filters, sorting, etc.)
@@ -366,7 +410,9 @@ async function handleGroupSearch(
   }
 
   // Search using the concept group
-  let results = service.searchGroup(conceptGroup)
+  process.stdout.write(`🔍 Searching concept group "${groupName}"...`)
+  let results = await service.searchGroup(conceptGroup)
+  process.stdout.write(' ✓\n')
 
   // Apply filters if provided
   if (typeFilter || fileFilter) {
@@ -413,7 +459,9 @@ async function handleReferences(
   }
 
   // Get impact analysis
-  const analysis = service.getImpactAnalysis(term)
+  process.stdout.write(`🔍 Analyzing references to "${term}"...`)
+  const analysis = await service.getImpactAnalysis(term)
+  process.stdout.write(' ✓\n')
 
   if (analysis.directReferences.length === 0) {
     console.log(`\n❌ No references found for "${term}"`)
@@ -518,7 +566,9 @@ async function handleSearch(
   if (query.includes('|')) {
     // OR pattern: term1|term2|term3
     const terms = query.split('|').map((t) => t.trim())
-    results = service.searchGroup(terms)
+    process.stdout.write(`🔍 Searching for any of: ${terms.join(', ')}...`)
+    results = await service.searchGroup(terms)
+    process.stdout.write(' ✓\n')
   } else if (query.includes('&')) {
     // AND pattern: term1&term2 (must contain all)
     const terms = query.split('&').map((t) => t.trim())
@@ -547,12 +597,14 @@ async function handleSearch(
     })
   } else {
     // Normal search with mode
-    results = service.search(query, {
+    process.stdout.write(`🔍 Searching for "${query}"...`)
+    results = await service.search(query, {
       type: typeFilter,
       files: fileFilter,
       maxResults,
       exact: searchMode === 'exact',
     })
+    process.stdout.write(' ✓\n')
   }
 
   // Sort results based on preference
@@ -753,6 +805,300 @@ function getTypeIcon(type: string): string {
   return icons[type] || '📄'
 }
 
+async function handleChangesImpact(
+  service: SemanticService,
+  projectPath: string,
+  args: string[]
+) {
+  const isCompact = args.includes('--compact') || args.includes('-c')
+  
+  // Load index first
+  if (!isCompact) {
+    process.stdout.write('📚 Loading semantic index...')
+  }
+  const loaded = await service.loadIndex(projectPath)
+  if (!loaded) {
+    if (!isCompact) {
+      process.stdout.write(' not found\n')
+      console.log('🔨 Building new index...')
+    }
+    await handleIndex(service, projectPath)
+  } else if (!isCompact) {
+    process.stdout.write(' ✓\n')
+  }
+
+  // Get git changes
+  try {
+    // Get changed files with status
+    const stagedRaw = execSync('git diff --cached --name-status', { 
+      cwd: projectPath, 
+      encoding: 'utf-8' 
+    }).trim().split('\n').filter(f => f.length > 0)
+    
+    const unstagedRaw = execSync('git diff --name-status', { 
+      cwd: projectPath, 
+      encoding: 'utf-8' 
+    }).trim().split('\n').filter(f => f.length > 0)
+    
+    // Parse file changes with their status
+    const parseChanges = (lines: string[]) => lines.map(line => {
+      const [status, ...pathParts] = line.split('\t')
+      return {
+        status: status[0] as 'M' | 'A' | 'D' | 'R',
+        path: pathParts[0]
+      }
+    })
+    
+    const staged = parseChanges(stagedRaw)
+    const unstaged = parseChanges(unstagedRaw)
+    
+    // Combine and deduplicate
+    const allChangesMap = new Map<string, { status: 'M' | 'A' | 'D' | 'R', path: string }>()
+    staged.forEach(change => {
+      allChangesMap.set(change.path, change)
+    })
+    unstaged.forEach(change => {
+      if (!allChangesMap.has(change.path)) {
+        allChangesMap.set(change.path, change)
+      }
+    })
+    const allChanged = Array.from(allChangesMap.values())
+    
+    if (allChanged.length === 0) {
+      if (!isCompact) {
+        console.log('\n✨ No changes in working directory')
+      }
+      return
+    }
+
+    // Get branch info
+    const branch = execSync('git rev-parse --abbrev-ref HEAD', {
+      cwd: projectPath,
+      encoding: 'utf-8'
+    }).trim()
+
+    if (!isCompact) {
+      console.log(`\n📊 Changes Impact Analysis`)
+      console.log(`📍 Branch: ${branch}`)
+      console.log(`📝 Status: ${staged.length} staged, ${unstaged.length} unstaged\n`)
+    }
+
+    // Analyze each changed file
+    let totalImpact = 0
+    const highImpactSymbols: { symbol: string, file: string, uses: number, refs?: any[] }[] = []
+    const impactedFiles = new Set<string>()
+
+    for (const change of allChanged) {
+      // Skip deleted files
+      if (change.status === 'D') {
+        if (!isCompact) {
+          console.log(`🗑️  ${change.path} (deleted)`)
+        }
+        continue
+      }
+      
+      // Get exported symbols from this file
+      const symbols = await service.search('', {
+        files: [change.path],
+        type: ['function', 'class', 'interface'],  // Skip generic variables
+        maxResults: 100
+      })
+
+      // Filter and deduplicate symbols
+      const symbolMap = new Map<string, typeof symbols[0]>()
+      symbols.forEach(s => {
+        // Skip generic names and duplicates
+        if (s.info.term.length > 2 && !['file', 'path', 'data', 'value', 'result', 'item'].includes(s.info.term)) {
+          const existing = symbolMap.get(s.info.term)
+          if (!existing || (s.usageCount || 0) > (existing.usageCount || 0)) {
+            symbolMap.set(s.info.term, s)
+          }
+        }
+      })
+
+      // Find high-impact symbols (with usage)
+      const impactful = Array.from(symbolMap.values())
+        .filter(s => s.usageCount && s.usageCount > 0)
+        .sort((a, b) => (b.usageCount || 0) - (a.usageCount || 0))
+
+      if (impactful.length > 0 && !isCompact) {
+        const statusIcon = change.status === 'A' ? '✨' : '📝'
+        console.log(`${statusIcon} ${change.path} (${change.status === 'A' ? 'new' : 'modified'})`)
+        
+        // Show most-used symbols
+        const toShow = impactful.slice(0, 3)
+        for (const symbol of toShow) {
+          const uses = symbol.usageCount || 0
+          totalImpact += uses
+          
+          // Get sample references to show WHERE it's used
+          if (uses >= 2) {
+            const refs = await service.getImpactAnalysis(symbol.info.term)
+            const externalRefs = refs.directReferences.filter(ref => ref.fromLocation.file !== change.path)
+            
+            externalRefs.forEach(ref => {
+              impactedFiles.add(ref.fromLocation.file)
+            })
+            
+            console.log(`   ${getTypeIcon(symbol.info.type)} ${symbol.info.term} (${uses} refs)`)
+            
+            // Show EXACTLY where it's used - this is what Claudes need!
+            if (uses <= 5) {
+              // Show all references if there are few
+              externalRefs.forEach(ref => {
+                const shortPath = ref.fromLocation.file.replace(projectPath + '/', '')
+                console.log(`      ↳ ${shortPath}:${ref.fromLocation.line} (${ref.referenceType})`)
+              })
+            } else {
+              // Show first 3 for high-use symbols
+              externalRefs.slice(0, 3).forEach(ref => {
+                const shortPath = ref.fromLocation.file.replace(projectPath + '/', '')
+                console.log(`      ↳ ${shortPath}:${ref.fromLocation.line} (${ref.referenceType})`)
+              })
+              console.log(`      ↳ ... and ${externalRefs.length - 3} more`)
+            }
+            
+            if (uses > 5) {
+              highImpactSymbols.push({ 
+                symbol: symbol.info.term, 
+                file: change.path, 
+                uses,
+                refs: externalRefs.slice(0, 5) // Keep some refs for summary
+              })
+            }
+          }
+        }
+        
+        // Add remaining count if significant
+        const remaining = impactful.slice(3).filter(s => (s.usageCount || 0) >= 2)
+        if (remaining.length > 0) {
+          const remainingUses = remaining.reduce((sum, s) => sum + (s.usageCount || 0), 0)
+          totalImpact += remainingUses
+          console.log(`   ... +${remaining.length} more (${remainingUses} refs)`)
+        }
+        console.log('')
+      } else if (impactful.length > 0 && isCompact) {
+        // Still count for compact mode
+        impactful.forEach(s => {
+          totalImpact += s.usageCount || 0
+          if ((s.usageCount || 0) > 5) {
+            highImpactSymbols.push({
+              symbol: s.info.term,
+              file: change.path,
+              uses: s.usageCount || 0
+            })
+          }
+        })
+      }
+    }
+
+    // Compact mode - actionable one-liner risk assessment
+    if (isCompact) {
+      if (totalImpact === 0) {
+        console.log(`✅ ${branch}: ${allChanged.length} files | No external impact - safe to commit`)
+      } else if (totalImpact < 10) {
+        console.log(`🟡 ${branch}: ${allChanged.length} files → ${totalImpact} refs | Low impact - review: ${highImpactSymbols.map(s => s.symbol).join(', ')}`)
+      } else if (totalImpact < 50) {
+        console.log(`🟠 ${branch}: ${allChanged.length} files → ${totalImpact} refs in ${impactedFiles.size} files | Medium impact - test carefully`)
+      } else {
+        const topSymbol = highImpactSymbols[0]
+        console.log(`🔴 ${branch}: ${allChanged.length} files → ${totalImpact} refs | HIGH IMPACT - ${topSymbol?.symbol} has ${topSymbol?.uses} refs!`)
+      }
+      return
+    }
+
+    // Regular mode - Claude-optimized output
+    
+    // Risk assessment
+    const riskLevel = totalImpact === 0 ? 'None' : 
+                      totalImpact < 10 ? 'Low' :
+                      totalImpact < 50 ? 'Medium' : 'High'
+    const riskIcon = totalImpact === 0 ? '✅' :
+                     totalImpact < 10 ? '🟡' :
+                     totalImpact < 50 ? '🟠' : '🔴'
+    
+    console.log(`\n${riskIcon} Risk Level: ${riskLevel}`)
+    console.log(`📊 ${allChanged.length} files changed → ${totalImpact} references across ${impactedFiles.size} files`)
+
+    // For Claudes: Show CRITICAL breaking changes first
+    const deletedFiles = allChanged.filter(c => c.status === 'D')
+    if (deletedFiles.length > 0) {
+      console.log(`\n🚨 DELETED FILES - Check these aren't still imported:`)
+      deletedFiles.forEach(({ path }) => {
+        console.log(`   ${path}`)
+      })
+    }
+
+    // Show test files that need to run
+    const testFiles = Array.from(impactedFiles).filter(f => f.includes('test') || f.includes('spec'))
+    if (testFiles.length > 0) {
+      console.log(`\n🧪 Tests to run:`)
+      testFiles.slice(0, 5).forEach(file => {
+        const shortPath = file.replace(projectPath + '/', '')
+        console.log(`   bun test ${shortPath}`)
+      })
+    }
+
+    if (impactedFiles.size > 0) {
+      // Group affected files by directory
+      const filesByDir = new Map<string, string[]>()
+      Array.from(impactedFiles).forEach(file => {
+        const dir = file.substring(0, file.lastIndexOf('/'))
+        if (!filesByDir.has(dir)) {
+          filesByDir.set(dir, [])
+        }
+        filesByDir.get(dir)!.push(file)
+      })
+      
+      console.log(`\n📁 Affected areas:`)
+      Array.from(filesByDir.entries())
+        .slice(0, 3)
+        .forEach(([dir, files]) => {
+          console.log(`   ${dir}/ (${files.length} files)`)
+        })
+    }
+    
+    // What to check before committing - this is what Claudes need!
+    console.log(`\n⚡ Before committing, check:`)
+    
+    if (totalImpact === 0) {
+      console.log(`   ✅ No external consumers - commit freely!`)
+    } else {
+      // Show the most important files to check
+      const criticalFiles = Array.from(impactedFiles)
+        .filter(f => !f.includes('test') && !f.includes('spec'))
+        .slice(0, 3)
+      
+      if (criticalFiles.length > 0) {
+        console.log(`   📍 Key files using your changes:`)
+        criticalFiles.forEach(file => {
+          const shortPath = file.replace(projectPath + '/', '')
+          console.log(`      ${shortPath}`)
+        })
+      }
+      
+      // Specific things to verify
+      if (highImpactSymbols.length > 0) {
+        const topSymbol = highImpactSymbols[0]
+        console.log(`   🔍 Verify: "${topSymbol.symbol}" still works correctly in its ${topSymbol.uses} usages`)
+      }
+      
+      // Quick command to see details
+      if (totalImpact > 20) {
+        console.log(`   📋 For full details: smartgrep refs "${highImpactSymbols[0]?.symbol}"`)
+      }
+    }
+
+  } catch (error: any) {
+    if (error.message.includes('not a git repository')) {
+      console.error('❌ Not in a git repository')
+    } else {
+      console.error(`❌ Git error: ${error.message}`)
+    }
+    process.exit(1)
+  }
+}
+
 function showHelp() {
   console.log(`
 🔍 Smart Grep - Semantic Code Search with Cross-References
@@ -761,6 +1107,7 @@ Usage:
   smartgrep <query>                Search for a term or pattern
   smartgrep --index                Rebuild the semantic index
   smartgrep refs <term>            Show where a term is referenced
+  smartgrep changes                Analyze impact of your uncommitted changes
 
 🏷️ Group Commands:
   smartgrep group list             List all available concept groups
@@ -816,6 +1163,8 @@ Usage:
   smartgrep group auth --sort usage             # Auth code sorted by usage
   smartgrep "CuratorService" --json             # Machine-readable output
   smartgrep refs "processPayment"               # Full impact analysis
+  smartgrep changes                             # Analyze uncommitted changes impact
+  smartgrep changes --compact                   # One-line risk assessment
   smartgrep group service --type class --max 10 # Top 10 service classes
   smartgrep group add api endpoint,route,handler,controller  # Add custom group
 

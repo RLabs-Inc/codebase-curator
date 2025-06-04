@@ -41,43 +41,49 @@ You get → Specific guidance that fits YOUR patterns
 - **Persistent Sessions**: Remembers context between questions
 - **Instant Follow-ups**: First question takes 2 minutes, rest are instant
 
-### 🔍 Smart Grep - Semantic Search Across 10 Languages
+### 🔍 Smart Grep - Semantic Search That Understands Code
 
 ```bash
-# Don't just search - understand (works across all languages!)
-smartgrep group auth            # Search ALL auth patterns
-smartgrep "handleAuth"         # TypeScript/JavaScript
-smartgrep "def authenticate"   # Python functions
+# Don't just search - understand!
+smartgrep "handleAuth"          # Shows where it's used + usage count
+smartgrep refs "apiClient"      # Full impact analysis - see all references
+smartgrep group auth            # Search ALL auth patterns at once
+smartgrep changes               # Analyze your uncommitted changes impact
+smartgrep changes --compact     # Quick risk assessment before committing
 smartgrep "func NewAuth"       # Go functions
 smartgrep "impl Auth"          # Rust implementations
 smartgrep "protocol Auth"      # Swift protocols
 smartgrep "function deploy"    # Shell scripts
 
-# Returns organized results:
+# Returns organized results with usage counts:
 # → Functions: authenticate() (12 uses), validateUser() (5 uses)
 # → Classes: AuthService, AuthMiddleware  
 # → Config: JWT_SECRET, AUTH_URL, oauth settings
-# → Cross-references: Shows actual calling code
+# → Cross-references: Shows actual calling code with file:line locations
 
 # Advanced patterns
 smartgrep "error&handler"       # AND search
 smartgrep "login|signin|auth"   # OR search
 smartgrep "!test" --type function # Exclude tests
+
+# Custom concept groups for your project
+smartgrep group add payments charge,bill,invoice,transaction
+smartgrep group payments --type function  # Search your custom group
 ```
 
 ### 🌐 Language Support - Now 10 Languages!
 
 **Programming Languages:**
-- **TypeScript/JavaScript** - Full AST parsing, JSX/TSX, ES6+
-- **Python** - Classes, decorators, async, type hints, docstrings
-- **Go** - Interfaces, goroutines, channels, embedded types
-- **Rust** - Traits, macros, lifetimes, async, unsafe blocks
-- **Swift** - Protocols, SwiftUI, extensions, property wrappers
-- **Shell** - Functions, aliases, exports, heredocs
+- **TypeScript/JavaScript** - Full AST parsing, JSX/TSX, ES6+, decorators
+- **Python** - Classes, decorators, async, type hints, docstrings, dataclasses
+- **Go** - Interfaces, goroutines, channels, embedded types, generics
+- **Rust** - Traits, macros, lifetimes, async, unsafe blocks, derive
+- **Swift** - Protocols, SwiftUI, extensions, property wrappers, actors
+- **Shell** - Functions, aliases, exports, heredocs, arrays
 
 **Configuration Files:**
 - **JSON** - package.json, tsconfig.json, hierarchical parsing
-- **YAML** - CI/CD pipelines, Docker Compose, Kubernetes
+- **YAML** - CI/CD pipelines, Docker Compose, Kubernetes manifests
 - **TOML** - Cargo.toml, pyproject.toml, structured configs
 - **Environment** - .env files with secure value masking
 
@@ -148,7 +154,7 @@ Now you can use these commands from anywhere:
   "mcpServers": {
     "codebase-curator": {
       "command": "bun",
-      "args": ["run", "/path/to/codebase-curator/src/mcp/server.ts"]
+      "args": ["run", "/path/to/codebase-curator/src/mcp-servers/codebase-curator/server.ts"]
     }
   }
 }
@@ -182,26 +188,30 @@ Use add_new_feature: "Add user notifications"
 Use implement_change: "Fix the login timeout bug"
 ```
 
-### Smart Grep CLI - Now with Concept Groups!
+### Smart Grep CLI - Semantic Search Made Simple
 
 ```bash
-# Install globally (coming soon)
-npm install -g @codebase-curator/smartgrep
-
-# For development
-bun link
+# After installation with bun link, use from anywhere:
 
 # Concept groups - search semantic patterns
 smartgrep group auth           # ALL auth patterns (login, jwt, token...)
 smartgrep group error          # ALL error patterns (exception, fail...)
 smartgrep group api            # ALL API patterns (endpoint, route...)
-smartgrep --list-groups        # See all 20+ concept groups
+smartgrep group list           # See all 20+ concept groups
+
+# NEW: Analyze your changes before committing!
+smartgrep changes              # Full impact analysis of uncommitted changes
+smartgrep changes --compact    # Quick risk assessment (one line)
 
 # Advanced search patterns
 smartgrep "user|auth"          # OR search
 smartgrep "async&function"      # AND search  
 smartgrep "!test" --type function  # Exclude tests
 smartgrep refs "PaymentService"    # Find all usages
+
+# Custom groups for your project
+smartgrep group add payments charge,bill,invoice,transaction
+smartgrep group payments       # Use your custom group
 
 # Type filters for precision
 smartgrep "auth" --type function      # Only functions
@@ -269,7 +279,11 @@ bun run smartgrep [query]         # Smart grep
 bun run monitor watch --overview  # Live monitoring
 
 # Build semantic index
-bun run smartgrep index
+bun run smartgrep --index
+
+# Analyze your changes
+bun run smartgrep changes         # Full impact analysis
+bun run smartgrep changes -c      # Quick risk check
 
 # Work with packages
 cd src/packages/smartgrep
@@ -310,6 +324,13 @@ _Remember: Your Claude works hard to help you code. Give it the superpower it de
 - **[Release Notes v4.0](./docs/RELEASE_NOTES_v4.md)** - Latest updates
 
 ## 🎆 What's New
+
+### v4.0 - Git Impact Analysis & Custom Groups
+- **Git Changes Analysis**: `smartgrep changes` analyzes uncommitted changes impact
+- **Custom Concept Groups**: Create project-specific semantic patterns
+- **Performance**: 37x faster than standalone tools (1s vs 37.5s)
+- **Risk Assessment**: One-line safety check before committing
+- **10 Language Support**: Added Swift and Shell script support
 
 ### v3.0 - Smart Grep Revolution
 - **Concept Groups**: `smartgrep group auth` searches semantic patterns

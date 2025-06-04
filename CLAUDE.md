@@ -100,11 +100,12 @@ The project is now organized as a monorepo with packages:
    - **Advanced Patterns**: AND (`&`), OR (`|`), NOT (`!`), regex (`/pattern/`)
    - **Type Filters**: `--type function,class,variable,string,comment`
    - **Cross-References**: `smartgrep refs "functionName"` shows all usages
+   - **Changes Impact**: `smartgrep changes` analyzes uncommitted changes
    - **20+ Concept Groups**: auth, error, api, database, cache, etc.
    
    ```bash
    # List all concept groups
-   bun run smartgrep --list-groups
+   bun run smartgrep group list
    
    # Search concept group
    bun run smartgrep group error --type function
@@ -116,6 +117,10 @@ The project is now organized as a monorepo with packages:
    
    # Find references
    bun run smartgrep refs "processPayment"
+   
+   # Analyze uncommitted changes
+   bun run smartgrep changes                  # Full impact analysis
+   bun run smartgrep changes --compact        # One-line risk assessment
    ```
 
 ### Debugging MCP Issues

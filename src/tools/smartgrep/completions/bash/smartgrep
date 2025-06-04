@@ -9,7 +9,7 @@ _smartgrep() {
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     
     # Main commands
-    local commands="group refs references"
+    local commands="group refs references changes"
     
     # Group subcommands
     local group_commands="list add remove rm"
@@ -63,6 +63,11 @@ _smartgrep() {
         refs|references)
             # After refs/references, no specific completion (user will type term)
             COMPREPLY=()
+            ;;
+            
+        changes)
+            # After changes, only offer --compact option
+            COMPREPLY=( $(compgen -W "--compact --help" -- ${cur}) )
             ;;
             
         *)
