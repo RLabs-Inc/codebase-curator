@@ -337,29 +337,59 @@ function displayResultsCompact(query: string, results: SearchResult[]) {
 }
 
 async function handleIndex(service: SemanticService, projectPath: string) {
-  console.log(`📂 Indexing codebase at: ${projectPath}`)
+  // Check if index exists
+  const hasExistingIndex = await service.loadIndex(projectPath)
   
-  // Add progress indicator
-  const startTime = Date.now()
-  const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
-  let spinnerIndex = 0
-  
-  const interval = setInterval(() => {
-    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
-    process.stdout.write(`\r${spinner[spinnerIndex]} Indexing... (${elapsed}s)`)
-    spinnerIndex = (spinnerIndex + 1) % spinner.length
-  }, 100)
-  
-  try {
-    await service.indexCodebase(projectPath)
-    clearInterval(interval)
-    const totalTime = ((Date.now() - startTime) / 1000).toFixed(1)
-    process.stdout.write('\r')
-    console.log(`✨ Indexing complete! (${totalTime}s)`)
-  } catch (error) {
-    clearInterval(interval)
-    process.stdout.write('\r')
-    throw error
+  if (!hasExistingIndex) {
+    // No index exists - do initial indexing
+    console.log(`📂 Building initial index at: ${projectPath}`)
+    
+    const startTime = Date.now()
+    const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+    let spinnerIndex = 0
+    
+    const interval = setInterval(() => {
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
+      process.stdout.write(`\r${spinner[spinnerIndex]} Indexing... (${elapsed}s)`)
+      spinnerIndex = (spinnerIndex + 1) % spinner.length
+    }, 100)
+    
+    try {
+      await service.indexCodebase(projectPath)
+      clearInterval(interval)
+      const totalTime = ((Date.now() - startTime) / 1000).toFixed(1)
+      process.stdout.write('\r')
+      console.log(`✨ Initial indexing complete! (${totalTime}s)`)
+    } catch (error) {
+      clearInterval(interval)
+      process.stdout.write('\r')
+      throw error
+    }
+  } else {
+    // Index exists - do incremental update
+    console.log(`📂 Updating index at: ${projectPath}`)
+    
+    const startTime = Date.now()
+    const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+    let spinnerIndex = 0
+    
+    const interval = setInterval(() => {
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
+      process.stdout.write(`\r${spinner[spinnerIndex]} Checking for changes... (${elapsed}s)`)
+      spinnerIndex = (spinnerIndex + 1) % spinner.length
+    }, 100)
+    
+    try {
+      const hadChanges = await service.updateIndex()
+      clearInterval(interval)
+      const totalTime = ((Date.now() - startTime) / 1000).toFixed(1)
+      process.stdout.write('\r')
+      console.log(`✨ Index updated! (${totalTime}s)`)
+    } catch (error) {
+      clearInterval(interval)
+      process.stdout.write('\r')
+      throw error
+    }
   }
 }
 

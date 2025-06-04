@@ -380,7 +380,8 @@ export class SemanticIndexImpl implements SemanticIndex {
       this.crossReferences = new Map(data.crossReferences || [])
       this.fileReferences = new Map(data.fileReferences || [])
     } catch (error) {
-      console.warn(`Could not load semantic index from ${path}:`, error)
+      // Silently fail - it's normal for index not to exist on first run
+      throw error
     }
   }
 }

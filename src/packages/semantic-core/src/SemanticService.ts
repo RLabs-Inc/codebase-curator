@@ -106,130 +106,78 @@ export class SemanticService {
     // Stream with incremental updates
     const streamer = new CodebaseStreamer(this.projectPath)
     let changedFiles = 0
-    let deletedFiles = 0
     
-    for await (const batch of streamer.streamFiles({
-      skipUnchanged: true
-    })) {
-      if (batch.metadata.type === 'final') {
-        // Process deletions
-        if (batch.deleted && batch.deleted.length > 0) {
-          for (const path of batch.deleted) {
-            this.index.removeFile(path)
-            deletedFiles++
-          }
-        }
+    for await (const batch of streamer.streamFiles()) {
+      // Process changed/new files
+      for (const [filePath, content] of batch.files) {
+        const extractor = this.extractors.find((e) => e.canHandle(filePath))
         
-        // No need to handle stats cache here - CodebaseStreamer manages it
-      } else {
-        // Process changed/new files
-        for (const [filePath, content] of batch.files) {
-          const extractor = this.extractors.find((e) => e.canHandle(filePath))
-          
-          if (extractor) {
-            try {
-              const result = extractor.extract(content, filePath)
-              
-              // Remove old entries and add new ones
-              this.index.removeFile(filePath)
-              
-              result.definitions.forEach((info) => {
-                this.index.add(info)
-              })
-              
-              result.references.forEach((ref) => {
-                this.index.addCrossReference(ref)
-              })
-              
-              changedFiles++
-            } catch (error) {
-              if (!this.silentMode) {
-                console.warn(`Error processing ${filePath}:`, error)
-              }
+        if (extractor) {
+          try {
+            const result = extractor.extract(content, filePath)
+            
+            // Remove old entries and add new ones
+            this.index.removeFile(filePath)
+            
+            result.definitions.forEach((info) => {
+              this.index.add(info)
+            })
+            
+            result.references.forEach((ref) => {
+              this.index.addCrossReference(ref)
+            })
+            
+            changedFiles++
+          } catch (error) {
+            if (!this.silentMode) {
+              console.warn(`Error processing ${filePath}:`, error)
             }
           }
-          
         }
       }
     }
     
-    if (changedFiles > 0 || deletedFiles > 0) {
+    if (changedFiles > 0) {
       // Save index only if there were changes
       const indexPath = this.getIndexPath(this.projectPath)
       await this.saveIndex(indexPath)
       
       if (!this.silentMode) {
         const duration = Date.now() - startTime
-        console.log(`✅ Index updated: ${changedFiles} changed, ${deletedFiles} deleted in ${duration}ms`)
+        console.log(`✅ Index updated: ${changedFiles} changed in ${duration}ms`)
       }
+    } else if (!this.silentMode) {
+      const duration = Date.now() - startTime
+      console.log(`✅ Index is up-to-date (checked in ${duration}ms)`)
     }
   }
 
   async indexCodebase(projectPath: string): Promise<void> {
-    console.log('🔍 Building semantic index...')
-
-    const streamer = new CodebaseStreamer(projectPath)
-    const startTime = Date.now()
-    let filesProcessed = 0
-    let entriesIndexed = 0
-
-    // Clear existing index
+    // Clear any existing index and hash cache
     this.index.clear()
-
-    // Process files in batches
-    for await (const batch of streamer.streamFiles()) {
-      if (batch.metadata.type === 'final') {
-        // Final batch - stats are handled by CodebaseStreamer
-        continue
-      }
-
-      // Process files
-      for (const [filePath, content] of batch.files) {
-        const extractor = this.extractors.find((e) => e.canHandle(filePath))
-
-        if (extractor) {
-          try {
-            const result = extractor.extract(content, filePath)
-
-            result.definitions.forEach((info) => {
-              this.index.add(info)
-              entriesIndexed++
-            })
-
-            result.references.forEach((ref) => {
-              this.index.addCrossReference(ref)
-            })
-
-            filesProcessed++
-          } catch (error) {
-            console.warn(`Error processing ${filePath}:`, error)
-          }
-        }
-      }
-
-      // Show progress
-      if (filesProcessed % 10 === 0) {
-        console.log(
-          `Processed ${filesProcessed} files, indexed ${entriesIndexed} entries...`
-        )
-      }
+    this.hasLoadedIndex = false
+    
+    // Delete hash cache to force full reindex
+    const hashCachePath = join(projectPath, '.curator', 'semantic', 'filehashes.json')
+    try {
+      await fs.unlink(hashCachePath)
+    } catch {
+      // Ignore if doesn't exist
     }
-
-    const duration = Date.now() - startTime
-    console.log(
-      `✅ Semantic index complete: ${filesProcessed} files, ${entriesIndexed} entries in ${duration}ms`
-    )
-
-    // Save index
-    const indexPath = this.getIndexPath(projectPath)
-    await this.saveIndex(indexPath)
-    console.log(`💾 Index saved`)
+    
+    // Use ensureFresh which handles everything
+    await this.ensureFresh()
   }
 
   async loadIndex(projectPath: string): Promise<boolean> {
     const indexPath = this.getIndexPath(projectPath)
     try {
       await this.index.load(indexPath)
+      // Check if index actually has content
+      const stats = await this.index.getStats()
+      if (stats.totalEntries === 0) {
+        return false
+      }
       this.hasLoadedIndex = true
       console.log(`📖 Loaded semantic index from ${indexPath}`)
       return true
@@ -269,9 +217,59 @@ export class SemanticService {
   /**
    * Build index for the configured project path
    */
-  async buildIndex(): Promise<void> {
-    await this.indexCodebase(this.projectPath)
-    this.hasLoadedIndex = true
+  private async buildIndex(): Promise<void> {
+    console.log('🔍 Building semantic index...')
+    const startTime = Date.now()
+    let filesProcessed = 0
+    let entriesIndexed = 0
+
+    // Clear existing index
+    this.index.clear()
+
+    // Process files using streamer
+    const streamer = new CodebaseStreamer(this.projectPath)
+    for await (const batch of streamer.streamFiles()) {
+      // Process files
+      for (const [filePath, content] of batch.files) {
+        const extractor = this.extractors.find((e) => e.canHandle(filePath))
+
+        if (extractor) {
+          try {
+            const result = extractor.extract(content, filePath)
+
+            result.definitions.forEach((info) => {
+              this.index.add(info)
+              entriesIndexed++
+            })
+
+            result.references.forEach((ref) => {
+              this.index.addCrossReference(ref)
+            })
+
+            filesProcessed++
+          } catch (error) {
+            console.warn(`Error processing ${filePath}:`, error)
+          }
+        }
+      }
+
+      // Show progress
+      if (filesProcessed % 10 === 0) {
+        console.log(
+          `Processed ${filesProcessed} files, indexed ${entriesIndexed} entries...`
+        )
+      }
+    }
+
+    const duration = Date.now() - startTime
+    console.log(
+      `✅ Semantic index complete: ${filesProcessed} files, ${entriesIndexed} entries in ${duration}ms`
+    )
+
+    // Save index
+    const indexPath = this.getIndexPath(this.projectPath)
+    await this.saveIndex(indexPath)
+    console.log(`💾 Index saved`)
   }
 
   /**
@@ -316,5 +314,26 @@ export class SemanticService {
    */
   getIndex(): SemanticIndexImpl {
     return this.index
+  }
+
+  /**
+   * Update the index with any file changes
+   * - First run: Builds complete index
+   * - Subsequent runs: Only processes changed/new/deleted files
+   * Returns true if any changes were processed
+   */
+  async updateIndex(): Promise<boolean> {
+    const startTime = Date.now()
+    const statsBefore = await this.getStats()
+    
+    await this.ensureFresh()
+    
+    const statsAfter = await this.getStats()
+    const duration = Date.now() - startTime
+    
+    // Return true if index changed or it took more than 500ms
+    return statsBefore.totalEntries !== statsAfter.totalEntries || 
+           statsBefore.totalFiles !== statsAfter.totalFiles ||
+           duration > 500
   }
 }
