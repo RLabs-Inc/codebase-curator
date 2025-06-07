@@ -410,6 +410,29 @@ export const DEFAULT_CONCEPT_GROUPS: Record<string, ConceptGroupDefinition> = {
       'production',
     ],
   },
+
+  // Development Markers & Technical Debt
+  devmarkers: {
+    name: 'devmarkers',
+    description: 'Development markers & technical debt indicators',
+    emoji: '🚧',
+    terms: [
+      'TODO',
+      'FIXME',
+      'HACK',
+      'XXX',
+      'BUG',
+      'OPTIMIZE',
+      'REFACTOR',
+      'NOTE',
+      'REVIEW',
+      'DEPRECATED',
+      'WORKAROUND',
+      'TEMP',
+      'KLUDGE',
+      'SMELL',
+    ],
+  },
 }
 
 /**

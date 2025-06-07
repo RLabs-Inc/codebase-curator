@@ -322,16 +322,27 @@ export class TypeScriptExtractor implements LanguageExtractor {
           const value = comment.value.trim()
           if (value.length > 5) {
             // Skip tiny comments
-            definitions.push(
-              this.createSemanticInfo(
-                value,
-                'comment',
-                comment.loc,
-                filePath,
-                lines,
-                this.getContext(comment.loc, lines)
-              )
+            const semanticInfo = this.createSemanticInfo(
+              value,
+              'comment',
+              comment.loc,
+              filePath,
+              lines,
+              this.getContext(comment.loc, lines)
             )
+            
+            // Check for development markers
+            const devMarkerPattern = /^\s*(TODO|FIXME|HACK|XXX|BUG|OPTIMIZE|REFACTOR|NOTE|REVIEW|DEPRECATED|WORKAROUND|TEMP|KLUDGE|SMELL)\b/i
+            const markerMatch = value.match(devMarkerPattern)
+            if (markerMatch) {
+              semanticInfo.metadata = {
+                ...semanticInfo.metadata,
+                isDevelopmentMarker: true,
+                markerType: markerMatch[1].toUpperCase()
+              }
+            }
+            
+            definitions.push(semanticInfo)
           }
         })
       }
@@ -497,15 +508,28 @@ export class TypeScriptExtractor implements LanguageExtractor {
 
       commentMatches.forEach((match) => {
         if (match && match[1] && match[1].length > 5) {
-          definitions.push({
-            term: match[1].trim(),
+          const commentText = match[1].trim()
+          const semanticInfo: SemanticInfo = {
+            term: commentText,
             type: 'comment',
             location: { file: filePath, line: index + 1, column: 0 },
             context: line.trim(),
             surroundingLines: [line.trim()],
             relatedTerms: [],
             language: 'typescript',
-          })
+          }
+          
+          // Check for development markers
+          const devMarkerPattern = /^\s*(TODO|FIXME|HACK|XXX|BUG|OPTIMIZE|REFACTOR|NOTE|REVIEW|DEPRECATED|WORKAROUND|TEMP|KLUDGE|SMELL)\b/i
+          const markerMatch = commentText.match(devMarkerPattern)
+          if (markerMatch) {
+            semanticInfo.metadata = {
+              isDevelopmentMarker: true,
+              markerType: markerMatch[1].toUpperCase()
+            }
+          }
+          
+          definitions.push(semanticInfo)
         }
       })
     })

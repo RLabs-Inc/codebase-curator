@@ -316,15 +316,28 @@ export class RustExtractor implements LanguageExtractor {
       // Comments (single-line)
       const commentMatch = line.match(/^\s*\/\/\/?!?\s*(.+)/)
       if (commentMatch && commentMatch[1].length > 5) {
-        definitions.push({
-          term: commentMatch[1].trim(),
+        const commentText = commentMatch[1].trim()
+        const semanticInfo: SemanticInfo = {
+          term: commentText,
           type: 'comment',
           location: { file: filePath, line: index + 1, column: 0 },
           context: line.trim(),
           surroundingLines: [line.trim()],
           relatedTerms: [],
           language: 'rust',
-        })
+        }
+        
+        // Check for development markers
+        const devMarkerPattern = /^\s*(TODO|FIXME|HACK|XXX|BUG|OPTIMIZE|REFACTOR|NOTE|REVIEW|DEPRECATED|WORKAROUND|TEMP|KLUDGE|SMELL)\b/i
+        const markerMatch = commentText.match(devMarkerPattern)
+        if (markerMatch) {
+          semanticInfo.metadata = {
+            isDevelopmentMarker: true,
+            markerType: markerMatch[1].toUpperCase()
+          }
+        }
+        
+        definitions.push(semanticInfo)
       }
 
       // Derive attributes (common pattern in Rust)
@@ -371,7 +384,7 @@ export class RustExtractor implements LanguageExtractor {
         // End of doc comment
         const fullDoc = docLines.join('\n').trim()
         if (fullDoc.length > 5) {
-          definitions.push({
+          const semanticInfo: SemanticInfo = {
             term: fullDoc,
             type: 'comment',
             location: { file: filePath, line: docStart + 1, column: 0 },
@@ -379,7 +392,19 @@ export class RustExtractor implements LanguageExtractor {
             surroundingLines: docLines.slice(0, 3),
             relatedTerms: [],
             language: 'rust',
-          })
+          }
+          
+          // Check for development markers in doc comments
+          const devMarkerPattern = /\b(TODO|FIXME|HACK|XXX|BUG|OPTIMIZE|REFACTOR|NOTE|REVIEW|DEPRECATED|WORKAROUND|TEMP|KLUDGE|SMELL)\b/gi
+          const markerMatches = fullDoc.match(devMarkerPattern)
+          if (markerMatches) {
+            semanticInfo.metadata = {
+              isDevelopmentMarker: true,
+              markerTypes: [...new Set(markerMatches.map(m => m.toUpperCase()))]
+            }
+          }
+          
+          definitions.push(semanticInfo)
         }
         inDocComment = false
         docLines = []

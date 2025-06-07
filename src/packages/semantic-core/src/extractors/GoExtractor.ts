@@ -295,15 +295,28 @@ export class GoExtractor implements LanguageExtractor {
       // Comments (single-line)
       const commentMatch = line.match(/^\s*\/\/\s*(.+)/)
       if (commentMatch && commentMatch[1].length > 5) {
-        definitions.push({
-          term: commentMatch[1].trim(),
+        const commentText = commentMatch[1].trim()
+        const semanticInfo: SemanticInfo = {
+          term: commentText,
           type: 'comment',
           location: { file: filePath, line: index + 1, column: 0 },
           context: line.trim(),
           surroundingLines: [line.trim()],
           relatedTerms: [],
           language: 'go',
-        })
+        }
+        
+        // Check for development markers
+        const devMarkerPattern = /^\s*(TODO|FIXME|HACK|XXX|BUG|OPTIMIZE|REFACTOR|NOTE|REVIEW|DEPRECATED|WORKAROUND|TEMP|KLUDGE|SMELL)\b/i
+        const markerMatch = commentText.match(devMarkerPattern)
+        if (markerMatch) {
+          semanticInfo.metadata = {
+            isDevelopmentMarker: true,
+            markerType: markerMatch[1].toUpperCase()
+          }
+        }
+        
+        definitions.push(semanticInfo)
       }
     })
 
@@ -326,7 +339,7 @@ export class GoExtractor implements LanguageExtractor {
         const beforeComment = content.substring(0, match.index || 0)
         const lineNumber = beforeComment.split('\n').length
         
-        definitions.push({
+        const semanticInfo: SemanticInfo = {
           term: commentContent,
           type: 'comment',
           location: { file: filePath, line: lineNumber, column: 0 },
@@ -334,7 +347,19 @@ export class GoExtractor implements LanguageExtractor {
           surroundingLines: [commentContent.split('\n')[0]],
           relatedTerms: [],
           language: 'go',
-        })
+        }
+        
+        // Check for development markers in multi-line comments
+        const devMarkerPattern = /\b(TODO|FIXME|HACK|XXX|BUG|OPTIMIZE|REFACTOR|NOTE|REVIEW|DEPRECATED|WORKAROUND|TEMP|KLUDGE|SMELL)\b/gi
+        const markerMatches = commentContent.match(devMarkerPattern)
+        if (markerMatches) {
+          semanticInfo.metadata = {
+            isDevelopmentMarker: true,
+            markerTypes: [...new Set(markerMatches.map(m => m.toUpperCase()))]
+          }
+        }
+        
+        definitions.push(semanticInfo)
       }
     }
   }

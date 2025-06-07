@@ -66,6 +66,7 @@ export class CuratorService implements CoreService {
     newSession?: boolean
   ): Promise<string> {
     const path = this.getPath(projectPath)
+    const prompt = this.getOverviewPrompt()
 
     // Don't run analyses - let Curator Claude use the tools himself!
     // Just give him the project path and our sophisticated prompts
@@ -77,7 +78,7 @@ export class CuratorService implements CoreService {
 
     // Ask curator for comprehensive overview
     const query: CuratorQuery = {
-      question: getCuratorContext(OVERVIEW_PROMPT),
+      question: prompt,
       projectPath: path,
       newSession: newSession || false, // Default: reuse existing session to preserve context
     }

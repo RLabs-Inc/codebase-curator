@@ -68,7 +68,7 @@ export class ShellExtractor implements LanguageExtractor {
       if (trimmedLine.startsWith('#') && !trimmedLine.startsWith('#!')) {
         const comment = trimmedLine.substring(1).trim()
         if (comment.length > 5) {
-          definitions.push({
+          const semanticInfo: SemanticInfo = {
             term: comment,
             type: 'comment',
             location: { file: filePath, line: index + 1, column: 0 },
@@ -76,7 +76,19 @@ export class ShellExtractor implements LanguageExtractor {
             surroundingLines: [trimmedLine],
             relatedTerms: [],
             language: 'shell',
-          })
+          }
+          
+          // Check for development markers
+          const devMarkerPattern = /^\s*(TODO|FIXME|HACK|XXX|BUG|OPTIMIZE|REFACTOR|NOTE|REVIEW|DEPRECATED|WORKAROUND|TEMP|KLUDGE|SMELL)\b/i
+          const markerMatch = comment.match(devMarkerPattern)
+          if (markerMatch) {
+            semanticInfo.metadata = {
+              isDevelopmentMarker: true,
+              markerType: markerMatch[1].toUpperCase()
+            }
+          }
+          
+          definitions.push(semanticInfo)
         }
         return
       }
