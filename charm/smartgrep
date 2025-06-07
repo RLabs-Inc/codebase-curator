@@ -1,0 +1,295 @@
+#!/bin/bash
+# charm/smartgrep - Beautiful semantic search optimized for Claude usage
+# 
+# Design Philosophy:
+# - Structured output that Claudes can parse quickly
+# - Clear visual hierarchy for rapid scanning
+# - Contextual information prominently displayed
+# - Batch operations for efficient exploration
+
+set -e
+
+# Colors and styling for Claude-friendly output
+HEADER_COLOR="212"      # Charm pink
+MATCH_COLOR="120"       # Bright green for matches
+CONTEXT_COLOR="244"     # Gray for context
+LOCATION_COLOR="33"     # Blue for file locations
+COUNT_COLOR="220"       # Yellow for counts
+
+# Source directory (relative to charm/)
+SMARTGREP_CMD="../src/tools/smartgrep/cli.ts"
+
+# Helper: Show styled header
+show_header() {
+    gum style \
+        --foreground $HEADER_COLOR \
+        --border double \
+        --margin "1 0" \
+        --padding "1 2" \
+        --align center \
+        "= SMARTGREP CHARM" \
+        "Semantic Search for Claude"
+}
+
+# Helper: Format results for Claude consumption
+format_for_claude() {
+    # Add clear separators and structure
+    sed -E '
+        # Highlight file paths
+        s|^(=Á [A-Z]+)|\n\1|g
+        # Add spacing between results
+        s|(=Í Used [0-9]+ times:)|\n\1|g
+    '
+}
+
+# Main search interface
+search_interactive() {
+    show_header
+    
+    # Choose search mode
+    local mode=$(gum choose \
+        --cursor "¸ " \
+        --cursor.foreground $HEADER_COLOR \
+        --header "Search Mode:" \
+        "pattern|= Pattern Search|Search for specific terms" \
+        "group|<÷ Concept Group|Search semantic groups" \
+        "refs|=Î References|Find all usages" \
+        "impact|=¥ Impact Analysis|Analyze changes" \
+        "claude|> Claude Mode|Batch search for exploration" | cut -d'|' -f1)
+    
+    case $mode in
+        "pattern")
+            search_pattern
+            ;;
+        "group")
+            search_group
+            ;;
+        "refs")
+            search_references
+            ;;
+        "impact")
+            analyze_impact
+            ;;
+        "claude")
+            claude_batch_mode
+            ;;
+    esac
+}
+
+# Pattern search with Claude-optimized output
+search_pattern() {
+    local pattern=$(gum input \
+        --placeholder "Search pattern (use | for OR, & for AND, ! for NOT)" \
+        --prompt "= " \
+        --prompt.foreground $HEADER_COLOR)
+    
+    [ -z "$pattern" ] && return
+    
+    # Type selection
+    local types=$(gum choose \
+        --no-limit \
+        --cursor "¸ " \
+        --header "Filter by type (space to select, enter to confirm):" \
+        "function" "class" "interface" "variable" "string" "comment" "import")
+    
+    # Build command
+    local cmd="bun run $SMARTGREP_CMD \"$pattern\""
+    if [ -n "$types" ]; then
+        cmd="$cmd --type $(echo $types | tr '\n' ',')"
+    fi
+    
+    # Add Claude-friendly formatting
+    cmd="$cmd --sort usage"
+    
+    # Execute with spinner and format output
+    gum spin --spinner dot --title " Searching for '$pattern'..." -- \
+        bash -c "$cmd" | format_for_claude | gum format --type code | gum pager
+}
+
+# Concept group search
+search_group() {
+    # First, get available groups
+    local groups=$(bun run $SMARTGREP_CMD group list | \
+        grep -E "^[==Ä=¾< =d=³™>êó='<
+<×=æ=Ë=¡=á=Ý=á=(=€=§]" | \
+        gum filter \
+            --placeholder "Select a concept group" \
+            --height 15 \
+            --indicator "¸" \
+            --indicator.foreground $HEADER_COLOR)
+    
+    [ -z "$groups" ] && return
+    
+    local group_name=$(echo "$groups" | awk '{print $2}')
+    
+    # Options for group search
+    gum style --foreground $HEADER_COLOR "<÷ Options for '$group_name' group:"
+    
+    local max_results=$(gum input --placeholder "Max results" --value "50")
+    local sort_by=$(gum choose "usage" "name" "file" "relevance")
+    
+    # Execute search
+    gum spin --spinner dot --title " Searching '$group_name' patterns..." -- \
+        bun run $SMARTGREP_CMD group "$group_name" \
+            --max "$max_results" \
+            --sort "$sort_by" | \
+        format_for_claude | \
+        gum format --type code | \
+        gum pager
+}
+
+# Find references
+search_references() {
+    local term=$(gum input \
+        --placeholder "Function/class/variable name to find references for" \
+        --prompt "=Î " \
+        --prompt.foreground $HEADER_COLOR)
+    
+    [ -z "$term" ] && return
+    
+    gum spin --spinner dot --title " Finding references to '$term'..." -- \
+        bun run $SMARTGREP_CMD refs "$term" | \
+        format_for_claude | \
+        gum format --type code | \
+        gum pager
+}
+
+# Analyze impact of changes
+analyze_impact() {
+    local compact=$(gum confirm "Use compact output?" && echo "--compact" || echo "")
+    
+    gum spin --spinner pulse --title " Analyzing uncommitted changes..." -- \
+        bun run $SMARTGREP_CMD changes $compact | \
+        gum format --type markdown | \
+        gum pager
+}
+
+# Claude batch mode - Multiple searches for comprehensive exploration
+claude_batch_mode() {
+    gum style \
+        --foreground $HEADER_COLOR \
+        --border rounded \
+        --padding "1 2" \
+        --margin "1" \
+        "> Claude Batch Mode" \
+        "" \
+        "This mode runs multiple searches to give Claude" \
+        "comprehensive context about a codebase area."
+    
+    local topic=$(gum input \
+        --placeholder "Topic to explore (e.g., 'authentication', 'database')" \
+        --prompt "<¯ " \
+        --prompt.foreground $HEADER_COLOR)
+    
+    [ -z "$topic" ] && return
+    
+    # Create comprehensive search batch
+    local timestamp=$(date +%s)
+    local output_file="/tmp/smartgrep-claude-$timestamp.md"
+    
+    {
+        echo "# > Claude Exploration Report: $topic"
+        echo "Generated: $(date)"
+        echo ""
+        
+        # 1. Direct term search
+        echo "## =Ê Direct Search Results"
+        echo '```'
+        bun run $SMARTGREP_CMD "$topic" --type function,class --max 20 --compact
+        echo '```'
+        echo ""
+        
+        # 2. Related concept groups
+        echo "## <÷ Related Concept Groups"
+        for group in auth service api database error; do
+            if bun run $SMARTGREP_CMD group list | grep -q "$group"; then
+                echo "### Group: $group"
+                echo '```'
+                bun run $SMARTGREP_CMD group "$group" --compact | grep -i "$topic" | head -10
+                echo '```'
+            fi
+        done
+        echo ""
+        
+        # 3. Cross references
+        echo "## =Î Cross References"
+        echo "Finding references to key $topic functions..."
+        echo '```'
+        # Find top functions related to topic
+        bun run $SMARTGREP_CMD "$topic" --type function --max 5 --compact | \
+            grep -o "^[^ ]*" | while read func; do
+            echo "References to $func:"
+            bun run $SMARTGREP_CMD refs "$func" --compact | head -5
+            echo ""
+        done
+        echo '```'
+        
+        # 4. File patterns
+        echo "## =Á File Organization"
+        echo '```'
+        bun run $SMARTGREP_CMD "$topic" --compact | \
+            awk -F':' '{print $1}' | \
+            sort | uniq -c | sort -rn | head -10
+        echo '```'
+        
+    } > "$output_file"
+    
+    # Display with gum
+    gum style \
+        --foreground $MATCH_COLOR \
+        --margin "1 0" \
+        " Exploration complete! Results saved to: $output_file"
+    
+    # Show results
+    gum format --type markdown < "$output_file" | gum pager
+    
+    # Offer to copy to clipboard
+    if gum confirm "Copy results to clipboard?"; then
+        if command -v pbcopy &> /dev/null; then
+            pbcopy < "$output_file"
+            gum style --foreground $MATCH_COLOR "=Ë Copied to clipboard!"
+        fi
+    fi
+}
+
+# Quick search mode (for command line usage)
+quick_search() {
+    # If arguments provided, use them directly
+    if [ $# -gt 0 ]; then
+        bun run $SMARTGREP_CMD "$@" | gum format --type code
+        return
+    fi
+    
+    # Otherwise, show interactive mode
+    main
+}
+
+# Main interface loop
+main() {
+    while true; do
+        search_interactive
+        
+        echo
+        if ! gum confirm "Search again?"; then
+            gum style \
+                --foreground $HEADER_COLOR \
+                --margin "1 0" \
+                "( Happy coding with Claude!"
+            break
+        fi
+        clear
+    done
+}
+
+# Entry point
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    # Check if gum is installed
+    if ! command -v gum &> /dev/null; then
+        echo "Error: gum is not installed. Please install it first:"
+        echo "  brew install gum"
+        exit 1
+    fi
+    
+    # Pass through any arguments for quick search
+    quick_search "$@"
+fi

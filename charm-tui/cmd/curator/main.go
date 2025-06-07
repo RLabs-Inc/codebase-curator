@@ -56,12 +56,12 @@ var overviewCmd = &cobra.Command{
 			cmdArgs = append(cmdArgs, "--new-session")
 		}
 		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
+		execCmd := exec.Command("bun", cmdArgs...)
+		execCmd.Stdout = os.Stdout
+		execCmd.Stderr = os.Stderr
+		execCmd.Stdin = os.Stdin
 		
-		return cmd.Run()
+		return execCmd.Run()
 	},
 }
 
@@ -93,12 +93,12 @@ var askCmd = &cobra.Command{
 		}
 		cmdArgs = append(cmdArgs, question)
 		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
+		execCmd := exec.Command("bun", cmdArgs...)
+		execCmd.Stdout = os.Stdout
+		execCmd.Stderr = os.Stderr
+		execCmd.Stdin = os.Stdin
 		
-		return cmd.Run()
+		return execCmd.Run()
 	},
 }
 
@@ -143,12 +143,12 @@ var featureCmd = &cobra.Command{
 		}
 		cmdArgs = append(cmdArgs, description)
 		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
+		execCmd := exec.Command("bun", cmdArgs...)
+		execCmd.Stdout = os.Stdout
+		execCmd.Stderr = os.Stderr
+		execCmd.Stdin = os.Stdin
 		
-		return cmd.Run()
+		return execCmd.Run()
 	},
 }
 
@@ -178,12 +178,12 @@ var changeCmd = &cobra.Command{
 		}
 		cmdArgs = append(cmdArgs, description)
 		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
+		execCmd := exec.Command("bun", cmdArgs...)
+		execCmd.Stdout = os.Stdout
+		execCmd.Stderr = os.Stderr
+		execCmd.Stdin = os.Stdin
 		
-		return cmd.Run()
+		return execCmd.Run()
 	},
 }
 
@@ -207,12 +207,12 @@ var memoryCmd = &cobra.Command{
 			cmdArgs = append(cmdArgs, path)
 		}
 		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
+		execCmd := exec.Command("bun", cmdArgs...)
+		execCmd.Stdout = os.Stdout
+		execCmd.Stderr = os.Stderr
+		execCmd.Stdin = os.Stdin
 		
-		return cmd.Run()
+		return execCmd.Run()
 	},
 }
 
@@ -232,12 +232,12 @@ var clearCmd = &cobra.Command{
 			cmdArgs = append(cmdArgs, path)
 		}
 		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
+		execCmd := exec.Command("bun", cmdArgs...)
+		execCmd.Stdout = os.Stdout
+		execCmd.Stderr = os.Stderr
+		execCmd.Stdin = os.Stdin
 		
-		return cmd.Run()
+		return execCmd.Run()
 	},
 }
 

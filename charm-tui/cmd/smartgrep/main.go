@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 
+	"github.com/RLabs-Inc/codebase-curator/charm-tui/internal/config"
 	"github.com/RLabs-Inc/codebase-curator/charm-tui/internal/smartgrep"
 	"github.com/spf13/cobra"
 )
@@ -26,6 +26,7 @@ var rootCmd = &cobra.Command{
 	
 By default, smartgrep runs in CLI mode for maximum Claude productivity.
 Use --tui for an interactive terminal interface.`,
+	Args: cobra.ArbitraryArgs,  // Allow any number of arguments
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if tuiMode {
 			// Launch TUI mode
@@ -46,50 +47,82 @@ func init() {
 	rootCmd.Flags().BoolVar(&rebuildIndex, "index", false, "Rebuild the semantic index")
 }
 
-func runCLIMode(args []string) error {
-	// Build command to run TypeScript smartgrep
-	smartgrepPath := "../../src/tools/smartgrep/cli.ts"
+// Helper to execute CLI commands
+func executeCommand(subcommand string, args []string, flags map[string]interface{}) error {
+	executor := config.GetExecutor()
+	cliPath := config.GetSmartgrepPath()
 	
-	// Start with base command
-	cmdArgs := []string{"run", smartgrepPath}
+	var cmd *exec.Cmd
+	var cmdArgs []string
 	
-	// Check if rebuilding index
-	if rebuildIndex {
-		cmdArgs = append(cmdArgs, "--index")
-		// Execute and pass through output
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
-		return cmd.Run()
+	if executor != "" {
+		// Development mode: bun run path/to/cli.ts
+		cmdArgs = []string{"run", cliPath}
+		if subcommand != "" {
+			cmdArgs = append(cmdArgs, subcommand)
+		}
+		cmdArgs = append(cmdArgs, args...)
+		
+		// Add flags
+		for flag, value := range flags {
+			if boolVal, ok := value.(bool); ok && boolVal {
+				cmdArgs = append(cmdArgs, "--"+flag)
+			} else if strVal, ok := value.(string); ok && strVal != "" {
+				cmdArgs = append(cmdArgs, "--"+flag, strVal)
+			} else if intVal, ok := value.(int); ok && flag == "max" && intVal != 50 {
+				cmdArgs = append(cmdArgs, "--"+flag, fmt.Sprintf("%d", intVal))
+			}
+		}
+		
+		cmd = exec.Command(executor, cmdArgs...)
+	} else {
+		// Production mode: smartgrep binary is in PATH
+		if subcommand != "" {
+			cmdArgs = append(cmdArgs, subcommand)
+		}
+		cmdArgs = append(cmdArgs, args...)
+		
+		// Add flags
+		for flag, value := range flags {
+			if boolVal, ok := value.(bool); ok && boolVal {
+				cmdArgs = append(cmdArgs, "--"+flag)
+			} else if strVal, ok := value.(string); ok && strVal != "" {
+				cmdArgs = append(cmdArgs, "--"+flag, strVal)
+			} else if intVal, ok := value.(int); ok && flag == "max" && intVal != 50 {
+				cmdArgs = append(cmdArgs, "--"+flag, fmt.Sprintf("%d", intVal))
+			}
+		}
+		
+		cmd = exec.Command(cliPath, cmdArgs...)
 	}
 	
-	// Add pattern if provided
-	if len(args) > 0 {
-		cmdArgs = append(cmdArgs, args[0])
-	}
-	
-	// Add flags
-	if typeFilter != "" {
-		cmdArgs = append(cmdArgs, "--type", typeFilter)
-	}
-	if maxResults != 50 {
-		cmdArgs = append(cmdArgs, "--max", fmt.Sprintf("%d", maxResults))
-	}
-	if sortBy != "relevance" {
-		cmdArgs = append(cmdArgs, "--sort", sortBy)
-	}
-	if compactMode {
-		cmdArgs = append(cmdArgs, "--compact")
-	}
-	
-	// Execute and pass through output
-	cmd := exec.Command("bun", cmdArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
 	
 	return cmd.Run()
+}
+
+func runCLIMode(args []string) error {
+	// Build flags map
+	flags := make(map[string]interface{})
+	if rebuildIndex {
+		flags["index"] = true
+	}
+	if typeFilter != "" {
+		flags["type"] = typeFilter
+	}
+	if maxResults != 50 {
+		flags["max"] = maxResults
+	}
+	if sortBy != "relevance" {
+		flags["sort"] = sortBy
+	}
+	if compactMode {
+		flags["compact"] = true
+	}
+	
+	return executeCommand("", args, flags)
 }
 
 // Subcommands
@@ -103,15 +136,7 @@ var groupCmd = &cobra.Command{
 		}
 		
 		// Pass through to TypeScript implementation
-		cmdArgs := []string{"run", "../../src/tools/smartgrep/cli.ts", "group"}
-		cmdArgs = append(cmdArgs, args...)
-		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
-		
-		return cmd.Run()
+		return executeCommand("group", args, nil)
 	},
 }
 
@@ -128,14 +153,7 @@ var refsCmd = &cobra.Command{
 		}
 		
 		// Pass through to TypeScript implementation
-		cmdArgs := []string{"run", "../../src/tools/smartgrep/cli.ts", "refs", args[0]}
-		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
-		
-		return cmd.Run()
+		return executeCommand("refs", args, nil)
 	},
 }
 
@@ -148,17 +166,11 @@ var changesCmd = &cobra.Command{
 		}
 		
 		// Pass through to TypeScript implementation
-		cmdArgs := []string{"run", "../../src/tools/smartgrep/cli.ts", "changes"}
+		flags := make(map[string]interface{})
 		if compactMode {
-			cmdArgs = append(cmdArgs, "--compact")
+			flags["compact"] = true
 		}
-		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
-		
-		return cmd.Run()
+		return executeCommand("changes", nil, flags)
 	},
 }
 

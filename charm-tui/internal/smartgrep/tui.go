@@ -1,15 +1,19 @@
 package smartgrep
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/RLabs-Inc/codebase-curator/charm-tui/internal/config"
 )
 
 // Styles
@@ -275,8 +279,21 @@ func (m model) executeSearch() tea.Cmd {
 		}
 		
 		// Execute command
-		cmd := exec.Command("bun", cmdArgs...)
-		output, err := cmd.CombinedOutput()
+		executor := config.GetExecutor()
+		cliPath := config.GetSmartgrepPath()
+		
+		var execCmd *exec.Cmd
+		if executor != "" {
+			execCmd = exec.Command(executor, cmdArgs...)
+		} else {
+			// Adjust command for production
+			if len(cmdArgs) > 2 && cmdArgs[0] == "run" {
+				cmdArgs = cmdArgs[2:] // Remove "run" and script path
+			}
+			execCmd = exec.Command(cliPath, cmdArgs...)
+		}
+		
+		output, err := execCmd.CombinedOutput()
 		if err != nil {
 			return errMsg(fmt.Errorf("command failed: %w\n%s", err, string(output)))
 		}
@@ -287,9 +304,51 @@ func (m model) executeSearch() tea.Cmd {
 
 // RunTUI launches the main TUI
 func RunTUI() error {
+	// Check if we have arguments for direct search
+	if len(os.Args) > 1 && !strings.HasPrefix(os.Args[1], "--") {
+		// Direct search mode - launch results TUI
+		query := strings.Join(os.Args[1:], " ")
+		return runSearchTUI(query)
+	}
+	
+	// Interactive menu mode
 	p := tea.NewProgram(initialModel(), tea.WithAltScreen())
 	_, err := p.Run()
 	return err
+}
+
+// runSearchTUI runs the beautiful Claude TUI with search results
+func runSearchTUI(query string) error {
+	// Get search results from TypeScript CLI
+	results, err := getSearchResultsJSON(query)
+	if err != nil {
+		return err
+	}
+	
+	// Create and run the Claude-optimized TUI
+	m := newResultViewModel()
+	m.results = results
+	
+	// Update table with results
+	var rows []table.Row
+	for _, r := range results {
+		rows = append(rows, table.Row{
+			r.term,
+			r.typ,
+			fmt.Sprintf("%s:%d", r.location.file, r.location.line),
+			fmt.Sprintf("%.0f%%", r.relevance*100),
+			fmt.Sprintf("%d", r.usageCount),
+		})
+	}
+	m.table.SetRows(rows)
+	
+	// Run TUI
+	p := tea.NewProgram(m, tea.WithAltScreen())
+	if _, err := p.Run(); err != nil {
+		return err
+	}
+	
+	return nil
 }
 
 // RunGroupTUI launches group-specific TUI
@@ -308,4 +367,110 @@ func RunRefsTUI() error {
 func RunChangesTUI() error {
 	// For now, redirect to main TUI
 	return RunTUI()
+}
+
+// getSearchResultsJSON calls TypeScript CLI and parses JSON results
+func getSearchResultsJSON(query string) ([]searchResult, error) {
+	executor := config.GetExecutor()
+	cliPath := config.GetSmartgrepPath()
+	
+	var cmd *exec.Cmd
+	if executor != "" {
+		cmd = exec.Command(executor, "run", cliPath, query, "--json")
+	} else {
+		cmd = exec.Command(cliPath, query, "--json")
+	}
+	
+	output, err := cmd.Output()
+	if err != nil {
+		return nil, fmt.Errorf("failed to run smartgrep: %w", err)
+	}
+	
+	// Parse JSON output
+	var tsResults []struct {
+		Info struct {
+			Term     string `json:"term"`
+			Type     string `json:"type"`
+			Location struct {
+				File   string `json:"file"`
+				Line   int    `json:"line"`
+				Column int    `json:"column"`
+			} `json:"location"`
+			Context         string   `json:"context"`
+			SurroundingLines []string `json:"surroundingLines"`
+			RelatedTerms    []string `json:"relatedTerms"`
+			Language        string   `json:"language"`
+			Metadata        map[string]interface{} `json:"metadata,omitempty"`
+		} `json:"info"`
+		RelevanceScore float64 `json:"relevanceScore"`
+		UsageCount     int     `json:"usageCount,omitempty"`
+		SampleUsages   []struct {
+			TargetTerm     string `json:"targetTerm"`
+			ReferenceType  string `json:"referenceType"`
+			FromLocation   struct {
+				File   string `json:"file"`
+				Line   int    `json:"line"`
+				Column int    `json:"column"`
+			} `json:"fromLocation"`
+			Context string `json:"context"`
+		} `json:"sampleUsages,omitempty"`
+	}
+	
+	// Remove ANSI codes and extract JSON
+	outputStr := string(output)
+	lines := strings.Split(outputStr, "\n")
+	var jsonStart int
+	for i, line := range lines {
+		if strings.HasPrefix(strings.TrimSpace(line), "[") {
+			jsonStart = i
+			break
+		}
+	}
+	
+	if jsonStart == 0 {
+		return nil, fmt.Errorf("no JSON output found")
+	}
+	
+	jsonData := strings.Join(lines[jsonStart:], "\n")
+	if err := json.Unmarshal([]byte(jsonData), &tsResults); err != nil {
+		return nil, fmt.Errorf("failed to parse JSON: %w", err)
+	}
+	
+	// Convert to our internal format
+	var results []searchResult
+	for _, tr := range tsResults {
+		result := searchResult{
+			term:         tr.Info.Term,
+			typ:          tr.Info.Type,
+			location:     location{
+				file:   tr.Info.Location.File,
+				line:   tr.Info.Location.Line,
+				column: tr.Info.Location.Column,
+			},
+			context:      tr.Info.Context,
+			surrounding:  tr.Info.SurroundingLines,
+			related:      tr.Info.RelatedTerms,
+			language:     tr.Info.Language,
+			relevance:    tr.RelevanceScore,
+			usageCount:   tr.UsageCount,
+			metadata:     tr.Info.Metadata,
+		}
+		
+		// Convert references
+		for _, usage := range tr.SampleUsages {
+			result.references = append(result.references, reference{
+				typ: usage.ReferenceType,
+				from: location{
+					file:   usage.FromLocation.File,
+					line:   usage.FromLocation.Line,
+					column: usage.FromLocation.Column,
+				},
+				context: usage.Context,
+			})
+		}
+		
+		results = append(results, result)
+	}
+	
+	return results, nil
 }

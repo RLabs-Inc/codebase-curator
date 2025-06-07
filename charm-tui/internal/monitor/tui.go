@@ -262,6 +262,43 @@ func RunWatchTUI(withOverview bool) error {
 	return err
 }
 
+// Simple overview model
+type overviewModel struct {
+	viewport viewport.Model
+	ready    bool
+}
+
+func (m overviewModel) Init() tea.Cmd {
+	return nil
+}
+
+func (m overviewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		if !m.ready {
+			m.viewport.Width = msg.Width
+			m.viewport.Height = msg.Height - 2
+			m.ready = true
+		}
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "q", "ctrl+c", "esc":
+			return m, tea.Quit
+		}
+	}
+	
+	var cmd tea.Cmd
+	m.viewport, cmd = m.viewport.Update(msg)
+	return m, cmd
+}
+
+func (m overviewModel) View() string {
+	if !m.ready {
+		return "Loading..."
+	}
+	return m.viewport.View() + "\n\n" + lipgloss.NewStyle().Faint(true).Render("Press q to quit")
+}
+
 // RunOverviewTUI launches overview TUI
 func RunOverviewTUI() error {
 	// For overview, we'll use a simpler display
@@ -275,12 +312,7 @@ func RunOverviewTUI() error {
 	vp := viewport.New(80, 30)
 	vp.SetContent(string(output))
 	
-	type overviewModel struct {
-		viewport viewport.Model
-		ready    bool
-	}
-	
-	p := tea.NewProgram(overviewModel{viewport: vp})
+	p := tea.NewProgram(overviewModel{viewport: vp}, tea.WithAltScreen())
 	_, err = p.Run()
 	return err
 }

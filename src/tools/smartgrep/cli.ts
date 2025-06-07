@@ -18,6 +18,7 @@ import type {
   CrossReference,
   ConceptGroupDefinition,
 } from '@codebase-curator/semantic-core'
+import { displayResultsForClaude, displayResultsBodyClaude } from './claude-display.js'
 import { execSync } from 'child_process'
 
 
@@ -416,7 +417,7 @@ async function handleGroupSearch(
   let fileFilter: string[] | undefined
   let maxResults = 50
   let sortBy: 'relevance' | 'usage' | 'name' | 'file' = 'relevance'
-  let outputFormat: 'pretty' | 'json' | 'compact' = 'pretty'
+  let outputFormat: 'pretty' | 'json' | 'compact' | 'human' = 'pretty'
   let showContext = true
 
   for (let i = 0; i < args.length; i++) {
@@ -434,6 +435,8 @@ async function handleGroupSearch(
       outputFormat = 'json'
     } else if (arg === '--compact') {
       outputFormat = 'compact'
+    } else if (arg === '--human') {
+      outputFormat = 'human'
     } else if (arg === '--no-context') {
       showContext = false
     }
@@ -471,8 +474,20 @@ async function handleGroupSearch(
     case 'compact':
       displayResultsCompact(`group:${groupName}`, results)
       break
-    default:
+    case 'human':
       displayGroupResults(groupName, conceptGroup, results, showContext)
+      break
+    default:
+      // Claude-optimized output by default!
+      displayResultsForClaude(`group:${groupName}`, results, conceptGroup, {
+        humanMode: false,
+        showContext,
+        showFullPaths: true,
+        showAllReferences: true,
+        showRelevanceScores: true,
+        showLanguageInfo: true,
+        showMetadata: true
+      })
   }
 }
 
@@ -556,7 +571,7 @@ async function handleSearch(
   let searchMode: 'fuzzy' | 'exact' | 'regex' = 'fuzzy'
   let showContext = true
   let sortBy: 'relevance' | 'usage' | 'name' | 'file' = 'relevance'
-  let outputFormat: 'pretty' | 'json' | 'compact' = 'pretty'
+  let outputFormat: 'pretty' | 'json' | 'compact' | 'human' = 'pretty'
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i]
@@ -579,6 +594,8 @@ async function handleSearch(
       outputFormat = 'json'
     } else if (arg === '--compact') {
       outputFormat = 'compact'
+    } else if (arg === '--human') {
+      outputFormat = 'human'
     } else if (!arg.startsWith('--')) {
       query = arg
     }
@@ -648,8 +665,20 @@ async function handleSearch(
     case 'compact':
       displayResultsCompact(query, results)
       break
-    default:
+    case 'human':
       displayResults(query, results, undefined, showContext)
+      break
+    default:
+      // Claude-optimized output by default!
+      displayResultsForClaude(query, results, undefined, {
+        humanMode: false,
+        showContext,
+        showFullPaths: true,
+        showAllReferences: true,
+        showRelevanceScores: true,
+        showLanguageInfo: true,
+        showMetadata: true
+      })
   }
 }
 
@@ -1163,14 +1192,19 @@ Usage:
   --sort <by>        Sort by: relevance|usage|name|file
   --json             Output as JSON
   --compact          Compact output format
+  --human            Simplified output for human readers (default: Claude-optimized)
 
-📊 Information Displayed:
-  • Function signatures with parameters
-  • Usage counts and sample usage locations
-  • Surrounding code context (2-3 lines)
-  • Related terms found nearby
-  • Full cross-reference information
-  • Exact line and column positions
+📊 Information Displayed (Claude-Optimized by Default):
+  • Complete function signatures with parameters and return types
+  • ALL usage locations and cross-references (not just samples)
+  • Full surrounding code context (all available lines)
+  • All related terms and co-located symbols
+  • Import/export dependencies and relationships
+  • Language information and metadata
+  • Relevance scores and usage statistics
+  • Relationship graphs and impact analysis
+  
+  Use --human for simplified output with less detail
 
 🏷️ Concept Groups:
   smartgrep group auth        Authentication & security patterns

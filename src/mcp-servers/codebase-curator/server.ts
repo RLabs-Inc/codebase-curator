@@ -248,51 +248,90 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     switch (name) {
       case 'get_codebase_overview': {
+        // Provide immediate feedback
+        console.error('[Curator] 🚀 Starting codebase analysis...')
+        console.error('[Curator] 🤖 Spawning Curator Claude to explore your codebase')
+        console.error('[Curator] 📊 This typically takes 1-2 minutes for the first analysis')
+        console.error('[Curator] 💡 Tip: Use "get_curator_activity" to see live progress')
+        
         const result = await curator.getOverview(
           args?.projectPath as string,
           args?.newSession as boolean
         )
+        
+        console.error('[Curator] ✅ Analysis complete!')
         return {
           content: [{ type: 'text', text: result }],
         }
       }
 
       case 'ask_curator': {
+        // Provide immediate feedback
+        const question = args?.question as string
+        console.error('[Curator] 💭 Processing your question...')
+        console.error(`[Curator] 📝 "${question.substring(0, 80)}${question.length > 80 ? '...' : ''}"`)
+        console.error('[Curator] 🤖 Curator Claude is analyzing the codebase')
+        
         const response = await curator.askCurator({
-          question: args?.question as string,
+          question: question,
           projectPath: args?.projectPath as string,
           newSession: args?.newSession as boolean,
         })
+        
+        console.error('[Curator] ✅ Response ready!')
         return {
           content: [{ type: 'text', text: response.content }],
         }
       }
 
       case 'add_new_feature': {
+        // Provide immediate feedback
+        const feature = args?.feature as string
+        console.error('[Curator] 🚀 Planning new feature implementation...')
+        console.error(`[Curator] 🎯 Feature: "${feature.substring(0, 80)}${feature.length > 80 ? '...' : ''}"`)
+        console.error('[Curator] 🤖 Curator Claude is analyzing integration points')
+        
         const result = await curator.addNewFeature({
-          feature: args?.feature as string,
+          feature: feature,
           projectPath: args?.projectPath as string,
         })
+        
+        console.error('[Curator] ✅ Feature plan ready!')
         return {
           content: [{ type: 'text', text: result }],
         }
       }
 
       case 'implement_change': {
+        // Provide immediate feedback
+        const change = args?.change as string
+        console.error('[Curator] 🔧 Analyzing change implementation...')
+        console.error(`[Curator] 📝 Change: "${change.substring(0, 80)}${change.length > 80 ? '...' : ''}"`)
+        if (args?.scope) {
+          console.error(`[Curator] 📁 Scope: ${(args.scope as string[]).join(', ')}`)
+        }
+        console.error('[Curator] 🤖 Curator Claude is creating action plan')
+        
         const result = await curator.implementChange({
-          change: args?.change as string,
+          change: change,
           projectPath: args?.projectPath as string,
           scope: args?.scope as string[],
         })
+        
+        console.error('[Curator] ✅ Action plan ready!')
         return {
           content: [{ type: 'text', text: result }],
         }
       }
 
       case 'get_curator_memory': {
+        console.error('[Curator] 🧠 Retrieving curator memory...')
+        
         const result = await curator.getCuratorMemory(
           args?.projectPath as string
         )
+        
+        console.error('[Curator] ✅ Memory retrieved!')
         return {
           content: [{ type: 'text', text: result }],
         }

@@ -286,8 +286,10 @@ export class CuratorProcessService implements CoreService {
       const stderrChunk = data.toString()
       error += stderrChunk
 
-      // Show ALL stderr for debugging
-      console.error(`[Curator Claude stderr]: ${stderrChunk}`)
+      // Forward the curator's stderr directly to parent process stderr
+      // This ensures the curator's feedback (tool usage, progress, etc.) 
+      // is visible when running with --mcp-debug
+      process.stderr.write(stderrChunk)
 
       resetTimeout() // Reset timeout on ANY stderr activity too
     })

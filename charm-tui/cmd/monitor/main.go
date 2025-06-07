@@ -46,12 +46,12 @@ var watchCmd = &cobra.Command{
 			cmdArgs = append(cmdArgs, "--overview")
 		}
 		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
+		execCmd := exec.Command("bun", cmdArgs...)
+		execCmd.Stdout = os.Stdout
+		execCmd.Stderr = os.Stderr
+		execCmd.Stdin = os.Stdin
 		
-		return cmd.Run()
+		return execCmd.Run()
 	},
 }
 
@@ -66,12 +66,12 @@ var overviewCmd = &cobra.Command{
 		// Pass through to TypeScript implementation
 		cmdArgs := []string{"run", "../../src/tools/monitor/cli.ts", "overview"}
 		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
+		execCmd := exec.Command("bun", cmdArgs...)
+		execCmd.Stdout = os.Stdout
+		execCmd.Stderr = os.Stderr
+		execCmd.Stdin = os.Stdin
 		
-		return cmd.Run()
+		return execCmd.Run()
 	},
 }
 
@@ -86,12 +86,12 @@ var statusCmd = &cobra.Command{
 		// Pass through to TypeScript implementation
 		cmdArgs := []string{"run", "../../src/tools/monitor/cli.ts", "status"}
 		
-		cmd := exec.Command("bun", cmdArgs...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		cmd.Stdin = os.Stdin
+		execCmd := exec.Command("bun", cmdArgs...)
+		execCmd.Stdout = os.Stdout
+		execCmd.Stderr = os.Stderr
+		execCmd.Stdin = os.Stdin
 		
-		return cmd.Run()
+		return execCmd.Run()
 	},
 }
 

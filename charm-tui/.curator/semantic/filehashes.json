@@ -1,0 +1,16 @@
+{
+  "go.mod": "eab9abfcbb933550",
+  "semantic_index_data_analysis.md": "ed598afb86e06a02",
+  "demo.sh": "e950ed56f06feb8c",
+  "Makefile": "45c4942640d0cc43",
+  "INSTALL.md": "1433386f64050674",
+  "README.md": "40b9eb1e984c4f8a",
+  "docs/CLAUDE_OUTPUT_OPTIMIZATION.md": "3eba11b5794ee9e5",
+  "internal/curator/tui.go": "ca68e00303fef48d",
+  "internal/smartgrep/tui.go": "bacdd3c256dfccf7",
+  "internal/config/config.go": "79755861e412c507",
+  "internal/monitor/tui.go": "8812b97955ec8cf8",
+  "cmd/curator/main.go": "10dc81791195b99d",
+  "cmd/smartgrep/main.go": "caf200c3b05fbb3e",
+  "cmd/monitor/main.go": "6e531442b306b29d"
+}

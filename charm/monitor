@@ -1,0 +1,452 @@
+#!/bin/bash
+# charm/monitor - Beautiful live codebase monitoring dashboard
+#
+# Features:
+# - Real-time file change monitoring
+# - Beautiful statistics dashboard
+# - Activity graphs and trends
+# - Codebase health metrics
+# - Visual alerts for important changes
+
+set -e
+
+# Color scheme
+HEADER_COLOR="212"      # Charm pink
+SUCCESS_COLOR="120"     # Green
+INFO_COLOR="33"         # Blue
+WARN_COLOR="220"        # Yellow
+ERROR_COLOR="196"       # Red
+MUTED_COLOR="244"       # Gray
+
+# Paths
+MONITOR_CMD="bun run ../src/tools/monitor/cli.ts"
+CACHE_DIR="$HOME/.cache/monitor-charm"
+STATS_FILE="$CACHE_DIR/stats.json"
+
+# Ensure cache directory exists
+mkdir -p "$CACHE_DIR"
+
+# Helper: Show styled header
+show_header() {
+    clear
+    echo
+    gum style \
+        --foreground $HEADER_COLOR \
+        --border-foreground $HEADER_COLOR \
+        --border double \
+        --margin "1" \
+        --padding "1 3" \
+        --width 50 \
+        --align center \
+        "=È MONITOR CHARM" \
+        "" \
+        "Live Codebase Monitoring"
+    echo
+}
+
+# Helper: Format time
+format_time() {
+    local seconds=$1
+    if [ $seconds -lt 60 ]; then
+        echo "${seconds}s"
+    elif [ $seconds -lt 3600 ]; then
+        echo "$((seconds / 60))m $((seconds % 60))s"
+    else
+        echo "$((seconds / 3600))h $((seconds % 3600 / 60))m"
+    fi
+}
+
+# Feature: Live monitoring with beautiful dashboard
+live_monitor() {
+    local project="${1:-$(pwd)}"
+    
+    show_header
+    
+    gum style --foreground $INFO_COLOR "=Á Monitoring: $project"
+    echo
+    
+    # Options
+    local with_overview=""
+    if gum confirm "Show codebase overview in dashboard?"; then
+        with_overview="--overview"
+    fi
+    
+    # Start monitoring with styled output
+    gum style \
+        --foreground $SUCCESS_COLOR \
+        --border rounded \
+        --padding "1 2" \
+        --margin "1" \
+        "=€ Starting live monitoring..." \
+        "" \
+        "Press Ctrl+C to stop"
+    
+    echo
+    
+    # Run monitor and pipe through formatter
+    $MONITOR_CMD watch $with_overview 2>&1 | format_monitor_output
+}
+
+# Helper: Format monitor output with colors
+format_monitor_output() {
+    while IFS= read -r line; do
+        case "$line" in
+            *"File added"*)
+                gum style --foreground $SUCCESS_COLOR "+ $line"
+                ;;
+            *"File modified"*)
+                gum style --foreground $INFO_COLOR "~ $line"
+                ;;
+            *"File deleted"*)
+                gum style --foreground $ERROR_COLOR "- $line"
+                ;;
+            *"Reindexing"*)
+                gum style --foreground $WARN_COLOR "¡ $line"
+                ;;
+            *"Overview"*)
+                echo
+                gum style --foreground $HEADER_COLOR --bold "$line"
+                ;;
+            *)
+                echo "$line"
+                ;;
+        esac
+    done
+}
+
+# Feature: Static overview with beautiful display
+static_overview() {
+    local project="${1:-$(pwd)}"
+    
+    show_header
+    
+    gum style --foreground $INFO_COLOR "=Ê Analyzing: $project"
+    echo
+    
+    # Get overview with spinner
+    local overview=$(gum spin \
+        --spinner meter \
+        --title " Analyzing codebase structure..." \
+        --show-output -- \
+        $MONITOR_CMD overview)
+    
+    # Display with sections
+    clear
+    show_header
+    
+    # Parse and display beautifully
+    echo "$overview" | display_overview_sections
+}
+
+# Helper: Display overview in beautiful sections
+display_overview_sections() {
+    local section=""
+    local in_table=false
+    
+    while IFS= read -r line; do
+        # Detect sections
+        if [[ "$line" =~ ^[=Ê<Û=Á=Ä=¾=$¡=È] ]]; then
+            # New section header
+            echo
+            gum style \
+                --foreground $HEADER_COLOR \
+                --bold \
+                "$line"
+            echo
+        elif [[ "$line" =~ ^[[:space:]]*$ ]]; then
+            # Empty line
+            echo
+        elif [[ "$line" =~ ^\| ]]; then
+            # Table row
+            if [ "$in_table" = false ]; then
+                in_table=true
+                echo "$line" | gum style --foreground $INFO_COLOR
+            else
+                echo "$line" | gum style --foreground $MUTED_COLOR
+            fi
+        else
+            # Regular content
+            in_table=false
+            echo "$line" | gum style --foreground $SUCCESS_COLOR
+        fi
+    done
+}
+
+# Feature: Status check with visual indicators
+check_status() {
+    local project="${1:-$(pwd)}"
+    
+    show_header
+    
+    gum style --foreground $INFO_COLOR "= Checking status: $project"
+    echo
+    
+    # Get status with spinner
+    local status=$(gum spin \
+        --spinner dots \
+        --title " Checking index status..." \
+        --show-output -- \
+        $MONITOR_CMD status)
+    
+    # Display with visual indicators
+    clear
+    show_header
+    
+    echo "$status" | format_status_output
+}
+
+# Helper: Format status output
+format_status_output() {
+    while IFS= read -r line; do
+        case "$line" in
+            *""*|*"Ready"*)
+                gum style --foreground $SUCCESS_COLOR "$line"
+                ;;
+            *" "*|*"Warning"*)
+                gum style --foreground $WARN_COLOR "$line"
+                ;;
+            *"L"*|*"Error"*)
+                gum style --foreground $ERROR_COLOR "$line"
+                ;;
+            *"Files indexed:"*)
+                gum style --foreground $INFO_COLOR --bold "$line"
+                ;;
+            *)
+                echo "$line"
+                ;;
+        esac
+    done
+}
+
+# Feature: Activity timeline
+show_activity() {
+    local project="${1:-$(pwd)}"
+    
+    show_header
+    
+    gum style --foreground $INFO_COLOR "=Å Activity Timeline"
+    echo
+    
+    # Get recent changes
+    local changes=$(gum spin \
+        --spinner dots \
+        --title " Loading activity history..." \
+        --show-output -- \
+        bash -c "cd '$project' && git log --oneline --graph --all -20 2>/dev/null || echo 'No git history available'")
+    
+    # Display with styling
+    echo "$changes" | gum style --foreground $MUTED_COLOR | gum pager
+}
+
+# Feature: Interactive dashboard menu
+dashboard_menu() {
+    local project=$(gum input \
+        --placeholder "Project path (default: current directory)" \
+        --value "$(pwd)" \
+        --prompt "=Á " \
+        --prompt.foreground $HEADER_COLOR)
+    
+    [ -z "$project" ] && project="$(pwd)"
+    
+    while true; do
+        show_header
+        
+        gum style --foreground $INFO_COLOR "Monitoring: $project"
+        echo
+        
+        local choice=$(gum choose \
+            --cursor "¸ " \
+            --cursor.foreground $HEADER_COLOR \
+            --selected.foreground $SUCCESS_COLOR \
+            --height 10 \
+            "live|=4 Live Monitor|Real-time file change tracking" \
+            "overview|=Ê Overview|Static codebase analysis" \
+            "status| Status|Check index health" \
+            "activity|=Å Activity|Recent changes timeline" \
+            "settings|™  Settings|Configure monitoring" \
+            "help|S Help|Usage guide" \
+            "exit|=K Exit|Close monitor")
+        
+        case ${choice%%|*} in
+            "live")
+                live_monitor "$project"
+                ;;
+            "overview")
+                static_overview "$project"
+                echo
+                gum style --foreground $INFO_COLOR "Press Enter to continue..."
+                read
+                ;;
+            "status")
+                check_status "$project"
+                echo
+                gum style --foreground $INFO_COLOR "Press Enter to continue..."
+                read
+                ;;
+            "activity")
+                show_activity "$project"
+                ;;
+            "settings")
+                configure_settings
+                ;;
+            "help")
+                show_help
+                ;;
+            "exit")
+                break
+                ;;
+        esac
+    done
+}
+
+# Feature: Configure settings
+configure_settings() {
+    clear
+    show_header
+    
+    gum style \
+        --foreground $HEADER_COLOR \
+        --border rounded \
+        --padding "1 2" \
+        --margin "1" \
+        "™  Monitor Settings"
+    
+    echo
+    
+    # File patterns to watch
+    local patterns=$(gum write \
+        --placeholder "File patterns to watch (one per line)" \
+        --value "*.ts
+*.tsx
+*.js
+*.jsx
+*.py
+*.go
+*.rs" \
+        --height 10 \
+        --width 50 \
+        --header "File Patterns")
+    
+    # Save settings
+    if [ -n "$patterns" ]; then
+        echo "$patterns" > "$CACHE_DIR/watch-patterns"
+        gum style --foreground $SUCCESS_COLOR " Settings saved!"
+        sleep 2
+    fi
+}
+
+# Feature: Show help
+show_help() {
+    clear
+    show_header
+    
+    cat << 'EOF' | gum format --type markdown | gum pager
+# Monitor Charm - Live Codebase Monitoring
+
+## Features
+
+### =4 **Live Monitor**
+Real-time tracking of file changes with visual indicators:
+- ( Green: New files added
+- = Blue: Files modified
+- L Red: Files deleted
+- ¡ Yellow: Reindexing triggered
+
+### =Ê **Overview**
+Static analysis showing:
+- File type distribution
+- Language statistics
+- Directory structure
+- Code metrics
+
+###  **Status**
+Health check of the semantic index:
+- Index size and status
+- Last update time
+- Performance metrics
+- Integrity verification
+
+### =Å **Activity**
+Timeline of recent changes and commits
+
+## Keyboard Shortcuts
+
+- `Ctrl+C` - Stop live monitoring
+- `‘“` - Navigate menus
+- `Enter` - Select option
+- `/` - Filter in lists
+- `q` - Quit pager views
+
+## Tips
+
+- Live monitoring shows changes as they happen
+- Overview provides a snapshot of current state
+- Use status to verify index health
+- Configure file patterns for better performance
+
+---
+*Powered by Charm tools and semantic indexing*
+EOF
+}
+
+# Feature: Quick monitor (direct command)
+quick_monitor() {
+    case "$1" in
+        "watch"|"live")
+            shift
+            live_monitor "$@"
+            ;;
+        "overview")
+            shift
+            static_overview "$@"
+            echo
+            ;;
+        "status")
+            shift
+            check_status "$@"
+            echo
+            ;;
+        *)
+            # Default to interactive menu
+            dashboard_menu
+            ;;
+    esac
+}
+
+# Main entry point
+main() {
+    # Check dependencies
+    if ! command -v gum &> /dev/null; then
+        echo "Error: gum is not installed. Please install it first:"
+        echo "  brew install gum"
+        exit 1
+    fi
+    
+    if ! command -v bun &> /dev/null; then
+        echo "Error: bun is not installed. Please install it first:"
+        echo "  curl -fsSL https://bun.sh/install | bash"
+        exit 1
+    fi
+    
+    # Handle command line usage
+    quick_monitor "$@"
+    
+    # Goodbye if interactive
+    if [ $# -eq 0 ]; then
+        clear
+        gum style \
+            --foreground $HEADER_COLOR \
+            --border rounded \
+            --padding "2 4" \
+            --margin "2" \
+            --align center \
+            "( Thanks for using Monitor Charm!" \
+            "" \
+            "Keep your code healthy! =ª"
+    fi
+}
+
+# Run if called directly
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    main "$@"
+fi
