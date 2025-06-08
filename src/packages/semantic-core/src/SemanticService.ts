@@ -209,6 +209,13 @@ export class SemanticService {
   }> {
     return this.index.getImpactAnalysis(term)
   }
+  
+  /**
+   * Get the underlying semantic index for advanced operations
+   */
+  getIndex(): SemanticIndex {
+    return this.index
+  }
 
   private getIndexPath(projectPath: string): string {
     return join(projectPath, '.curator', 'semantic-index.json')

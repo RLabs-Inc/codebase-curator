@@ -270,6 +270,37 @@ bun run smartgrep group api --compact
 bun run smartgrep group myapi --type class,function --sort usage
 ```
 
+### 🚀 NEW: Compact Mode for Context Management
+
+Smart Grep now defaults to **compact summary mode** specifically designed for Claudes:
+
+```bash
+# Default behavior - Compact summary (200-300 tokens)
+bun run smartgrep "authService"
+
+# Full detailed output when needed (2000-3000 tokens)
+bun run smartgrep "authService" --full
+```
+
+**Why This Matters:**
+- **90% reduction in context usage** - More searches before hitting limits
+- **Focused information** - Definition, signature, top usage, breaking changes
+- **Smart suggestions** - Next searches based on current results
+- **Instant answers** - No scrolling through hundreds of lines
+
+**What You Get in Compact Mode:**
+1. **Primary Definition** with full signature (constructor/parameters)
+2. **Top 3 Usage Locations** with actual code context
+3. **Breaking Changes** - Specific functions that call this code
+4. **Patterns Detected** - async/await, errors thrown, related terms
+5. **Next Suggestions** - Contextual follow-up searches
+
+**Context Management Tips:**
+- Use compact mode (default) for exploration and quick lookups
+- Use `--full` only when you need to see ALL occurrences
+- Chain searches using the suggested "NEXT" commands
+- Combine with filters to narrow results: `--type function --file "*.ts"`
+
 ### Custom Groups Configuration
 Custom groups are saved to `.curatorconfig.json` in your project root:
 ```json

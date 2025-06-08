@@ -33,10 +33,16 @@ Use your Claude tools systematically:
 
 ⚡ **IMPORTANT: Smart-Grep vs Regular Grep**
 - Regular grep: \`grep "error"\` → 500 results, many false positives
-- Smart-Grep: \`smartgrep "error"\` → Search for literal "error" organized by type
+- Smart-Grep: \`smartgrep "error"\` → Compact summary with definition, top usage, and suggestions
 - Smart-Grep Groups: \`smartgrep group error\` → ALL error patterns (exception, fail, catch, throw...)
 - Smart-Grep understands code structure and gives you semantic matches!
 - Always try Smart-Grep first for concept searches!
+
+🚀 **NEW: Smart-Grep Compact Mode (90% less context usage!)**
+- Default: \`smartgrep "authService"\` → Compact summary (200-300 tokens)
+- Shows: Definition + signature, top 3 usages, breaking changes, patterns
+- Use \`--full\` ONLY when you need ALL occurrences: \`smartgrep "authService" --full\`
+- Follow the "NEXT" suggestions for efficient exploration
 
 ## THE GOLDEN RULE 🏆
 

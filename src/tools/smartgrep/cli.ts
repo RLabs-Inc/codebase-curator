@@ -12,6 +12,8 @@ import {
   getGroupTerms,
   groupExists,
   getFormattedGroupList,
+  FlowTracer,
+  DEFAULT_CONCEPT_GROUPS,
 } from '@codebase-curator/semantic-core'
 import type {
   SearchResult,
@@ -19,6 +21,7 @@ import type {
   ConceptGroupDefinition,
 } from '@codebase-curator/semantic-core'
 import { displayResultsForClaude, displayResultsBodyClaude } from './claude-display.js'
+import { CompactSummaryGenerator } from './compactSummary.js'
 import { execSync } from 'child_process'
 
 
@@ -74,6 +77,17 @@ async function main() {
   // Handle changes command for impact analysis
   if (command === 'changes') {
     await handleChangesImpact(service, projectPath, args.slice(1))
+    return
+  }
+  
+  // Handle flow command for data flow tracing
+  if (command === 'flow') {
+    if (args.length < 2) {
+      console.error('Please provide a term to trace')
+      console.error('Example: smartgrep flow user.email')
+      process.exit(1)
+    }
+    await handleFlow(service, args[1])
     return
   }
 
@@ -486,7 +500,9 @@ async function handleGroupSearch(
         showAllReferences: true,
         showRelevanceScores: true,
         showLanguageInfo: true,
-        showMetadata: true
+        showMetadata: true,
+        typeFilter,
+        fileFilter
       })
   }
 }
@@ -571,7 +587,8 @@ async function handleSearch(
   let searchMode: 'fuzzy' | 'exact' | 'regex' = 'fuzzy'
   let showContext = true
   let sortBy: 'relevance' | 'usage' | 'name' | 'file' = 'relevance'
-  let outputFormat: 'pretty' | 'json' | 'compact' | 'human' = 'pretty'
+  let outputFormat: 'pretty' | 'json' | 'compact' | 'human' | 'claude' = 'claude'
+  let fullOutput = false
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i]
@@ -596,6 +613,9 @@ async function handleSearch(
       outputFormat = 'compact'
     } else if (arg === '--human') {
       outputFormat = 'human'
+    } else if (arg === '--full') {
+      fullOutput = true
+      outputFormat = 'pretty' // Use the current detailed format
     } else if (!arg.startsWith('--')) {
       query = arg
     }
@@ -772,8 +792,13 @@ async function handleSearch(
     case 'human':
       displayResults(query, results, undefined, showContext)
       break
-    default:
-      // Claude-optimized output by default!
+    case 'claude':
+      // New compact mode for Claudes (default)
+      const compactGen = new CompactSummaryGenerator()
+      console.log(compactGen.generate(query, results))
+      break
+    case 'pretty':
+      // Full detailed output (when --full is used)
       displayResultsForClaude(query, results, undefined, {
         humanMode: false,
         showContext,
@@ -781,8 +806,16 @@ async function handleSearch(
         showAllReferences: true,
         showRelevanceScores: true,
         showLanguageInfo: true,
-        showMetadata: true
+        showMetadata: true,
+        searchMode,
+        typeFilter,
+        fileFilter,
+        // Track if we used a fallback strategy
+        fallbackUsed: results.length > 0 && searchMode === 'fuzzy' && 
+          (canSmartSplit(query) || getAvailableGroups(projectPath).some(g => g.name.toLowerCase() === query.toLowerCase())) 
+          ? 'split' : undefined
       })
+      break
   }
 }
 
@@ -1262,6 +1295,53 @@ async function handleChangesImpact(
   }
 }
 
+/**
+ * Handle flow command - trace data flow through codebase
+ */
+async function handleFlow(service: SemanticService, searchTerm: string) {
+  // Load the index first
+  const projectPath = process.cwd()
+  const loaded = await service.loadIndex(projectPath)
+  if (!loaded) {
+    console.log('No semantic index found. Building...')
+    await service.indexCodebase(projectPath)
+  }
+  
+  console.log(`🌊 Tracing data flow for "${searchTerm}"...\n`)
+  
+  try {
+    // Create flow tracer with the service's index
+    const tracer = new FlowTracer(service.getIndex())
+    
+    // Trace the flow
+    const flowPath = await tracer.traceFlow(searchTerm)
+    
+    if (flowPath.nodes.length === 0) {
+      console.log(`❌ No occurrences of "${searchTerm}" found`)
+      console.log('\n💡 Tips:')
+      console.log('  • Try a more specific term (e.g., "user.email" instead of "email")')
+      console.log('  • Check if the term exists with: smartgrep "' + searchTerm + '"')
+      return
+    }
+    
+    // Display the flow path
+    console.log(tracer.formatFlowPath(flowPath))
+    
+    // Suggest related searches
+    if (flowPath.summary.functionsInvolved.length > 0) {
+      console.log('\n💡 Related searches:')
+      const topFunctions = flowPath.summary.functionsInvolved.slice(0, 3)
+      topFunctions.forEach(func => {
+        console.log(`  smartgrep refs "${func}"  # See all references to this function`)
+      })
+    }
+    
+  } catch (error) {
+    console.error(`❌ Error tracing flow: ${error.message}`)
+    process.exit(1)
+  }
+}
+
 function showHelp() {
   console.log(`
 🔍 Smart Grep - Semantic Code Search with Cross-References
@@ -1271,6 +1351,11 @@ Usage:
   smartgrep --index                Rebuild the semantic index
   smartgrep refs <term>            Show where a term is referenced
   smartgrep changes                Analyze impact of your uncommitted changes
+
+🌊 Flow Analysis:
+  smartgrep flow <term>            Trace how data flows through functions
+                                   Shows assignments, parameters, calls, returns
+                                   Example: smartgrep flow user.email
 
 🏷️ Group Commands:
   smartgrep group list             List all available concept groups
@@ -1296,19 +1381,25 @@ Usage:
   --sort <by>        Sort by: relevance|usage|name|file
   --json             Output as JSON
   --compact          Compact output format
-  --human            Simplified output for human readers (default: Claude-optimized)
+  --human            Simplified output for human readers
+  --full             Show full detailed results (default: compact summary)
 
-📊 Information Displayed (Claude-Optimized by Default):
-  • Complete function signatures with parameters and return types
-  • ALL usage locations and cross-references (not just samples)
-  • Full surrounding code context (all available lines)
-  • All related terms and co-located symbols
-  • Import/export dependencies and relationships
-  • Language information and metadata
-  • Relevance scores and usage statistics
-  • Relationship graphs and impact analysis
+📊 Information Displayed:
+  DEFAULT (Compact Summary - Claude-Optimized):
+  • Primary definition with signature (constructor/params)
+  • Top 3 usage locations with code context
+  • Breaking changes - what calls this code
+  • Patterns detected (async, errors, related terms)
+  • Smart next search suggestions
   
-  Use --human for simplified output with less detail
+  WITH --full FLAG (Complete Details):
+  • ALL usage locations and cross-references
+  • Full surrounding code context
+  • All related terms and metadata
+  • Relationship graphs and statistics
+  
+  Use --human for human-friendly format
+  Use --json for machine-readable output
 
 🏷️ Concept Groups:
   smartgrep group auth        Authentication & security patterns
@@ -1452,6 +1543,18 @@ function smartSplitTerms(term: string): string[] {
   
   // Remove duplicates
   return [...new Set(parts)]
+}
+
+// Helper function to get all available groups
+function getAvailableGroups(projectPath: string): ConceptGroupDefinition[] {
+  const config = loadConfig(projectPath)
+  const customGroups = parseCustomGroups(config.customGroups || {})
+  
+  // Combine default and custom groups
+  const allGroups = { ...DEFAULT_CONCEPT_GROUPS, ...customGroups }
+  
+  // Return as array
+  return Object.values(allGroups)
 }
 
 // Run the CLI

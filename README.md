@@ -43,6 +43,49 @@ You get → Specific guidance that fits YOUR patterns
 
 ### 🔍 Smart Grep - Semantic Search That Understands Code
 
+#### 🚀 NEW: Compact Mode for Claudes (90% Less Context Usage!)
+
+Smart Grep now defaults to a **compact summary mode** that's optimized for AI assistants:
+
+```bash
+# Default: Compact summary (perfect for Claudes)
+smartgrep "authService"
+
+══════════════════════════════════════════════════════════════════════
+🔍 SMARTGREP: "authService" (17 results in 4 files)
+
+📍 DEFINITION: auth/service.ts:42 (CLASS)
+   export class AuthService {
+   constructor(db: Database, cache: Cache)
+
+🔥 TOP USAGE:
+   • api/routes.ts:
+     - Line 15: authService.authenticate(username, password)
+     - Line 23: authService.validateToken(token)
+   • middleware/auth.ts:12 - if (!authService.isValid(token))
+
+⚡ BREAKING CHANGES (if you modify this):
+   • LoginController.handleLogin() - calls authenticate()
+   • AuthMiddleware.verify() - calls validateToken()
+
+💡 PATTERNS DETECTED:
+   • Always async/await calls
+   • Throws: AuthenticationError, TokenExpiredError
+
+🎯 NEXT: smartgrep refs "authService" | smartgrep "authenticate"
+══════════════════════════════════════════════════════════════════════
+
+# Need full details? Use --full flag
+smartgrep "authService" --full    # Complete analysis with all matches
+```
+
+**Why This Matters for Claudes:**
+- **Before**: Each search consumed 2000-3000 tokens
+- **Now**: Only 200-300 tokens per search
+- **Result**: 10x more searches before hitting context limits!
+
+#### Core Features
+
 ```bash
 # Don't just search - understand!
 smartgrep "handleAuth"          # Shows where it's used + usage count

@@ -7,6 +7,7 @@
  */
 
 import { SearchResult, CrossReference, SemanticInfo } from '@codebase-curator/semantic-core'
+import { SearchSummaryGenerator, SearchContext } from './searchSummary.js'
 
 export interface DisplayOptions {
   showContext?: boolean
@@ -17,6 +18,10 @@ export interface DisplayOptions {
   showRelevanceScores?: boolean
   showLanguageInfo?: boolean
   showMetadata?: boolean
+  searchMode?: 'fuzzy' | 'exact' | 'regex'
+  typeFilter?: string[]
+  fileFilter?: string[]
+  fallbackUsed?: 'split' | 'group' | 'variations'
 }
 
 const DEFAULT_OPTIONS: DisplayOptions = {
@@ -43,6 +48,22 @@ export function displayResultsForClaude(
   
   if (results.length === 0) {
     console.log(`\n❌ No results found for "${query}"`)
+    
+    // Still generate summary for no results case
+    const summaryGenerator = new SearchSummaryGenerator()
+    const context: SearchContext = {
+      query,
+      results,
+      searchMode: opts.searchMode,
+      filters: {
+        type: opts.typeFilter,
+        file: opts.fileFilter
+      },
+      fallbackUsed: opts.fallbackUsed
+    }
+    
+    const summary = summaryGenerator.generateSummary(context)
+    console.log(summary)
     return
   }
 
@@ -72,6 +93,23 @@ export function displayResultsForClaude(
   if (opts.showAllReferences) {
     displayRelationshipGraph(results)
   }
+  
+  // NEW: Action-oriented summary at the end
+  const summaryGenerator = new SearchSummaryGenerator()
+  const context: SearchContext = {
+    query,
+    results,
+    searchMode: opts.searchMode,
+    filters: {
+      type: opts.typeFilter,
+      file: opts.fileFilter
+    },
+    fallbackUsed: opts.fallbackUsed
+  }
+  
+  // Generate and display the summary
+  const summary = summaryGenerator.generateSummary(context)
+  console.log(summary)
 }
 
 function displayTypeGroup(type: string, items: SearchResult[], opts: DisplayOptions) {

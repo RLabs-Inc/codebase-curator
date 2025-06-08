@@ -7,6 +7,7 @@
 export * from './SemanticService'
 export * from './SemanticIndexImpl'
 export * from './types'
+export * from './FlowTracer'
 
 // Re-export extractors
 export * from './extractors/TypeScriptExtractor'
