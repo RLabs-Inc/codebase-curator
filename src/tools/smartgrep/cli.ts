@@ -609,8 +609,44 @@ async function handleSearch(
   // Handle different search patterns
   let results: SearchResult[] = []
 
+  // Check for multi-word search (spaces but not special operators)
+  const hasSpaces = query.includes(' ') && !query.includes('|') && !query.includes('&') && !query.startsWith('!') && !query.startsWith('/')
+  
+  if (hasSpaces) {
+    // Multi-word search: Try AND first, then OR
+    const words = query.split(/\s+/).filter(w => w.length > 0)
+    
+    if (words.length > 1) {
+      process.stdout.write(`🔍 Searching for all terms: ${words.join(' AND ')}...`)
+      
+      // First try AND search (all words must match)
+      results = await searchWithAnd(service, words, {
+        type: typeFilter,
+        files: fileFilter,
+        maxResults: maxResults * 2, // Get more results for filtering
+      })
+      
+      process.stdout.write(' ✓\n')
+      
+      if (results.length === 0) {
+        // Fall back to OR search
+        console.log(`\n💡 No results with all terms. Searching for any term...`)
+        results = await service.searchGroup(words)
+        
+        if (results.length > 0) {
+          console.log(`✨ Found ${results.length} results with partial matches!\n`)
+        }
+      } else {
+        console.log(`✅ Found ${results.length} results containing all terms!\n`)
+      }
+    } else {
+      // Single word after trimming - fall through to normal search
+      query = words[0]
+    }
+  }
+  
   // Note: Concept groups are now handled by the 'group' command
-  if (query.includes('|')) {
+  if (!hasSpaces && query.includes('|')) {
     // OR pattern: term1|term2|term3
     const terms = query.split('|').map((t) => t.trim())
     process.stdout.write(`🔍 Searching for any of: ${terms.join(', ')}...`)
@@ -652,6 +688,74 @@ async function handleSearch(
       exact: searchMode === 'exact',
     })
     process.stdout.write(' ✓\n')
+    
+    // If no results, try fallback strategies
+    if (results.length === 0 && !searchMode) {
+      const groups = getAvailableGroups(projectPath)
+      
+      // Priority 1: Try smart term splitting FIRST (most relevant to original query)
+      if (canSmartSplit(query)) {
+        console.log(`\n💡 No exact matches. Trying smart term splitting...`)
+        const splitTerms = smartSplitTerms(query)
+        
+        if (splitTerms.length > 1) {
+          console.log(`   Searching for: ${splitTerms.join(' OR ')}\n`)
+          results = await service.searchGroup(splitTerms)
+          
+          if (results.length > 0) {
+            console.log(`✨ Found ${results.length} results using split terms!\n`)
+            
+            // Note if any split term is also a concept group (but don't search it yet)
+            const matchingGroups: typeof groups = []
+            for (const term of splitTerms) {
+              const termGroup = groups.find(g => g.name.toLowerCase() === term.toLowerCase())
+              if (termGroup) {
+                console.log(`   🎯 Note: "${term}" is also a concept group (${termGroup.emoji} ${termGroup.description})`)
+                matchingGroups.push(termGroup)
+              }
+            }
+          }
+        }
+      }
+      
+      // Priority 2: If still no results, check if query matches a concept group
+      if (results.length === 0) {
+        const matchingGroup = groups.find(g => g.name.toLowerCase() === query.toLowerCase())
+        
+        if (matchingGroup) {
+          console.log(`\n🎯 Still no matches, but "${query}" is a concept group!`)
+          console.log(`   Using group search for: ${matchingGroup.emoji} ${matchingGroup.description}\n`)
+          results = await service.searchGroup(matchingGroup.terms)
+          
+          if (results.length > 0) {
+            console.log(`✨ Found ${results.length} results using ${matchingGroup.name} group!\n`)
+          }
+        }
+      }
+      
+      // Priority 3: If STILL no results, try concept groups for split terms
+      if (results.length === 0 && canSmartSplit(query)) {
+        const splitTerms = smartSplitTerms(query)
+        const groupTerms: string[] = []
+        
+        for (const term of splitTerms) {
+          const termGroup = groups.find(g => g.name.toLowerCase() === term.toLowerCase())
+          if (termGroup) {
+            console.log(`\n🎯 Last resort: "${term}" matches concept group ${termGroup.emoji} ${termGroup.description}`)
+            groupTerms.push(...termGroup.terms)
+          }
+        }
+        
+        if (groupTerms.length > 0) {
+          console.log(`   Searching concept group terms...\n`)
+          results = await service.searchGroup([...new Set(groupTerms)]) // Remove duplicates
+          
+          if (results.length > 0) {
+            console.log(`✨ Found ${results.length} results using concept groups for split terms!\n`)
+          }
+        }
+      }
+    }
   }
 
   // Sort results based on preference
@@ -1310,6 +1414,44 @@ function getGroupIcon(group: string): string {
     deploy: '🚀',
   }
   return icons[group] || '📂'
+}
+
+// Helper function to check if a term can be smart split
+function canSmartSplit(term: string): boolean {
+  // Check for camelCase
+  if (/[a-z][A-Z]/.test(term)) return true
+  // Check for snake_case or kebab-case
+  if (/[_-]/.test(term)) return true
+  // Check for dots (namespaced items)
+  if (/\./.test(term) && !term.startsWith('.')) return true
+  
+  return false
+}
+
+// Smart split terms for camelCase, snake_case, kebab-case
+function smartSplitTerms(term: string): string[] {
+  const parts: string[] = []
+  
+  // Split camelCase
+  let camelSplit = term.replace(/([a-z])([A-Z])/g, '$1|$2')
+  
+  // Split snake_case and kebab-case
+  camelSplit = camelSplit.replace(/[_-]/g, '|')
+  
+  // Split dots (but not file extensions)
+  camelSplit = camelSplit.replace(/\.(?![a-z]{2,4}$)/g, '|')
+  
+  // Split into parts and clean up
+  const rawParts = camelSplit.split('|')
+  for (const part of rawParts) {
+    const cleaned = part.trim().toLowerCase()
+    if (cleaned && cleaned.length > 1) {
+      parts.push(cleaned)
+    }
+  }
+  
+  // Remove duplicates
+  return [...new Set(parts)]
 }
 
 // Run the CLI

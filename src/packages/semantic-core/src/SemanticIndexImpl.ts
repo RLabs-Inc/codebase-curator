@@ -131,7 +131,9 @@ export class SemanticIndexImpl implements SemanticIndex {
         }
       })
     } else {
-      // Fuzzy matching: exact matches first, then partial
+      // Enhanced fuzzy matching with multiple strategies
+      
+      // 1. Exact matches (case-insensitive) - highest score
       const exactMatches = this.termIndex.get(normalizedQuery) || []
       exactMatches.forEach((info) => {
         if (this.matchesOptions(info, options)) {
@@ -139,15 +141,66 @@ export class SemanticIndexImpl implements SemanticIndex {
         }
       })
 
-      // Partial matches
+      // 2. Case variations (for exact term)
       for (const [term, infos] of this.termIndex.entries()) {
-        if (term.includes(normalizedQuery) && term !== normalizedQuery) {
+        if (term.toLowerCase() === normalizedQuery && term !== normalizedQuery) {
           infos.forEach((info) => {
             if (this.matchesOptions(info, options)) {
-              const score = normalizedQuery.length / term.length
+              results.push(this.createSearchResult(info, 0.95))
+            }
+          })
+        }
+      }
+
+      // 3. Word boundary matches (term starts with or ends with query)
+      for (const [term, infos] of this.termIndex.entries()) {
+        const termLower = term.toLowerCase()
+        if (termLower !== normalizedQuery) {
+          // Check if query matches at word boundaries
+          const startsWithQuery = termLower.startsWith(normalizedQuery)
+          const endsWithQuery = termLower.endsWith(normalizedQuery)
+          const containsAtBoundary = this.matchesAtWordBoundary(termLower, normalizedQuery)
+          
+          if (startsWithQuery || endsWithQuery || containsAtBoundary) {
+            infos.forEach((info) => {
+              if (this.matchesOptions(info, options)) {
+                // Higher score for boundary matches
+                const score = startsWithQuery ? 0.85 : (endsWithQuery ? 0.80 : 0.75)
+                results.push(this.createSearchResult(info, score))
+              }
+            })
+          }
+        }
+      }
+
+      // 4. Substring matches (contains query anywhere)
+      for (const [term, infos] of this.termIndex.entries()) {
+        const termLower = term.toLowerCase()
+        if (termLower.includes(normalizedQuery) && 
+            !termLower.startsWith(normalizedQuery) && 
+            !termLower.endsWith(normalizedQuery) &&
+            !this.matchesAtWordBoundary(termLower, normalizedQuery)) {
+          infos.forEach((info) => {
+            if (this.matchesOptions(info, options)) {
+              // Score based on how much of the term matches
+              const score = 0.6 * (normalizedQuery.length / term.length)
               results.push(this.createSearchResult(info, score))
             }
           })
+        }
+      }
+
+      // 5. Common variations (auth -> authenticate, config -> configuration)
+      const variations = this.getCommonVariations(normalizedQuery)
+      for (const variation of variations) {
+        for (const [term, infos] of this.termIndex.entries()) {
+          if (term.toLowerCase().includes(variation)) {
+            infos.forEach((info) => {
+              if (this.matchesOptions(info, options)) {
+                results.push(this.createSearchResult(info, 0.5))
+              }
+            })
+          }
         }
       }
     }
@@ -213,6 +266,82 @@ export class SemanticIndexImpl implements SemanticIndex {
       .replace(/\*/g, '.*')
       .replace(/\?/g, '.')
     return new RegExp(regex).test(path)
+  }
+
+  private matchesAtWordBoundary(term: string, query: string): boolean {
+    // Check if query appears at camelCase, snake_case, or kebab-case boundaries
+    const boundaries = [
+      // CamelCase boundaries
+      /[a-z][A-Z]/g,
+      // snake_case and kebab-case
+      /[_-]/g,
+      // Dots and slashes (for namespaced items)
+      /[.\/]/g
+    ]
+    
+    for (const boundary of boundaries) {
+      const parts = term.split(boundary)
+      for (const part of parts) {
+        if (part.toLowerCase().startsWith(query) || part.toLowerCase() === query) {
+          return true
+        }
+      }
+    }
+    
+    // Also check if query appears after common prefixes
+    const prefixes = ['get', 'set', 'is', 'has', 'create', 'update', 'delete', 'handle', 'process']
+    for (const prefix of prefixes) {
+      if (term.toLowerCase().startsWith(prefix) && 
+          term.toLowerCase().substring(prefix.length).startsWith(query)) {
+        return true
+      }
+    }
+    
+    return false
+  }
+
+  private getCommonVariations(query: string): string[] {
+    const variations: string[] = []
+    
+    // Common abbreviations and their expansions
+    const expansions: Record<string, string[]> = {
+      'auth': ['authenticate', 'authorization', 'authorized'],
+      'config': ['configuration', 'configure'],
+      'db': ['database'],
+      'ctx': ['context'],
+      'req': ['request', 'require'],
+      'res': ['response', 'result'],
+      'err': ['error'],
+      'msg': ['message'],
+      'usr': ['user'],
+      'pwd': ['password'],
+      'mgr': ['manager'],
+      'ctrl': ['controller', 'control'],
+      'svc': ['service'],
+      'repo': ['repository'],
+      'util': ['utility', 'utilities'],
+      'lib': ['library'],
+      'pkg': ['package'],
+      'proc': ['process', 'processor'],
+      'exec': ['execute', 'execution'],
+      'init': ['initialize', 'initialization']
+    }
+    
+    // Check if query is an abbreviation
+    if (expansions[query]) {
+      variations.push(...expansions[query])
+    }
+    
+    // Check if query is a shortened version of common words
+    for (const [abbr, expanded] of Object.entries(expansions)) {
+      for (const word of expanded) {
+        if (word.startsWith(query) && query.length >= 3) {
+          variations.push(word)
+        }
+      }
+    }
+    
+    return [...new Set(variations)] // Remove duplicates
   }
 
   private deduplicateResults(results: SearchResult[]): SearchResult[] {
