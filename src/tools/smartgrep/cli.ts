@@ -22,6 +22,7 @@ import type {
 } from '@codebase-curator/semantic-core'
 import { displayResultsForClaude, displayResultsBodyClaude } from './claude-display.js'
 import { CompactSummaryGenerator } from './compactSummary.js'
+import { StoryDisplay } from './storyCommand.js'
 import { execSync } from 'child_process'
 
 
@@ -88,6 +89,12 @@ async function main() {
       process.exit(1)
     }
     await handleFlow(service, args[1])
+    return
+  }
+
+  // Handle story command for codebase narrative extraction
+  if (command === 'story') {
+    await handleStory(service, projectPath)
     return
   }
 
@@ -794,7 +801,15 @@ async function handleSearch(
       break
     case 'claude':
       // New compact mode for Claudes (default)
-      const compactGen = new CompactSummaryGenerator()
+      // Try to get story context if available
+      let story
+      try {
+        story = await service.getStoryForTerm(query)
+      } catch {
+        // Ignore story errors, continue without it
+      }
+      
+      const compactGen = new CompactSummaryGenerator({ story })
       console.log(compactGen.generate(query, results))
       break
     case 'pretty':
@@ -1342,6 +1357,32 @@ async function handleFlow(service: SemanticService, searchTerm: string) {
   }
 }
 
+/**
+ * Handle story command - extract and display codebase narrative
+ */
+async function handleStory(service: SemanticService, projectPath: string) {
+  console.log('📖 Extracting codebase story...\n')
+  
+  // Ensure index is up to date
+  const updated = await service.updateIndex()
+  if (updated) {
+    console.log('✅ Index updated with latest changes\n')
+  }
+  
+  try {
+    // Extract story
+    const story = await service.extractStory()
+    
+    // Display story
+    const display = new StoryDisplay()
+    display.displayStory(story)
+    
+  } catch (error: any) {
+    console.error(`❌ Error extracting story: ${error.message}`)
+    process.exit(1)
+  }
+}
+
 function showHelp() {
   console.log(`
 🔍 Smart Grep - Semantic Code Search with Cross-References
@@ -1356,6 +1397,11 @@ Usage:
   smartgrep flow <term>            Trace how data flows through functions
                                    Shows assignments, parameters, calls, returns
                                    Example: smartgrep flow user.email
+
+📖 Story Extraction:
+  smartgrep story                  Extract narrative patterns from codebase
+                                   Shows flows, errors, boundaries, patterns
+                                   Helps Claudes understand what your code does
 
 🏷️ Group Commands:
   smartgrep group list             List all available concept groups
@@ -1426,6 +1472,12 @@ Usage:
   smartgrep changes --compact                   # One-line risk assessment
   smartgrep group service --type class --max 10 # Top 10 service classes
   smartgrep group add api endpoint,route,handler,controller  # Add custom group
+  
+  # Framework searches (IMPORTANT: use single quotes for $ symbols!)
+  smartgrep '$state' --file "*.svelte"          # Svelte 5 runes
+  smartgrep 'onMount' --file "*.svelte"         # Svelte lifecycle
+  smartgrep 'defineProps' --file "*.vue"        # Vue composition API
+  smartgrep '{#if' --file "*.svelte"            # Svelte directives
 
 📍 Pro Tips:
   • The tool shows function signatures, surrounding context, and related code

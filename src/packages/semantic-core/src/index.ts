@@ -7,6 +7,7 @@
 export * from './SemanticService'
 export * from './SemanticIndexImpl'
 export * from './types'
+export * from './types/story'
 export * from './FlowTracer'
 
 // Re-export extractors
@@ -20,6 +21,9 @@ export * from './extractors/JsonExtractor'
 export * from './extractors/YamlExtractor'
 export * from './extractors/TomlExtractor'
 export * from './extractors/EnvExtractor'
+
+// Re-export analyzers
+export * from './analyzers/StoryExtractor'
 
 // Re-export indexing services
 export * from './indexing/CodebaseStreamer'

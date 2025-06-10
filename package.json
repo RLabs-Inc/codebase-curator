@@ -43,11 +43,12 @@
     "monitor": "bun run src/tools/monitor/cli.ts"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.4",
-    "zod": "^3.24.1",
     "@babel/parser": "^7.23.0",
     "@babel/traverse": "^7.23.0",
-    "@babel/types": "^7.23.0"
+    "@babel/types": "^7.23.0",
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "chalk": "^5.4.1",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/bun": "latest",

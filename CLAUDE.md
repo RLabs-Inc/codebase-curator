@@ -102,6 +102,7 @@ The project is now organized as a monorepo with packages:
    - **Cross-References**: `smartgrep refs "functionName"` shows all usages
    - **Changes Impact**: `smartgrep changes` analyzes uncommitted changes
    - **20+ Concept Groups**: auth, error, api, database, cache, etc.
+   - **📖 Story Mode**: `smartgrep story` extracts narrative patterns from strings
    
    ```bash
    # List all concept groups
@@ -121,6 +122,27 @@ The project is now organized as a monorepo with packages:
    # Analyze uncommitted changes
    bun run smartgrep changes                  # Full impact analysis
    bun run smartgrep changes --compact        # One-line risk assessment
+   
+   # Framework-specific searches (NEW!)
+   # IMPORTANT: When using Bash tool, use SINGLE QUOTES for $ symbols and special characters
+   bun run smartgrep '$state'                 # Find Svelte 5 runes (MUST use single quotes!)
+   bun run smartgrep '$derived'               # Find Svelte derived runes
+   bun run smartgrep "onMount"                # Find Svelte lifecycle hooks
+   bun run smartgrep "defineProps"            # Find Vue composition API
+   bun run smartgrep "client:load"            # Find Astro client directives
+   bun run smartgrep '{#if'                   # Find Svelte template directives (single quotes!)
+   
+   # DO NOT escape with backslash - it returns 0 results!
+   # BAD:  bun run smartgrep "\$state"        # This won't work!
+   # GOOD: bun run smartgrep '$state'         # This works!
+   
+   # Story Mode - Extract narrative patterns from codebase
+   bun run smartgrep story                    # Full codebase story analysis
+   # Shows:
+   # - Process flows (how things work step by step)
+   # - Error scenarios (what can go wrong and recovery)
+   # - System boundaries (external APIs, DBs, files)
+   # - Recurring patterns (retry, validation, lifecycle)
    ```
 
 ### Debugging MCP Issues
@@ -164,6 +186,7 @@ The project is now organized as a monorepo with packages:
 - Multi-language support (TypeScript, Python, Go, Rust)
 - Professional shell completions for all CLI tools
 - Human-friendly curator CLI with chat mode
+- Story Mode - narrative extraction from codebase strings
 
 ### 🚀 Next Up
 1. **Enhanced Monitoring**: More detailed code metrics
@@ -209,6 +232,9 @@ bun run smartgrep --index
 
 # Find references
 bun run smartgrep refs "apiClient"
+
+# Extract codebase story
+bun run smartgrep story
 ```
 
 ### Group Commands (Built-in + Custom)

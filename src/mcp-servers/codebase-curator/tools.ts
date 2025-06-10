@@ -40,10 +40,12 @@ export const PROJECT_SPECIAL_TOOLS = {
 1. **Smart Grep** - Semantic code search that understands your code
    Command: \`smartgrep [pattern]\`
    
+   • 🚀 NEW: Compact mode by default - 90% less context usage!
    • 10x faster than regular grep
    • Understands code structure (functions, classes, etc.)
    • Shows usage counts and cross-references
    • Supports concept groups (auth, api, error, etc.)
+   • Use --full flag only when you need every occurrence
    
    Try: \`smartgrep --help\` for full capabilities
 
@@ -60,7 +62,13 @@ export const PROJECT_SPECIAL_TOOLS = {
 export const SMARTGREP_REMINDER = {
   quickstart: 'smartgrep [pattern]  # or: smartgrep group [concept] | smartgrep group list',
   
+  compact_mode_benefit: '🚀 NEW: Compact mode by default - 90% less context usage for Claudes!',
+  
   killer_examples: [
+    // 🔥 COMPACT MODE - THE GAME CHANGER
+    'smartgrep "authService"             # Compact summary: definition + top usage + impact',
+    'smartgrep "authService" --full      # Full details when you need EVERYTHING',
+    
     // Basic searches that blow grep away
     'smartgrep "handleAuth"              # Finds function + shows who calls it!',
     'smartgrep refs "apiClient"          # Full impact analysis - see all usages',
@@ -117,12 +125,14 @@ export const SMARTGREP_REMINDER = {
   },
   
   pro_features: [
+    '🚀 COMPACT MODE: 90% less context usage - 10x more searches per conversation!',
     '📊 Shows usage counts - see how often code is referenced',
     '🔍 Shows actual code context - not just line numbers', 
     '🎯 Cross-references - see who calls what',
     '⚡ Instant after first index - uses semantic cache',
-    '🧠 Understands TypeScript/JavaScript structure',
-    '🏷️ 20+ concept groups for semantic exploration'
+    '🧠 Understands TypeScript/JavaScript/Python/Go/Rust/Swift structure',
+    '🏷️ 20+ concept groups for semantic exploration',
+    '💡 Smart suggestions - tells you what to search next'
   ],
   
   game_changer: '💡 This isn\'t just faster grep - it understands your code structure and relationships!',
@@ -157,11 +167,12 @@ but they don't know about it unless you explicitly tell them!`,
     prompt: `Search for all authentication implementations in the codebase. 
     
 IMPORTANT: Use the Bash tool to run smartgrep for semantic search:
-- 'smartgrep group auth' - finds ALL auth patterns
+- 'smartgrep group auth' - finds ALL auth patterns (compact mode: 90% less output!)
 - 'smartgrep "authenticate" --type function' - finds auth functions
 - 'smartgrep refs "AuthService"' - finds all references
 - 'smartgrep group list' - see all available concept groups
 - 'smartgrep group add mygroup term1,term2' - add project-specific groups
+- Use --full flag only if you need every single occurrence
 
 Smartgrep understands code structure and is much more effective than grep.`,
     benefit: "Agent now knows to use smartgrep and how to use it effectively!"
@@ -170,7 +181,8 @@ Smartgrep understands code structure and is much more effective than grep.`,
   template: `When creating Task prompts for code searching, include:
 
 "Use the Bash tool to run smartgrep commands for semantic code search:
-- 'smartgrep [pattern]' for literal searches
+- 'smartgrep [pattern]' for literal searches (compact by default!)
+- 'smartgrep [pattern] --full' only if you need every occurrence
 - 'smartgrep group [concept]' for semantic pattern groups
 - 'smartgrep group list' to see all available groups
 - 'smartgrep group add name terms' to add custom groups

@@ -114,7 +114,7 @@ smartgrep group add payments charge,bill,invoice,transaction
 smartgrep group payments --type function  # Search your custom group
 ```
 
-### 🌐 Language Support - Now 10 Languages!
+### 🌐 Language Support - Now 14 Languages + Frameworks!
 
 **Programming Languages:**
 - **TypeScript/JavaScript** - Full AST parsing, JSX/TSX, ES6+, decorators
@@ -123,6 +123,12 @@ smartgrep group payments --type function  # Search your custom group
 - **Rust** - Traits, macros, lifetimes, async, unsafe blocks, derive
 - **Swift** - Protocols, SwiftUI, extensions, property wrappers, actors
 - **Shell** - Functions, aliases, exports, heredocs, arrays
+
+**Framework Files (NEW!):**
+- **Svelte** (.svelte) - Runes ($state, $derived), stores, lifecycle hooks, directives
+- **Vue** (.vue) - Composition API, SFC, directives (v-if, v-for), defineProps
+- **Astro** (.astro) - Props interface, client directives, Astro.props
+- **MDX** (.mdx) - Markdown with JSX components, imports, exports
 
 **Configuration Files:**
 - **JSON** - package.json, tsconfig.json, hierarchical parsing

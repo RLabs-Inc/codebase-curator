@@ -1,0 +1,2090 @@
+{
+  "flows": [
+    {
+      "id": "flow_1749556201814_m961qfn",
+      "name": "Processing Flow",
+      "steps": [
+        {
+          "text": "Process changed/new files",
+          "type": "process",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 117,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201814_dx51rdo"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Ignore if doesn't exist",
+          "type": "decision",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 178,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201814_airuel4"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Use ensureFresh which handles everything",
+          "type": "process",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 181,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201814_b5b7pfp"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Process files using streamer",
+          "type": "process",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 245,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201814_6b1c3qs"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Process files",
+          "type": "process",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 248,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201814_dzkfbt0"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Processed ${...} files, indexed ${...} entries...",
+          "type": "process",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 275,
+            "column": 10
+          },
+          "nextSteps": [
+            "step_1749556201814_9qkn6i3"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "✅ Semantic index complete: ${...} files, ${...} entries in ${...}ms",
+          "type": "end",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 282,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201814_4pupud2"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "*\n   * Get the underlying semantic index (for advanced usage)\n   * Note: This doesn't ensure freshness automatically",
+          "type": "process",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 329,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201814_i78weed"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "*\n   * Update the index with any file changes\n   * - First run: Builds complete index\n   * - Subsequent runs: Only processes changed/new/deleted files\n   * Returns true if any changes were processed",
+          "type": "end",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 337,
+            "column": 2
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/SemanticService.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_hyxlidh",
+      "name": "Processing Flow",
+      "steps": [
+        {
+          "text": "Handle empty query - return all results",
+          "type": "process",
+          "location": {
+            "file": "src/SemanticIndexImpl.ts",
+            "line": 116,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201814_bnwt4or"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "initialization",
+          "type": "start",
+          "location": {
+            "file": "src/SemanticIndexImpl.ts",
+            "line": 327,
+            "column": 29
+          },
+          "nextSteps": [
+            "step_1749556201814_g2ctek4"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Process in small chunks",
+          "type": "process",
+          "location": {
+            "file": "src/SemanticIndexImpl.ts",
+            "line": 463,
+            "column": 26
+          },
+          "nextSteps": [
+            "step_1749556201814_txccrbb"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Silently fail - it's normal for index not to exist on first run",
+          "type": "error",
+          "location": {
+            "file": "src/SemanticIndexImpl.ts",
+            "line": 512,
+            "column": 6
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/SemanticIndexImpl.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_uvghlzn",
+      "name": "Process Flow",
+      "steps": [
+        {
+          "text": "Build initial nodes from search results",
+          "type": "start",
+          "location": {
+            "file": "src/FlowTracer.ts",
+            "line": 51,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201814_jobr67q"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "*\n   * Create a flow node from semantic info",
+          "type": "start",
+          "location": {
+            "file": "src/FlowTracer.ts",
+            "line": 83,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201814_b01z14t"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Start from roots",
+          "type": "start",
+          "location": {
+            "file": "src/FlowTracer.ts",
+            "line": 278,
+            "column": 4
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/FlowTracer.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_eeey89t",
+      "name": "Process Flow",
+      "steps": [
+        {
+          "text": "Parse with Babel - be very permissive to handle various code styles",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/TypeScriptExtractor.ts",
+            "line": 24,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201814_339ri9v"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handled by other visitors",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/TypeScriptExtractor.ts",
+            "line": 153,
+            "column": 12
+          },
+          "nextSteps": [
+            "step_1749556201814_1iiwl4e"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handle export { name }",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/TypeScriptExtractor.ts",
+            "line": 157,
+            "column": 10
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/extractors/TypeScriptExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_oigl1l3",
+      "name": "Processing Flow",
+      "steps": [
+        {
+          "text": "*\n * Framework-specific File Extractor\n * Handles Svelte, Vue, Astro, and MDX files with multiple sections",
+          "type": "decision",
+          "location": {
+            "file": "src/extractors/FrameworkExtractor.ts",
+            "line": 1,
+            "column": 0
+          },
+          "nextSteps": [
+            "step_1749556201814_1xhg727"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Process each section",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/FrameworkExtractor.ts",
+            "line": 36,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201814_wtxgaqe"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Svelte 5 Runes",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/FrameworkExtractor.ts",
+            "line": 299,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201814_r26dkn9"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "svelte-rune",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/FrameworkExtractor.ts",
+            "line": 318,
+            "column": 32
+          },
+          "nextSteps": [
+            "step_1749556201814_0wpk864"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Check if it's not a rune",
+          "type": "decision",
+          "location": {
+            "file": "src/extractors/FrameworkExtractor.ts",
+            "line": 395,
+            "column": 10
+          },
+          "nextSteps": [
+            "step_1749556201814_rysscmv"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "event-handler",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/FrameworkExtractor.ts",
+            "line": 664,
+            "column": 27
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/extractors/FrameworkExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_rtr5ya0",
+      "name": "Processing Flow",
+      "steps": [
+        {
+          "text": "Wait 500ms before processing change to allow for rapid successive events",
+          "type": "process",
+          "location": {
+            "file": "src/indexing/HashTree.ts",
+            "line": 70,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201814_50wyhvl"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Create directory nodes as needed",
+          "type": "start",
+          "location": {
+            "file": "src/indexing/HashTree.ts",
+            "line": 147,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201814_y7fshhv"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Create missing directory nodes",
+          "type": "start",
+          "location": {
+            "file": "src/indexing/HashTree.ts",
+            "line": 324,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201814_x5cx36w"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Path doesn't exist in tree",
+          "type": "process",
+          "location": {
+            "file": "src/indexing/HashTree.ts",
+            "line": 401,
+            "column": 16
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/indexing/HashTree.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_ax8ef9t",
+      "name": "Processing Flow",
+      "steps": [
+        {
+          "text": "*\n * Ultra-memory-efficient file streaming using Bun's native streams! 🚀\n *\n * This version uses Bun's file.stream() for TRUE streaming - we never\n * load entire files into memory at once. Perfect for massive codebases!\n *\n * Built FOR Claude BY Claude to handle ANY size codebase! 💪",
+          "type": "process",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 32,
+            "column": 0
+          },
+          "nextSteps": [
+            "step_1749556201814_r5b0yij"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Cache missing or corrupted, start fresh",
+          "type": "start",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 57,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201814_qxr579l"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Process files in batches",
+          "type": "process",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 103,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201814_09i148g"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "File unchanged - skip semantic processing",
+          "type": "process",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 138,
+            "column": 12
+          },
+          "nextSteps": [
+            "step_1749556201814_ppfc0v6"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Update and save hash cache for next run",
+          "type": "process",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 192,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201814_yegzxg9"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "*\n   * Create a transform stream for processing files on the fly\n   * This is the ULTIMATE in memory efficiency!",
+          "type": "start",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 276,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201814_lwvsart"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "*\n   * Reset processed files tracking",
+          "type": "process",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 323,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201814_qutjyzu"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "*\n   * Create a ReadableStream that yields file paths\n   * Can be piped to other streams for processing",
+          "type": "start",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 388,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201814_ekc03x8"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "*\n   * Estimate total size of files to be processed",
+          "type": "process",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 406,
+            "column": 2
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/indexing/CodebaseStreamer.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_oh5wuo1",
+      "name": "Processing Flow",
+      "steps": [
+        {
+          "text": "API endpoints & communication patterns",
+          "type": "end",
+          "location": {
+            "file": "src/groups/ConceptGroups.ts",
+            "line": 87,
+            "column": 17
+          },
+          "nextSteps": [
+            "step_1749556201814_hj77q6j"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Data flow & processing pipelines",
+          "type": "process",
+          "location": {
+            "file": "src/groups/ConceptGroups.ts",
+            "line": 242,
+            "column": 17
+          },
+          "nextSteps": [
+            "step_1749556201814_d8rgvzg"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Development Workflow",
+          "type": "process",
+          "location": {
+            "file": "src/groups/ConceptGroups.ts",
+            "line": 379,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201814_zyrp1o3"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Build tools & compilation processes",
+          "type": "process",
+          "location": {
+            "file": "src/groups/ConceptGroups.ts",
+            "line": 382,
+            "column": 17
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/groups/ConceptGroups.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_ms1pkti",
+      "name": "Processing Flow",
+      "steps": [
+        {
+          "text": "initialization",
+          "type": "start",
+          "location": {
+            "file": "src/analyzers/StoryAnalyzer.ts",
+            "line": 58,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201814_s8ufhvu"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Common narrative patterns across languages/domains",
+          "type": "process",
+          "location": {
+            "file": "src/analyzers/StoryAnalyzer.ts",
+            "line": 64,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201814_656m9nd"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "\"is processing\", \"is running\"",
+          "type": "process",
+          "location": {
+            "file": "src/analyzers/StoryAnalyzer.ts",
+            "line": 94,
+            "column": 26
+          },
+          "nextSteps": [
+            "step_1749556201814_vbwbni5"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "initialization",
+          "type": "start",
+          "location": {
+            "file": "src/analyzers/StoryAnalyzer.ts",
+            "line": 326,
+            "column": 23
+          },
+          "nextSteps": [
+            "step_1749556201814_yuqwqfr"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Process Flow",
+          "type": "process",
+          "location": {
+            "file": "src/analyzers/StoryAnalyzer.ts",
+            "line": 359,
+            "column": 11
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/analyzers/StoryAnalyzer.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_8bfsba2",
+      "name": "Process Flow",
+      "steps": [
+        {
+          "text": "Handle multiline strings",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/TomlExtractor.ts",
+            "line": 54,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201814_pjt35ic"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handle special keys based on file type",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/TomlExtractor.ts",
+            "line": 123,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201814_6i4qqki"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handle different string formats",
+          "type": "decision",
+          "location": {
+            "file": "src/extractors/TomlExtractor.ts",
+            "line": 396,
+            "column": 4
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/extractors/TomlExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_gphnstg",
+      "name": "Process Flow",
+      "steps": [
+        {
+          "text": "Extract doc comments",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/RustExtractor.ts",
+            "line": 362,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201814_buevrea"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "End of doc comment",
+          "type": "end",
+          "location": {
+            "file": "src/extractors/RustExtractor.ts",
+            "line": 384,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201814_69pqe5n"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Doc comment",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/RustExtractor.ts",
+            "line": 391,
+            "column": 21
+          },
+          "nextSteps": [
+            "step_1749556201814_emkjapq"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Check for development markers in doc comments",
+          "type": "decision",
+          "location": {
+            "file": "src/extractors/RustExtractor.ts",
+            "line": 397,
+            "column": 10
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/extractors/RustExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_dawj3xh",
+      "name": "docstring Flow",
+      "steps": [
+        {
+          "text": "Check for docstring start",
+          "type": "start",
+          "location": {
+            "file": "src/extractors/PythonExtractor.ts",
+            "line": 285,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201814_owb8rjr"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Check if it's a single-line docstring",
+          "type": "decision",
+          "location": {
+            "file": "src/extractors/PythonExtractor.ts",
+            "line": 293,
+            "column": 10
+          },
+          "nextSteps": [
+            "step_1749556201814_kuspn93"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Check for development markers in docstrings",
+          "type": "decision",
+          "location": {
+            "file": "src/extractors/PythonExtractor.ts",
+            "line": 309,
+            "column": 14
+          },
+          "nextSteps": [
+            "step_1749556201814_jnb7dei"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "In docstring, look for end",
+          "type": "end",
+          "location": {
+            "file": "src/extractors/PythonExtractor.ts",
+            "line": 328,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201814_jhn123q"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Check for development markers in multi-line docstrings",
+          "type": "decision",
+          "location": {
+            "file": "src/extractors/PythonExtractor.ts",
+            "line": 345,
+            "column": 12
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/extractors/PythonExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201814_f1rbfn1",
+      "name": "Processing Flow",
+      "steps": [
+        {
+          "text": "*\n   * Extract process flows from strings",
+          "type": "process",
+          "location": {
+            "file": "src/analyzers/StoryExtractor.ts",
+            "line": 64,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201814_l02fq0o"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Look for domain terms",
+          "type": "process",
+          "location": {
+            "file": "src/analyzers/StoryExtractor.ts",
+            "line": 257,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201814_t303v02"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Process Flow",
+          "type": "process",
+          "location": {
+            "file": "src/analyzers/StoryExtractor.ts",
+            "line": 267,
+            "column": 40
+          },
+          "nextSteps": [
+            "step_1749556201814_i3z5jcn"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Create a signature based on step types and key words",
+          "type": "start",
+          "location": {
+            "file": "src/analyzers/StoryExtractor.ts",
+            "line": 443,
+            "column": 4
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/analyzers/StoryExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201815_4b22bmi",
+      "name": "Process Flow",
+      "steps": [
+        {
+          "text": "Extract comments as documentation",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 43,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201814_jl99y80"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handle multiline strings",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 58,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201815_yon7obc"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "End of multiline",
+          "type": "end",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 61,
+            "column": 10
+          },
+          "nextSteps": [
+            "step_1749556201815_8aq33mh"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handle special keys based on file type",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 105,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201815_vcf805y"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handle multiline indicators",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 145,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201815_a2xtnc7"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handle array items",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 152,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201815_mke8rxe"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Docker image: ${...}",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 231,
+            "column": 17
+          },
+          "nextSteps": [
+            "step_1749556201815_rer0soo"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Workflow name",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 248,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201815_3zxukj9"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "GitHub Actions Workflow: ${...}",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 254,
+            "column": 17
+          },
+          "nextSteps": [
+            "step_1749556201815_lbbff2q"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Docker Service: ${...}",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 310,
+            "column": 17
+          },
+          "nextSteps": [
+            "step_1749556201815_fu5247k"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Docker image: ${...}",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 323,
+            "column": 17
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/extractors/YamlExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201815_kxim0ov",
+      "name": "Process Flow",
+      "steps": [
+        {
+          "text": "Create references for known patterns",
+          "type": "start",
+          "location": {
+            "file": "src/extractors/EnvExtractor.ts",
+            "line": 97,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201815_dpzjaxx"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handle empty values",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/EnvExtractor.ts",
+            "line": 106,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201815_pjclk69"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handle special cases",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/EnvExtractor.ts",
+            "line": 115,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201815_xruzrz8"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Reference to service endpoints",
+          "type": "end",
+          "location": {
+            "file": "src/extractors/EnvExtractor.ts",
+            "line": 272,
+            "column": 4
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/extractors/EnvExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201815_0s4a7k3",
+      "name": "Process Flow",
+      "steps": [
+        {
+          "text": "npm run ${...}",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/JsonExtractor.ts",
+            "line": 72,
+            "column": 16
+          },
+          "nextSteps": [
+            "step_1749556201815_3t77yih"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Create reference to the package",
+          "type": "start",
+          "location": {
+            "file": "src/extractors/JsonExtractor.ts",
+            "line": 101,
+            "column": 8
+          },
+          "nextSteps": [
+            "step_1749556201815_yqf585f"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Handle arrays of strings",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/JsonExtractor.ts",
+            "line": 237,
+            "column": 6
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/extractors/JsonExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201815_x3q7g32",
+      "name": "Processing Flow",
+      "steps": [
+        {
+          "text": "Handle here documents",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/ShellExtractor.ts",
+            "line": 51,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201815_jyaxoml"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Check for here document start",
+          "type": "start",
+          "location": {
+            "file": "src/extractors/ShellExtractor.ts",
+            "line": 60,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201815_b74u6qm"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "End of function",
+          "type": "end",
+          "location": {
+            "file": "src/extractors/ShellExtractor.ts",
+            "line": 112,
+            "column": 6
+          },
+          "nextSteps": [
+            "step_1749556201815_h8gzihx"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Command at start of line",
+          "type": "start",
+          "location": {
+            "file": "src/extractors/ShellExtractor.ts",
+            "line": 191,
+            "column": 52
+          },
+          "nextSteps": [
+            "step_1749556201815_wejnc0e"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Signal handler: ${...}",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/ShellExtractor.ts",
+            "line": 311,
+            "column": 19
+          },
+          "nextSteps": [
+            "step_1749556201815_4frgph9"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "Text processing",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/ShellExtractor.ts",
+            "line": 378,
+            "column": 6
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/extractors/ShellExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201815_m1ujv99",
+      "name": "Process Flow",
+      "steps": [
+        {
+          "text": ".github/workflows",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 12,
+            "column": 29,
+            "function": "includes"
+          },
+          "nextSteps": [
+            "step_1749556201815_7bi0tfg"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": ".github/workflows",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 28,
+            "column": 46,
+            "function": "includes"
+          },
+          "nextSteps": [
+            "step_1749556201815_2q7lndd"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "docker-compose",
+          "type": "process",
+          "location": {
+            "file": "src/extractors/YamlExtractor.ts",
+            "line": 29,
+            "column": 46,
+            "function": "includes"
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/extractors/YamlExtractor.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201815_6119o9b",
+      "name": "matching Flow",
+      "steps": [
+        {
+          "text": "For now, just do simple wildcard matching",
+          "type": "process",
+          "location": {
+            "file": "src/config/config.ts",
+            "line": 62,
+            "column": 4
+          },
+          "nextSteps": [
+            "step_1749556201815_mgc0hq3"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "For patterns starting with **, match anywhere in the path",
+          "type": "start",
+          "location": {
+            "file": "src/config/config.ts",
+            "line": 109,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201815_a2lfzyx"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "For specific paths, anchor at start",
+          "type": "start",
+          "location": {
+            "file": "src/config/config.ts",
+            "line": 121,
+            "column": 2
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/config/config.ts"
+      ]
+    },
+    {
+      "id": "flow_1749556201815_1lueo6b",
+      "name": "Process Flow",
+      "steps": [
+        {
+          "text": "* Whether to start a new session",
+          "type": "start",
+          "location": {
+            "file": "src/types/core.ts",
+            "line": 33,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201815_lqwe22j"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "* Initialize the service",
+          "type": "start",
+          "location": {
+            "file": "src/types/core.ts",
+            "line": 117,
+            "column": 2
+          },
+          "nextSteps": [
+            "step_1749556201815_zyte30h"
+          ],
+          "errorSteps": []
+        },
+        {
+          "text": "* Cleanup resources",
+          "type": "end",
+          "location": {
+            "file": "src/types/core.ts",
+            "line": 120,
+            "column": 2
+          },
+          "nextSteps": [],
+          "errorSteps": []
+        }
+      ],
+      "frequency": 1,
+      "variations": [],
+      "fileLocations": [
+        "src/types/core.ts"
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "id": "error_1749556201815_vl6hhsi",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Error processing ${...}:",
+      "frequency": 2,
+      "locations": [
+        {
+          "file": "src/SemanticService.ts",
+          "line": 139,
+          "column": 27,
+          "function": "warn"
+        },
+        {
+          "file": "src/SemanticService.ts",
+          "line": 267,
+          "column": 25,
+          "function": "warn"
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_ozi0stv",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Skip empty lines and comments",
+      "frequency": 2,
+      "locations": [
+        {
+          "file": "src/extractors/TomlExtractor.ts",
+          "line": 38,
+          "column": 6
+        },
+        {
+          "file": "src/extractors/YamlExtractor.ts",
+          "line": 41,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_0bt9bzo",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Skip empty lines",
+      "frequency": 2,
+      "locations": [
+        {
+          "file": "src/extractors/EnvExtractor.ts",
+          "line": 36,
+          "column": 6
+        },
+        {
+          "file": "src/extractors/ShellExtractor.ts",
+          "line": 48,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201815_egewxto",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Ignore errors, regenerate story",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/SemanticService.ts",
+          "line": 447,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_lk03ugf",
+      "category": "data",
+      "trigger": "Unknown trigger",
+      "error": "Handle empty query - return all results",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/SemanticIndexImpl.ts",
+          "line": 116,
+          "column": 4
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_zs6tj3w",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Silently fail - it's normal for index not to exist on first run",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/SemanticIndexImpl.ts",
+          "line": 512,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_gc2cm8x",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "nullishCoalescingOperator",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/extractors/TypeScriptExtractor.ts",
+          "line": 37,
+          "column": 10
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_kwummsc",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Failed to parse ${...}:",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/extractors/TypeScriptExtractor.ts",
+          "line": 350,
+          "column": 19,
+          "function": "warn"
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_a5344cq",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Continue parsing even with errors",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/extractors/TypeScriptExtractor.ts",
+          "line": 41,
+          "column": 29
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_e1ewf0r",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Clean the value (remove quotes, handle empty)",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/extractors/EnvExtractor.ts",
+          "line": 66,
+          "column": 8,
+          "function": "value"
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_nhg2srh",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Handle empty values",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/extractors/EnvExtractor.ts",
+          "line": 106,
+          "column": 4
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_e5oh9r2",
+      "category": "validation",
+      "trigger": "Unknown trigger",
+      "error": "Invalid URL, skip",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/extractors/EnvExtractor.ts",
+          "line": 283,
+          "column": 8
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_2z16vma",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "If JSON parsing fails, extract what we can",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/extractors/JsonExtractor.ts",
+          "line": 42,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_yacm7ci",
+      "category": "general",
+      "trigger": "Navigate to parent directory, creating intermediate directories if needed",
+      "error": "Create missing directory nodes",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/indexing/HashTree.ts",
+          "line": 324,
+          "column": 8
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201816_qnvgkjj",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Error streaming ${...}:",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/indexing/CodebaseStreamer.ts",
+          "line": 235,
+          "column": 22,
+          "function": "error"
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_75obsm6",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Transform error for ${...}:",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/indexing/CodebaseStreamer.ts",
+          "line": 292,
+          "column": 24,
+          "function": "error"
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_y6mxiit",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Cache missing or corrupted, start fresh",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/indexing/CodebaseStreamer.ts",
+          "line": 57,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_ee86lpw",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Error handling & status management",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/groups/ConceptGroups.ts",
+          "line": 107,
+          "column": 17
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_6fsqhgt",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Error & Status",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/groups/ConceptGroups.ts",
+          "line": 104,
+          "column": 2
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_my0pldm",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Error loading config from ${...}:",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/config/config.ts",
+          "line": 18,
+          "column": 22,
+          "function": "error"
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_etcajxe",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Return empty config if none found",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/config/config.ts",
+          "line": 23,
+          "column": 2
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_tjka26i",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "IDs of error branches",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/types/story.ts",
+          "line": 27,
+          "column": 23
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_hpluenf",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "*\n   * Extract error scenarios",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/analyzers/StoryExtractor.ts",
+          "line": 89,
+          "column": 2
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_k4k41hh",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Look for error branches",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/analyzers/StoryExtractor.ts",
+          "line": 230,
+          "column": 4
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_2fzrdjk",
+      "category": "general",
+      "trigger": "Extract the most significant word",
+      "error": "Look for strings before this error in the same scope",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/analyzers/StoryExtractor.ts",
+          "line": 459,
+          "column": 4
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_4ewzh5j",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Look for recovery strings after this error",
+      "recovery": "Find recovery patterns",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/analyzers/StoryExtractor.ts",
+          "line": 476,
+          "column": 4
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_aof089y",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "For each step, look for nearby error strings",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/analyzers/StoryExtractor.ts",
+          "line": 493,
+          "column": 4
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_3degzb1",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Add error branches",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/analyzers/StoryExtractor.ts",
+          "line": 502,
+          "column": 8
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_g48w42f",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Normalize for grouping similar errors",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/analyzers/StoryExtractor.ts",
+          "line": 518,
+          "column": 4
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_pbtmb59",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Error patterns add confidence",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/analyzers/StoryExtractor.ts",
+          "line": 551,
+          "column": 4
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_zakoipw",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "*\n * Story Analyzer - Extracts narrative patterns from codebase strings\n * \n * Every codebase tells a story through its strings. This analyzer finds\n * the narrative arc hidden in error messages, logs, and state transitions.",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/analyzers/StoryAnalyzer.ts",
+          "line": 1,
+          "column": 0
+        }
+      ]
+    },
+    {
+      "id": "error_1749556201817_kg1nias",
+      "category": "general",
+      "trigger": "Unknown trigger",
+      "error": "Find conflicts (errors and their resolutions)",
+      "frequency": 1,
+      "locations": [
+        {
+          "file": "src/analyzers/StoryAnalyzer.ts",
+          "line": 115,
+          "column": 4,
+          "function": "conflicts"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "boundary_1749556201818_w50vdal",
+      "type": "api",
+      "identifier": "github.com",
+      "protocol": "http",
+      "usage": [
+        {
+          "context": "\"https://github.com/RLabs-Inc/codebase-curator.git\"",
+          "location": {
+            "file": "package.json",
+            "line": 1,
+            "column": 797
+          }
+        }
+      ]
+    },
+    {
+      "id": "boundary_1749556201818_r6hw5un",
+      "type": "database",
+      "identifier": "leaf",
+      "usage": [
+        {
+          "context": "    // Update hashes from leaf to root",
+          "location": {
+            "file": "src/indexing/HashTree.ts",
+            "line": 407,
+            "column": 4
+          },
+          "operation": "UPDATE"
+        }
+      ]
+    }
+  ],
+  "patterns": [
+    {
+      "id": "pattern_1749556201818_azujow6",
+      "type": "retry",
+      "description": "Retry logic with attempts tracking",
+      "examples": [
+        {
+          "text": "Processed ${...} files, indexed ${...} entries...",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 275,
+            "column": 10
+          }
+        },
+        {
+          "text": "✅ Semantic index complete: ${...} files, ${...} entries in ${...}ms",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 282,
+            "column": 6
+          }
+        },
+        {
+          "text": "Remove old entries and add new ones",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 125,
+            "column": 12
+          }
+        },
+        {
+          "text": "💾 Large index detected (${...} entries) - using summary format",
+          "location": {
+            "file": "src/SemanticIndexImpl.ts",
+            "line": 415,
+            "column": 18,
+            "function": "log"
+          }
+        },
+        {
+          "text": "For massive codebases (>50K entries), use a lightweight summary format",
+          "location": {
+            "file": "src/SemanticIndexImpl.ts",
+            "line": 413,
+            "column": 4,
+            "function": "codebases"
+          }
+        }
+      ],
+      "frequency": 7
+    },
+    {
+      "id": "pattern_1749556201819_pydoa8b",
+      "type": "validation",
+      "description": "Input validation and constraints",
+      "examples": [
+        {
+          "text": "Framework files (must come before TypeScript to handle .svelte, .vue, etc.)",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 36,
+            "column": 4,
+            "function": "files"
+          }
+        },
+        {
+          "text": "Invalid URL, skip",
+          "location": {
+            "file": "src/extractors/EnvExtractor.ts",
+            "line": 283,
+            "column": 8
+          }
+        },
+        {
+          "text": "Input validation and constraints",
+          "location": {
+            "file": "src/analyzers/StoryExtractor.ts",
+            "line": 360,
+            "column": 19
+          }
+        },
+        {
+          "text": "Validation patterns",
+          "location": {
+            "file": "src/analyzers/StoryExtractor.ts",
+            "line": 169,
+            "column": 4
+          }
+        }
+      ],
+      "frequency": 4
+    },
+    {
+      "id": "pattern_1749556201819_r5lr9ng",
+      "type": "lifecycle",
+      "description": "Entity lifecycle management (a)",
+      "examples": [
+        {
+          "text": "*\n   * Remove a file from the semantic index",
+          "location": {
+            "file": "src/SemanticService.ts",
+            "line": 303,
+            "column": 2
+          }
+        },
+        {
+          "text": "*\n   * Create a flow node from semantic info",
+          "location": {
+            "file": "src/FlowTracer.ts",
+            "line": 83,
+            "column": 2
+          }
+        },
+        {
+          "text": "*\n   * Create a transform stream for processing files on the fly\n   * This is the ULTIMATE in memory efficiency!",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 276,
+            "column": 2
+          }
+        },
+        {
+          "text": "*\n   * Create a ReadableStream that yields file paths\n   * Can be piped to other streams for processing",
+          "location": {
+            "file": "src/indexing/CodebaseStreamer.ts",
+            "line": 388,
+            "column": 2
+          }
+        },
+        {
+          "text": "Create a signature based on step types and key words",
+          "location": {
+            "file": "src/analyzers/StoryExtractor.ts",
+            "line": 443,
+            "column": 4
+          }
+        }
+      ],
+      "frequency": 5
+    }
+  ],
+  "metadata": {
+    "extractedAt": 1749556201819,
+    "totalStrings": 1396,
+    "coveredFiles": 28,
+    "confidence": 1
+  }
+}
