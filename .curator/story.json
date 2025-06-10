@@ -1,7 +1,7 @@
 {
   "flows": [
     {
-      "id": "flow_1749526606511_lz64d84",
+      "id": "flow_1749590821463_o2uiig7",
       "name": "Process Flow",
       "steps": [
         {
@@ -13,7 +13,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606511_gtrz1sy"
+            "step_1749590821463_24tzjs8"
           ],
           "errorSteps": []
         },
@@ -26,7 +26,7 @@
             "column": 10
           },
           "nextSteps": [
-            "step_1749526606511_3czme3t"
+            "step_1749590821463_7httph6"
           ],
           "errorSteps": []
         },
@@ -39,7 +39,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606511_9xkd2m0"
+            "step_1749590821463_kd4n9v5"
           ],
           "errorSteps": []
         },
@@ -52,7 +52,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606511_hkyi80n"
+            "step_1749590821463_y8bb3d5"
           ],
           "errorSteps": []
         },
@@ -65,7 +65,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606511_cq9cbeb"
+            "step_1749590821463_hw5afbj"
           ],
           "errorSteps": []
         },
@@ -78,7 +78,7 @@
             "column": 13
           },
           "nextSteps": [
-            "step_1749526606511_teqci1y"
+            "step_1749590821463_lsbghsb"
           ],
           "errorSteps": []
         },
@@ -91,7 +91,7 @@
             "column": 10
           },
           "nextSteps": [
-            "step_1749526606511_ovz94nq"
+            "step_1749590821463_izrlexa"
           ],
           "errorSteps": []
         },
@@ -104,7 +104,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606511_0h8paou"
+            "step_1749590821463_l5qc2xo"
           ],
           "errorSteps": []
         },
@@ -127,7 +127,7 @@
       ]
     },
     {
-      "id": "flow_1749526606511_11pd98e",
+      "id": "flow_1749590821463_l7vafu4",
       "name": "Process Flow",
       "steps": [
         {
@@ -139,7 +139,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606511_xsigx6o"
+            "step_1749590821463_uu317xy"
           ],
           "errorSteps": []
         },
@@ -152,7 +152,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606511_zrhoveh"
+            "step_1749590821463_zijra8h"
           ],
           "errorSteps": []
         },
@@ -165,7 +165,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606511_nvv9knh"
+            "step_1749590821463_zi56h3j"
           ],
           "errorSteps": []
         },
@@ -178,7 +178,7 @@
             "column": 14
           },
           "nextSteps": [
-            "step_1749526606511_3elrr1m"
+            "step_1749590821463_yvr84v4"
           ],
           "errorSteps": []
         },
@@ -191,7 +191,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606511_zyoqb3t"
+            "step_1749590821463_434peoo"
           ],
           "errorSteps": []
         },
@@ -204,7 +204,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606511_83r6adc"
+            "step_1749590821463_3bk2xr9"
           ],
           "errorSteps": []
         },
@@ -217,7 +217,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_u6vexbo"
+            "step_1749590821463_v01qeel"
           ],
           "errorSteps": []
         },
@@ -230,7 +230,7 @@
             "column": 34
           },
           "nextSteps": [
-            "step_1749526606511_hva69jm"
+            "step_1749590821463_2h7355s"
           ],
           "errorSteps": []
         },
@@ -243,7 +243,7 @@
             "column": 34
           },
           "nextSteps": [
-            "step_1749526606511_26rk66u"
+            "step_1749590821463_928c7xx"
           ],
           "errorSteps": []
         },
@@ -256,7 +256,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606511_h8v1iii"
+            "step_1749590821463_hpjiu7s"
           ],
           "errorSteps": []
         },
@@ -269,7 +269,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_4uxxvfp"
+            "step_1749590821463_tstw8ad"
           ],
           "errorSteps": []
         },
@@ -282,7 +282,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_58qbnn6"
+            "step_1749590821463_rwjn74g"
           ],
           "errorSteps": []
         },
@@ -295,7 +295,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_95ur1wg"
+            "step_1749590821463_q6evk9j"
           ],
           "errorSteps": []
         },
@@ -318,7 +318,7 @@
       ]
     },
     {
-      "id": "flow_1749526606511_cdh9md6",
+      "id": "flow_1749590821463_57x30qa",
       "name": "Process Flow",
       "steps": [
         {
@@ -330,7 +330,7 @@
             "column": 71
           },
           "nextSteps": [
-            "step_1749526606511_8jnk1ne"
+            "step_1749590821463_sd3naip"
           ],
           "errorSteps": []
         },
@@ -343,7 +343,7 @@
             "column": 1166
           },
           "nextSteps": [
-            "step_1749526606511_rworapj"
+            "step_1749590821463_2r7h25a"
           ],
           "errorSteps": []
         },
@@ -356,7 +356,7 @@
             "column": 1279
           },
           "nextSteps": [
-            "step_1749526606511_8iyp7va"
+            "step_1749590821463_dzmpoo8"
           ],
           "errorSteps": []
         },
@@ -369,7 +369,7 @@
             "column": 1350
           },
           "nextSteps": [
-            "step_1749526606511_wm9i4uy"
+            "step_1749590821463_w3i54f1"
           ],
           "errorSteps": []
         },
@@ -392,7 +392,7 @@
       ]
     },
     {
-      "id": "flow_1749526606511_q2i7h0e",
+      "id": "flow_1749590821464_kdcd1kl",
       "name": "Process Flow",
       "steps": [
         {
@@ -404,7 +404,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_2d19wwg"
+            "step_1749590821464_9gr0ffz"
           ],
           "errorSteps": []
         },
@@ -417,7 +417,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606511_30q13fs"
+            "step_1749590821464_tkv6a34"
           ],
           "errorSteps": []
         },
@@ -430,7 +430,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_6i3hq1o"
+            "step_1749590821464_eokyc65"
           ],
           "errorSteps": []
         },
@@ -443,7 +443,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_9z43m38"
+            "step_1749590821464_yxwnho1"
           ],
           "errorSteps": []
         },
@@ -456,7 +456,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_160ycat"
+            "step_1749590821464_3e87n37"
           ],
           "errorSteps": []
         },
@@ -469,7 +469,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_flg9qg4"
+            "step_1749590821464_zbsdtef"
           ],
           "errorSteps": []
         },
@@ -482,7 +482,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_w9pm5mg"
+            "step_1749590821464_01ittad"
           ],
           "errorSteps": []
         },
@@ -495,7 +495,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606511_8whpvxl"
+            "step_1749590821464_z5ybqb8"
           ],
           "errorSteps": []
         },
@@ -508,7 +508,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606511_lwuwum1"
+            "step_1749590821464_1fk3ozl"
           ],
           "errorSteps": []
         },
@@ -521,7 +521,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_bwk6oq5"
+            "step_1749590821464_3noeq87"
           ],
           "errorSteps": []
         },
@@ -534,7 +534,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_yeo69u9"
+            "step_1749590821464_vj19qp9"
           ],
           "errorSteps": []
         },
@@ -547,7 +547,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_riyd4gx"
+            "step_1749590821464_g0wwdpv"
           ],
           "errorSteps": []
         },
@@ -560,7 +560,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_gfekyc7"
+            "step_1749590821464_gfg1ke1"
           ],
           "errorSteps": []
         },
@@ -583,7 +583,7 @@
       ]
     },
     {
-      "id": "flow_1749526606511_8jluzoa",
+      "id": "flow_1749590821464_miskl3w",
       "name": "Processing Flow",
       "steps": [
         {
@@ -595,7 +595,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606511_b6jykpw"
+            "step_1749590821464_8fm52ht"
           ],
           "errorSteps": []
         },
@@ -608,7 +608,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606511_ftogby7"
+            "step_1749590821464_6zea4gv"
           ],
           "errorSteps": []
         },
@@ -621,7 +621,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606511_dj6b37f"
+            "step_1749590821464_168sfng"
           ],
           "errorSteps": []
         },
@@ -634,7 +634,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_m1yl24m"
+            "step_1749590821464_37ad1f6"
           ],
           "errorSteps": []
         },
@@ -647,7 +647,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_zbnpa6a"
+            "step_1749590821464_fnqvp9r"
           ],
           "errorSteps": []
         },
@@ -660,7 +660,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606511_w2e0w9s"
+            "step_1749590821464_d38k7do"
           ],
           "errorSteps": []
         },
@@ -673,7 +673,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606511_a5lr70t"
+            "step_1749590821464_vrriwfz"
           ],
           "errorSteps": []
         },
@@ -686,7 +686,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606511_z3382uj"
+            "step_1749590821464_5r2f4mm"
           ],
           "errorSteps": []
         },
@@ -699,7 +699,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606511_uimnvka"
+            "step_1749590821464_x9cqpqt"
           ],
           "errorSteps": []
         },
@@ -712,7 +712,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606511_j03kvzp"
+            "step_1749590821464_iber3sk"
           ],
           "errorSteps": []
         },
@@ -725,7 +725,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606511_nt3d3eq"
+            "step_1749590821464_4tuftos"
           ],
           "errorSteps": []
         },
@@ -738,7 +738,7 @@
             "column": 10
           },
           "nextSteps": [
-            "step_1749526606511_hy1hzmy"
+            "step_1749590821464_9i709ra"
           ],
           "errorSteps": []
         },
@@ -751,7 +751,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606511_9qnmldc"
+            "step_1749590821464_ohc2dtc"
           ],
           "errorSteps": []
         },
@@ -764,7 +764,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606511_4rrc45j"
+            "step_1749590821464_jkoit4c"
           ],
           "errorSteps": []
         },
@@ -777,7 +777,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606511_qu9u7ga"
+            "step_1749590821464_99y04kj"
           ],
           "errorSteps": []
         },
@@ -790,7 +790,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606511_0dh749q"
+            "step_1749590821464_u04r3tq"
           ],
           "errorSteps": []
         },
@@ -813,7 +813,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_gs3le8l",
+      "id": "flow_1749590821464_pdayffb",
       "name": "Payment Flow",
       "steps": [
         {
@@ -825,7 +825,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606511_biy6sf6"
+            "step_1749590821464_tsxsxwx"
           ],
           "errorSteps": []
         },
@@ -838,7 +838,7 @@
             "column": 36
           },
           "nextSteps": [
-            "step_1749526606511_l8ucmsc"
+            "step_1749590821464_abio89x"
           ],
           "errorSteps": []
         },
@@ -851,7 +851,7 @@
             "column": 36
           },
           "nextSteps": [
-            "step_1749526606511_20kaes2"
+            "step_1749590821464_ap0zvfe"
           ],
           "errorSteps": []
         },
@@ -864,7 +864,7 @@
             "column": 31
           },
           "nextSteps": [
-            "step_1749526606511_aelexc1"
+            "step_1749590821464_pqct6ch"
           ],
           "errorSteps": []
         },
@@ -877,7 +877,7 @@
             "column": 31
           },
           "nextSteps": [
-            "step_1749526606511_3sudy2v"
+            "step_1749590821464_yzubl15"
           ],
           "errorSteps": []
         },
@@ -890,7 +890,7 @@
             "column": 34
           },
           "nextSteps": [
-            "step_1749526606511_7ibgd8n"
+            "step_1749590821464_ptirbdk"
           ],
           "errorSteps": []
         },
@@ -903,7 +903,7 @@
             "column": 34
           },
           "nextSteps": [
-            "step_1749526606511_j7da2h3"
+            "step_1749590821464_xwyp32x"
           ],
           "errorSteps": []
         },
@@ -916,7 +916,7 @@
             "column": 39
           },
           "nextSteps": [
-            "step_1749526606512_72vgsyd"
+            "step_1749590821464_2mygf9r"
           ],
           "errorSteps": []
         },
@@ -929,7 +929,7 @@
             "column": 39
           },
           "nextSteps": [
-            "step_1749526606512_bzh851w"
+            "step_1749590821464_bkr4njd"
           ],
           "errorSteps": []
         },
@@ -942,7 +942,7 @@
             "column": 34
           },
           "nextSteps": [
-            "step_1749526606512_d9g2s3r"
+            "step_1749590821464_42o9r9n"
           ],
           "errorSteps": []
         },
@@ -955,7 +955,7 @@
             "column": 34
           },
           "nextSteps": [
-            "step_1749526606512_bizu4ye"
+            "step_1749590821464_f4wks9z"
           ],
           "errorSteps": []
         },
@@ -968,7 +968,7 @@
             "column": 41
           },
           "nextSteps": [
-            "step_1749526606512_ekkvop0"
+            "step_1749590821464_e3gu8rt"
           ],
           "errorSteps": []
         },
@@ -981,7 +981,7 @@
             "column": 22
           },
           "nextSteps": [
-            "step_1749526606512_p7e8fa9"
+            "step_1749590821464_d9cqpjm"
           ],
           "errorSteps": []
         },
@@ -994,7 +994,7 @@
             "column": 22
           },
           "nextSteps": [
-            "step_1749526606512_zcvpmqh"
+            "step_1749590821464_fhhtljr"
           ],
           "errorSteps": []
         },
@@ -1007,7 +1007,7 @@
             "column": 38
           },
           "nextSteps": [
-            "step_1749526606512_jgxone2"
+            "step_1749590821464_sui6o2b"
           ],
           "errorSteps": []
         },
@@ -1020,7 +1020,7 @@
             "column": 38
           },
           "nextSteps": [
-            "step_1749526606512_gx9eaho"
+            "step_1749590821464_yg9aq7b"
           ],
           "errorSteps": []
         },
@@ -1033,7 +1033,7 @@
             "column": 41
           },
           "nextSteps": [
-            "step_1749526606512_ptwj9i1"
+            "step_1749590821464_y3hbo3m"
           ],
           "errorSteps": []
         },
@@ -1046,7 +1046,7 @@
             "column": 41
           },
           "nextSteps": [
-            "step_1749526606512_3jpg7i1"
+            "step_1749590821464_juuookv"
           ],
           "errorSteps": []
         },
@@ -1059,7 +1059,7 @@
             "column": 35
           },
           "nextSteps": [
-            "step_1749526606512_eec1yhh"
+            "step_1749590821464_heb4n9w"
           ],
           "errorSteps": []
         },
@@ -1072,7 +1072,7 @@
             "column": 35
           },
           "nextSteps": [
-            "step_1749526606512_3pyrcz8"
+            "step_1749590821464_ow748qw"
           ],
           "errorSteps": []
         },
@@ -1085,7 +1085,7 @@
             "column": 42
           },
           "nextSteps": [
-            "step_1749526606512_0sjxale"
+            "step_1749590821464_hvce83a"
           ],
           "errorSteps": []
         },
@@ -1098,7 +1098,7 @@
             "column": 42
           },
           "nextSteps": [
-            "step_1749526606512_mbzc3z7"
+            "step_1749590821464_zta2npz"
           ],
           "errorSteps": []
         },
@@ -1111,7 +1111,7 @@
             "column": 38
           },
           "nextSteps": [
-            "step_1749526606512_0qr7gdy"
+            "step_1749590821464_lkwny5t"
           ],
           "errorSteps": []
         },
@@ -1124,7 +1124,7 @@
             "column": 38
           },
           "nextSteps": [
-            "step_1749526606512_p9gm0ib"
+            "step_1749590821464_0dmwwy3"
           ],
           "errorSteps": []
         },
@@ -1137,7 +1137,7 @@
             "column": 9
           },
           "nextSteps": [
-            "step_1749526606512_chrmcr0"
+            "step_1749590821464_gp4u71y"
           ],
           "errorSteps": []
         },
@@ -1160,7 +1160,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_flcgytm",
+      "id": "flow_1749590821464_ftb82n3",
       "name": "Process Flow",
       "steps": [
         {
@@ -1172,7 +1172,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_mygbiqz"
+            "step_1749590821464_iyunpd2"
           ],
           "errorSteps": []
         },
@@ -1185,7 +1185,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_lc09eu5"
+            "step_1749590821464_p9ffvwb"
           ],
           "errorSteps": []
         },
@@ -1198,7 +1198,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_1yktctv"
+            "step_1749590821464_llhuf9y"
           ],
           "errorSteps": []
         },
@@ -1221,7 +1221,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_gh6lc7g",
+      "id": "flow_1749590821464_tk2rltt",
       "name": "Processing Flow",
       "steps": [
         {
@@ -1234,7 +1234,7 @@
             "function": "error"
           },
           "nextSteps": [
-            "step_1749526606512_gcashyq"
+            "step_1749590821464_8p6xf8z"
           ],
           "errorSteps": []
         },
@@ -1248,7 +1248,7 @@
             "function": "error"
           },
           "nextSteps": [
-            "step_1749526606512_xj695gl"
+            "step_1749590821464_xm4an4c"
           ],
           "errorSteps": []
         },
@@ -1262,7 +1262,7 @@
             "function": "error"
           },
           "nextSteps": [
-            "step_1749526606512_a6myref"
+            "step_1749590821464_pudp152"
           ],
           "errorSteps": []
         },
@@ -1276,7 +1276,7 @@
             "function": "error"
           },
           "nextSteps": [
-            "step_1749526606512_bbgdrie"
+            "step_1749590821464_earpuhe"
           ],
           "errorSteps": []
         },
@@ -1290,7 +1290,7 @@
             "function": "error"
           },
           "nextSteps": [
-            "step_1749526606512_32270b3"
+            "step_1749590821464_9oezzx5"
           ],
           "errorSteps": []
         },
@@ -1304,7 +1304,7 @@
             "function": "error"
           },
           "nextSteps": [
-            "step_1749526606512_isij7ve"
+            "step_1749590821464_oqoaru4"
           ],
           "errorSteps": []
         },
@@ -1328,7 +1328,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_nymdvbr",
+      "id": "flow_1749590821464_qi471un",
       "name": "Process Flow",
       "steps": [
         {
@@ -1340,7 +1340,7 @@
             "column": 590
           },
           "nextSteps": [
-            "step_1749526606512_zgp2kcz"
+            "step_1749590821464_wei99s8"
           ],
           "errorSteps": []
         },
@@ -1353,7 +1353,7 @@
             "column": 1285
           },
           "nextSteps": [
-            "step_1749526606512_pb23zmr"
+            "step_1749590821464_2nstyda"
           ],
           "errorSteps": []
         },
@@ -1376,7 +1376,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_hpax98v",
+      "id": "flow_1749590821464_axi5idi",
       "name": "Payment Flow",
       "steps": [
         {
@@ -1388,7 +1388,7 @@
             "column": 15
           },
           "nextSteps": [
-            "step_1749526606512_1zl0y5m"
+            "step_1749590821464_9gg3bw0"
           ],
           "errorSteps": []
         },
@@ -1401,7 +1401,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_g90hog2"
+            "step_1749590821464_fd5uer6"
           ],
           "errorSteps": []
         },
@@ -1414,7 +1414,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_hwon999"
+            "step_1749590821464_wzya4s3"
           ],
           "errorSteps": []
         },
@@ -1427,7 +1427,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_cn4ezzh"
+            "step_1749590821464_63der5a"
           ],
           "errorSteps": []
         },
@@ -1440,7 +1440,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_bz46r4m"
+            "step_1749590821464_ljw6i77"
           ],
           "errorSteps": []
         },
@@ -1453,7 +1453,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_cbebg3z"
+            "step_1749590821464_44hfdsy"
           ],
           "errorSteps": []
         },
@@ -1466,7 +1466,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606512_nip0shf"
+            "step_1749590821464_com1uf4"
           ],
           "errorSteps": []
         },
@@ -1479,7 +1479,7 @@
             "column": 13
           },
           "nextSteps": [
-            "step_1749526606512_ls7iebs"
+            "step_1749590821464_8vyg35c"
           ],
           "errorSteps": []
         },
@@ -1492,7 +1492,7 @@
             "column": 15
           },
           "nextSteps": [
-            "step_1749526606512_ymcrrxg"
+            "step_1749590821464_35651uc"
           ],
           "errorSteps": []
         },
@@ -1505,7 +1505,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_v3otqkb"
+            "step_1749590821464_tj8ybw8"
           ],
           "errorSteps": []
         },
@@ -1518,7 +1518,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_e5647ay"
+            "step_1749590821464_cbqq3sw"
           ],
           "errorSteps": []
         },
@@ -1531,7 +1531,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_ppu5jwj"
+            "step_1749590821464_rrey5u6"
           ],
           "errorSteps": []
         },
@@ -1554,7 +1554,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_tfj67db",
+      "id": "flow_1749590821464_qwaf3fk",
       "name": "Process Flow",
       "steps": [
         {
@@ -1566,7 +1566,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_muu96ib"
+            "step_1749590821464_39m82u2"
           ],
           "errorSteps": []
         },
@@ -1579,7 +1579,7 @@
             "column": 19
           },
           "nextSteps": [
-            "step_1749526606512_3f69w07"
+            "step_1749590821464_l58q90b"
           ],
           "errorSteps": []
         },
@@ -1592,7 +1592,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_e2r67nr"
+            "step_1749590821464_0nsqqjd"
           ],
           "errorSteps": []
         },
@@ -1605,7 +1605,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_2lqghh5"
+            "step_1749590821464_r0peg07"
           ],
           "errorSteps": []
         },
@@ -1618,7 +1618,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_jzrdn1g"
+            "step_1749590821464_rss7y1o"
           ],
           "errorSteps": []
         },
@@ -1631,7 +1631,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_d3ratdp"
+            "step_1749590821464_u65o7u0"
           ],
           "errorSteps": []
         },
@@ -1644,7 +1644,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_wllh7c0"
+            "step_1749590821464_50nyz4w"
           ],
           "errorSteps": []
         },
@@ -1657,7 +1657,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_4mmg482"
+            "step_1749590821464_unq1x5i"
           ],
           "errorSteps": []
         },
@@ -1670,7 +1670,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_2llud63"
+            "step_1749590821464_ypt2fab"
           ],
           "errorSteps": []
         },
@@ -1683,7 +1683,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_pjtze0s"
+            "step_1749590821464_8t95wzn"
           ],
           "errorSteps": []
         },
@@ -1696,7 +1696,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_90pvmwf"
+            "step_1749590821464_usmu2m5"
           ],
           "errorSteps": []
         },
@@ -1719,7 +1719,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_asq34vi",
+      "id": "flow_1749590821465_enhqvmg",
       "name": "Process Flow",
       "steps": [
         {
@@ -1731,7 +1731,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_iv2z42m"
+            "step_1749590821465_i1hv06k"
           ],
           "errorSteps": []
         },
@@ -1744,7 +1744,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_d2a6jzy"
+            "step_1749590821465_58pntli"
           ],
           "errorSteps": []
         },
@@ -1757,7 +1757,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_bm9yhnj"
+            "step_1749590821465_p8wwz89"
           ],
           "errorSteps": []
         },
@@ -1770,7 +1770,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_fpu7uxp"
+            "step_1749590821465_ojue1u6"
           ],
           "errorSteps": []
         },
@@ -1783,7 +1783,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_2vqko93"
+            "step_1749590821465_0ogwubm"
           ],
           "errorSteps": []
         },
@@ -1796,7 +1796,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_2az0sve"
+            "step_1749590821465_1wji114"
           ],
           "errorSteps": []
         },
@@ -1819,7 +1819,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_jrrmo0n",
+      "id": "flow_1749590821465_8nxo2gr",
       "name": "Process Flow",
       "steps": [
         {
@@ -1831,7 +1831,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606512_klwkroa"
+            "step_1749590821465_8v2dy39"
           ],
           "errorSteps": []
         },
@@ -1844,7 +1844,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_ng8umr5"
+            "step_1749590821465_nwpjkr0"
           ],
           "errorSteps": []
         },
@@ -1867,7 +1867,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_u67h3lv",
+      "id": "flow_1749590821465_bjqww8h",
       "name": "Processing Flow",
       "steps": [
         {
@@ -1879,7 +1879,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_rrz3zx0"
+            "step_1749590821465_pwz9gtp"
           ],
           "errorSteps": []
         },
@@ -1892,7 +1892,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_hzorirv"
+            "step_1749590821465_qxul8vq"
           ],
           "errorSteps": []
         },
@@ -1905,7 +1905,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_95neird"
+            "step_1749590821465_kdnm5zw"
           ],
           "errorSteps": []
         },
@@ -1918,7 +1918,7 @@
             "column": 32
           },
           "nextSteps": [
-            "step_1749526606512_n393rma"
+            "step_1749590821465_i81dhg9"
           ],
           "errorSteps": []
         },
@@ -1931,7 +1931,7 @@
             "column": 10
           },
           "nextSteps": [
-            "step_1749526606512_g37wuel"
+            "step_1749590821465_4hpw63q"
           ],
           "errorSteps": []
         },
@@ -1954,7 +1954,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_ijosk67",
+      "id": "flow_1749590821465_udemshq",
       "name": "Process Flow",
       "steps": [
         {
@@ -1966,7 +1966,7 @@
             "column": 16
           },
           "nextSteps": [
-            "step_1749526606512_ezai44i"
+            "step_1749590821465_7gumdkt"
           ],
           "errorSteps": []
         },
@@ -1979,7 +1979,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_yrprsgq"
+            "step_1749590821465_vp2wwp1"
           ],
           "errorSteps": []
         },
@@ -2002,7 +2002,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_oxqthyt",
+      "id": "flow_1749590821465_1nsg2pk",
       "name": "Processing Flow",
       "steps": [
         {
@@ -2014,7 +2014,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_fdmc656"
+            "step_1749590821465_6q6v4s2"
           ],
           "errorSteps": []
         },
@@ -2027,7 +2027,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_0d0lbrq"
+            "step_1749590821465_fjjqy2x"
           ],
           "errorSteps": []
         },
@@ -2040,7 +2040,7 @@
             "column": 13
           },
           "nextSteps": [
-            "step_1749526606512_a4kyv9e"
+            "step_1749590821465_si350n7"
           ],
           "errorSteps": []
         },
@@ -2053,7 +2053,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_ri9zmoo"
+            "step_1749590821465_awyp1q1"
           ],
           "errorSteps": []
         },
@@ -2066,7 +2066,7 @@
             "column": 13
           },
           "nextSteps": [
-            "step_1749526606512_pfi7jxm"
+            "step_1749590821465_dx9jr0g"
           ],
           "errorSteps": []
         },
@@ -2079,7 +2079,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_imx8au7"
+            "step_1749590821465_r1o6z3t"
           ],
           "errorSteps": []
         },
@@ -2092,7 +2092,7 @@
             "column": 13
           },
           "nextSteps": [
-            "step_1749526606512_e64jaee"
+            "step_1749590821465_o8cx22o"
           ],
           "errorSteps": []
         },
@@ -2105,7 +2105,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606512_wl2gjtp"
+            "step_1749590821465_0l0tdai"
           ],
           "errorSteps": []
         },
@@ -2118,7 +2118,7 @@
             "column": 13
           },
           "nextSteps": [
-            "step_1749526606512_dnugtkd"
+            "step_1749590821465_9obhclj"
           ],
           "errorSteps": []
         },
@@ -2141,7 +2141,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_2cbt0j4",
+      "id": "flow_1749590821465_fqgnvbj",
       "name": "Process Flow",
       "steps": [
         {
@@ -2153,7 +2153,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606512_p6m7qxm"
+            "step_1749590821465_xlpxbxa"
           ],
           "errorSteps": []
         },
@@ -2166,7 +2166,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606512_l7ygo73"
+            "step_1749590821465_felx4ip"
           ],
           "errorSteps": []
         },
@@ -2179,7 +2179,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_8afy6sn"
+            "step_1749590821465_qlo0ixw"
           ],
           "errorSteps": []
         },
@@ -2192,7 +2192,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606512_itj2p5b"
+            "step_1749590821465_shvwjcm"
           ],
           "errorSteps": []
         },
@@ -2215,7 +2215,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_1t5b55g",
+      "id": "flow_1749590821465_1tdcgha",
       "name": "Processing Flow",
       "steps": [
         {
@@ -2227,7 +2227,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606512_ckoqg5k"
+            "step_1749590821465_eqrnrtv"
           ],
           "errorSteps": []
         },
@@ -2240,7 +2240,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_j5cov29"
+            "step_1749590821465_i5gsck7"
           ],
           "errorSteps": []
         },
@@ -2253,7 +2253,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606512_youbeay"
+            "step_1749590821465_f7jeqp3"
           ],
           "errorSteps": []
         },
@@ -2266,7 +2266,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606512_liharvq"
+            "step_1749590821465_9wbf689"
           ],
           "errorSteps": []
         },
@@ -2279,7 +2279,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_nj1lknz"
+            "step_1749590821465_wun1ezz"
           ],
           "errorSteps": []
         },
@@ -2292,7 +2292,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606512_l64errf"
+            "step_1749590821465_o6zcaxv"
           ],
           "errorSteps": []
         },
@@ -2305,7 +2305,7 @@
             "column": 15
           },
           "nextSteps": [
-            "step_1749526606512_od4j6sz"
+            "step_1749590821465_nndch2r"
           ],
           "errorSteps": []
         },
@@ -2328,7 +2328,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_wo0i7vw",
+      "id": "flow_1749590821465_7o3ikn7",
       "name": "Authentication Flow",
       "steps": [
         {
@@ -2340,7 +2340,7 @@
             "column": 56
           },
           "nextSteps": [
-            "step_1749526606512_3j9h1ze"
+            "step_1749590821465_f5hdq84"
           ],
           "errorSteps": []
         },
@@ -2353,7 +2353,7 @@
             "column": 65
           },
           "nextSteps": [
-            "step_1749526606512_jxb3qmb"
+            "step_1749590821465_tqkdrep"
           ],
           "errorSteps": []
         },
@@ -2366,7 +2366,7 @@
             "column": 38
           },
           "nextSteps": [
-            "step_1749526606512_jg4zbrq"
+            "step_1749590821465_nwb83f2"
           ],
           "errorSteps": []
         },
@@ -2379,7 +2379,7 @@
             "column": 48
           },
           "nextSteps": [
-            "step_1749526606512_2ujrwol"
+            "step_1749590821465_4ry44de"
           ],
           "errorSteps": []
         },
@@ -2392,7 +2392,7 @@
             "column": 53
           },
           "nextSteps": [
-            "step_1749526606512_zp3qoh6"
+            "step_1749590821465_st2f9um"
           ],
           "errorSteps": []
         },
@@ -2405,7 +2405,7 @@
             "column": 72
           },
           "nextSteps": [
-            "step_1749526606512_valneuf"
+            "step_1749590821465_bupsdw1"
           ],
           "errorSteps": []
         },
@@ -2428,7 +2428,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_hs7epqi",
+      "id": "flow_1749590821465_i1icsq0",
       "name": "Processing Flow",
       "steps": [
         {
@@ -2440,7 +2440,7 @@
             "column": 17
           },
           "nextSteps": [
-            "step_1749526606512_z4afdw7"
+            "step_1749590821465_f4tl7hk"
           ],
           "errorSteps": []
         },
@@ -2453,7 +2453,7 @@
             "column": 17
           },
           "nextSteps": [
-            "step_1749526606512_0kf7w8g"
+            "step_1749590821465_1wh36r4"
           ],
           "errorSteps": []
         },
@@ -2466,7 +2466,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606512_6mvr37p"
+            "step_1749590821465_j7aukru"
           ],
           "errorSteps": []
         },
@@ -2489,7 +2489,7 @@
       ]
     },
     {
-      "id": "flow_1749526606512_mezodnk",
+      "id": "flow_1749590821465_70ltzb3",
       "name": "Processing Flow",
       "steps": [
         {
@@ -2501,7 +2501,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_ol05emv"
+            "step_1749590821465_jrxepiq"
           ],
           "errorSteps": []
         },
@@ -2514,7 +2514,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_221i8j6"
+            "step_1749590821465_z290wpm"
           ],
           "errorSteps": []
         },
@@ -2527,7 +2527,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_aunz6vv"
+            "step_1749590821465_9uwshx2"
           ],
           "errorSteps": []
         },
@@ -2540,7 +2540,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606512_za6qfk8"
+            "step_1749590821465_29h1jk8"
           ],
           "errorSteps": []
         },
@@ -2553,7 +2553,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606512_e7gr1cc"
+            "step_1749590821465_lquo0mp"
           ],
           "errorSteps": []
         },
@@ -2566,7 +2566,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606512_2vbfg33"
+            "step_1749590821465_bxhtkjs"
           ],
           "errorSteps": []
         },
@@ -2579,7 +2579,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_q3sx5u2"
+            "step_1749590821465_3lty2wr"
           ],
           "errorSteps": []
         },
@@ -2592,7 +2592,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606512_9nnjhe2"
+            "step_1749590821465_fu8ixj5"
           ],
           "errorSteps": []
         },
@@ -2605,7 +2605,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606512_64xqxl3"
+            "step_1749590821465_tvsvrbg"
           ],
           "errorSteps": []
         },
@@ -2618,7 +2618,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_rtmangs"
+            "step_1749590821465_dxeyovr"
           ],
           "errorSteps": []
         },
@@ -2631,7 +2631,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606512_7ctwlw4"
+            "step_1749590821465_sfm85zm"
           ],
           "errorSteps": []
         },
@@ -2644,7 +2644,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606512_as1nczm"
+            "step_1749590821465_4r0nas8"
           ],
           "errorSteps": []
         },
@@ -2657,7 +2657,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_w4500am"
+            "step_1749590821465_dqi9kc5"
           ],
           "errorSteps": []
         },
@@ -2670,7 +2670,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_tec1uo2"
+            "step_1749590821465_lpsxzfi"
           ],
           "errorSteps": []
         },
@@ -2683,7 +2683,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_k6l1ugv"
+            "step_1749590821465_9kkni9e"
           ],
           "errorSteps": []
         },
@@ -2696,7 +2696,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_9sxmio8"
+            "step_1749590821465_izdg6md"
           ],
           "errorSteps": []
         },
@@ -2709,7 +2709,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_uh5ojre"
+            "step_1749590821465_ffbv2nv"
           ],
           "errorSteps": []
         },
@@ -2722,7 +2722,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_g6rhgrz"
+            "step_1749590821465_a55en9c"
           ],
           "errorSteps": []
         },
@@ -2735,7 +2735,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_l11qbwz"
+            "step_1749590821465_vrqjfl1"
           ],
           "errorSteps": []
         },
@@ -2748,7 +2748,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606512_xigj5fe"
+            "step_1749590821465_2v4j6vr"
           ],
           "errorSteps": []
         },
@@ -2771,7 +2771,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_8ftuvjv",
+      "id": "flow_1749590821465_3gnlh0i",
       "name": "Processing Flow",
       "steps": [
         {
@@ -2783,7 +2783,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606513_yiqo0f0"
+            "step_1749590821465_uxd9gwr"
           ],
           "errorSteps": []
         },
@@ -2796,7 +2796,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606513_h8a4flb"
+            "step_1749590821465_sfmqfgg"
           ],
           "errorSteps": []
         },
@@ -2809,7 +2809,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_je38h9l"
+            "step_1749590821465_si9ldft"
           ],
           "errorSteps": []
         },
@@ -2822,7 +2822,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_t5esha0"
+            "step_1749590821465_303eewg"
           ],
           "errorSteps": []
         },
@@ -2835,7 +2835,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606513_2wofbpn"
+            "step_1749590821465_1is6vaa"
           ],
           "errorSteps": []
         },
@@ -2848,7 +2848,7 @@
             "column": 10
           },
           "nextSteps": [
-            "step_1749526606513_3dkijsz"
+            "step_1749590821465_wu8jz3j"
           ],
           "errorSteps": []
         },
@@ -2861,7 +2861,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606513_mf51e30"
+            "step_1749590821465_dkwmr00"
           ],
           "errorSteps": []
         },
@@ -2874,7 +2874,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_j6rjgsq"
+            "step_1749590821465_spsdiwe"
           ],
           "errorSteps": []
         },
@@ -2887,7 +2887,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_qma6ms8"
+            "step_1749590821465_hf3ylcb"
           ],
           "errorSteps": []
         },
@@ -2900,7 +2900,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_j4t8xu7"
+            "step_1749590821465_wed6aul"
           ],
           "errorSteps": []
         },
@@ -2913,7 +2913,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_7f4ze2g"
+            "step_1749590821465_1kiki4a"
           ],
           "errorSteps": []
         },
@@ -2936,7 +2936,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_0ruub50",
+      "id": "flow_1749590821465_oh53fvf",
       "name": "Process Flow",
       "steps": [
         {
@@ -2948,7 +2948,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_3jfjfna"
+            "step_1749590821465_icy27dz"
           ],
           "errorSteps": []
         },
@@ -2961,7 +2961,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_x1i09i7"
+            "step_1749590821465_o6qfwul"
           ],
           "errorSteps": []
         },
@@ -2974,7 +2974,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606513_r1yz9uu"
+            "step_1749590821465_0zjjpez"
           ],
           "errorSteps": []
         },
@@ -2997,7 +2997,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_4wj6r6x",
+      "id": "flow_1749590821465_s6w2e43",
       "name": "Processing Flow",
       "steps": [
         {
@@ -3009,7 +3009,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606513_7064p3k"
+            "step_1749590821465_vyvwvu6"
           ],
           "errorSteps": []
         },
@@ -3022,7 +3022,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_b3r1ho9"
+            "step_1749590821465_aar4o6a"
           ],
           "errorSteps": []
         },
@@ -3035,7 +3035,7 @@
             "column": 26
           },
           "nextSteps": [
-            "step_1749526606513_haxc9rc"
+            "step_1749590821465_eai0egv"
           ],
           "errorSteps": []
         },
@@ -3048,7 +3048,7 @@
             "column": 23
           },
           "nextSteps": [
-            "step_1749526606513_08qd2hz"
+            "step_1749590821465_mxqrf8q"
           ],
           "errorSteps": []
         },
@@ -3071,7 +3071,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_ecyqqwu",
+      "id": "flow_1749590821465_rnk5ius",
       "name": "Process Flow",
       "steps": [
         {
@@ -3083,7 +3083,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_mdas5gt"
+            "step_1749590821465_6zuijcm"
           ],
           "errorSteps": []
         },
@@ -3096,7 +3096,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_abooie2"
+            "step_1749590821465_xiaa8hd"
           ],
           "errorSteps": []
         },
@@ -3109,7 +3109,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_ykczxq8"
+            "step_1749590821465_415u4wq"
           ],
           "errorSteps": []
         },
@@ -3122,7 +3122,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_oxqctrl"
+            "step_1749590821465_2rt9alp"
           ],
           "errorSteps": []
         },
@@ -3135,7 +3135,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_r4v19yv"
+            "step_1749590821465_qjsamt7"
           ],
           "errorSteps": []
         },
@@ -3148,7 +3148,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_553s7r0"
+            "step_1749590821465_op9z6hi"
           ],
           "errorSteps": []
         },
@@ -3161,7 +3161,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_ah14tq3"
+            "step_1749590821465_bu0z3x3"
           ],
           "errorSteps": []
         },
@@ -3174,7 +3174,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_v9ogkpx"
+            "step_1749590821465_5gsd7lf"
           ],
           "errorSteps": []
         },
@@ -3187,7 +3187,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_46vgmi5"
+            "step_1749590821465_oiivsl2"
           ],
           "errorSteps": []
         },
@@ -3200,7 +3200,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_etlsz06"
+            "step_1749590821465_te9sapv"
           ],
           "errorSteps": []
         },
@@ -3213,7 +3213,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_mmifsey"
+            "step_1749590821465_aq8ldlr"
           ],
           "errorSteps": []
         },
@@ -3226,7 +3226,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_57vine1"
+            "step_1749590821465_gdpo90a"
           ],
           "errorSteps": []
         },
@@ -3239,7 +3239,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_jvfz94i"
+            "step_1749590821465_6fb8w5f"
           ],
           "errorSteps": []
         },
@@ -3252,7 +3252,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_betv1bg"
+            "step_1749590821465_z5b3vus"
           ],
           "errorSteps": []
         },
@@ -3265,7 +3265,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_zzeimdh"
+            "step_1749590821465_jv0qpkv"
           ],
           "errorSteps": []
         },
@@ -3278,7 +3278,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_otgizt9"
+            "step_1749590821465_dhq1ceg"
           ],
           "errorSteps": []
         },
@@ -3291,7 +3291,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_bqp4a21"
+            "step_1749590821465_3bydirs"
           ],
           "errorSteps": []
         },
@@ -3304,7 +3304,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_la3ourx"
+            "step_1749590821465_o84d6tm"
           ],
           "errorSteps": []
         },
@@ -3317,7 +3317,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_mcfbf6o"
+            "step_1749590821465_lczh2wl"
           ],
           "errorSteps": []
         },
@@ -3330,7 +3330,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_5a0nurb"
+            "step_1749590821465_v9ttjow"
           ],
           "errorSteps": []
         },
@@ -3343,7 +3343,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_mworqbx"
+            "step_1749590821465_jsy4tlu"
           ],
           "errorSteps": []
         },
@@ -3356,7 +3356,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_zv9zvjh"
+            "step_1749590821465_3yph017"
           ],
           "errorSteps": []
         },
@@ -3369,7 +3369,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_nftj55d"
+            "step_1749590821465_z6aozh0"
           ],
           "errorSteps": []
         },
@@ -3382,7 +3382,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_ue4crib"
+            "step_1749590821465_7r0r235"
           ],
           "errorSteps": []
         },
@@ -3395,7 +3395,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_edp9zcj"
+            "step_1749590821465_4qj8tua"
           ],
           "errorSteps": []
         },
@@ -3408,7 +3408,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_uisiee2"
+            "step_1749590821465_yoxn3tb"
           ],
           "errorSteps": []
         },
@@ -3421,7 +3421,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_ymgf5yl"
+            "step_1749590821465_w3n4ylj"
           ],
           "errorSteps": []
         },
@@ -3434,7 +3434,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_fx54j7l"
+            "step_1749590821465_ct0ou24"
           ],
           "errorSteps": []
         },
@@ -3447,7 +3447,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_hop70uu"
+            "step_1749590821465_uu4t2zs"
           ],
           "errorSteps": []
         },
@@ -3460,7 +3460,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_szc7jfl"
+            "step_1749590821465_0tz2jni"
           ],
           "errorSteps": []
         },
@@ -3473,7 +3473,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_gesysi5"
+            "step_1749590821465_ibgrif4"
           ],
           "errorSteps": []
         },
@@ -3486,7 +3486,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_7lbvxan"
+            "step_1749590821465_txbxyxx"
           ],
           "errorSteps": []
         },
@@ -3499,7 +3499,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_rcmpvgq"
+            "step_1749590821465_vvel7lq"
           ],
           "errorSteps": []
         },
@@ -3512,7 +3512,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_us26ktg"
+            "step_1749590821465_3aegm3l"
           ],
           "errorSteps": []
         },
@@ -3525,7 +3525,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_dco2hkn"
+            "step_1749590821465_pzu1w2g"
           ],
           "errorSteps": []
         },
@@ -3548,7 +3548,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_3dba6hx",
+      "id": "flow_1749590821465_nkabayq",
       "name": "Payment Flow",
       "steps": [
         {
@@ -3560,7 +3560,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606513_qghzhq5"
+            "step_1749590821465_a4lt24i"
           ],
           "errorSteps": []
         },
@@ -3573,7 +3573,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606513_00geutp"
+            "step_1749590821465_vfbhz8a"
           ],
           "errorSteps": []
         },
@@ -3586,7 +3586,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606513_lqxh399"
+            "step_1749590821465_3nsn3us"
           ],
           "errorSteps": []
         },
@@ -3599,7 +3599,7 @@
             "column": 11
           },
           "nextSteps": [
-            "step_1749526606513_lgb3e8m"
+            "step_1749590821465_qvxebc2"
           ],
           "errorSteps": []
         },
@@ -3612,7 +3612,7 @@
             "column": 28
           },
           "nextSteps": [
-            "step_1749526606513_ntoody5"
+            "step_1749590821465_fthouc4"
           ],
           "errorSteps": []
         },
@@ -3625,7 +3625,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606513_kymjr6q"
+            "step_1749590821465_ks2bday"
           ],
           "errorSteps": []
         },
@@ -3638,7 +3638,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606513_919iuax"
+            "step_1749590821465_2mv757r"
           ],
           "errorSteps": []
         },
@@ -3651,7 +3651,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606513_n5axc10"
+            "step_1749590821465_1n5hi4b"
           ],
           "errorSteps": []
         },
@@ -3664,7 +3664,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606513_2hrveds"
+            "step_1749590821465_rylzfbv"
           ],
           "errorSteps": []
         },
@@ -3677,7 +3677,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606513_rhtkxvy"
+            "step_1749590821465_e5bin7a"
           ],
           "errorSteps": []
         },
@@ -3690,7 +3690,7 @@
             "column": 19
           },
           "nextSteps": [
-            "step_1749526606513_3gumqm3"
+            "step_1749590821465_bh72ehd"
           ],
           "errorSteps": []
         },
@@ -3703,7 +3703,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606513_u6sn1ud"
+            "step_1749590821465_54xfb8k"
           ],
           "errorSteps": []
         },
@@ -3716,7 +3716,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606513_vukn6aj"
+            "step_1749590821465_s6tms0x"
           ],
           "errorSteps": []
         },
@@ -3739,7 +3739,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_syjly3h",
+      "id": "flow_1749590821465_a1b60od",
       "name": "Payment Flow",
       "steps": [
         {
@@ -3752,7 +3752,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_j6wuv5r"
+            "step_1749590821465_s4a6lk1"
           ],
           "errorSteps": []
         },
@@ -3766,7 +3766,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_6auhplr"
+            "step_1749590821465_fifam7n"
           ],
           "errorSteps": []
         },
@@ -3780,7 +3780,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_bhr0qhy"
+            "step_1749590821465_yq4hbwh"
           ],
           "errorSteps": []
         },
@@ -3804,7 +3804,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_6sfqhs4",
+      "id": "flow_1749590821465_6v6ocwl",
       "name": "Process Flow",
       "steps": [
         {
@@ -3816,7 +3816,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_tf84njy"
+            "step_1749590821465_jjnp1om"
           ],
           "errorSteps": []
         },
@@ -3829,7 +3829,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_q91t6qx"
+            "step_1749590821465_hv4bzi9"
           ],
           "errorSteps": []
         },
@@ -3852,7 +3852,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_0kk5j8n",
+      "id": "flow_1749590821465_6dmnf8e",
       "name": "Process Flow",
       "steps": [
         {
@@ -3864,7 +3864,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_5pw1w2x"
+            "step_1749590821465_8004kn4"
           ],
           "errorSteps": []
         },
@@ -3877,7 +3877,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606513_xzf4oul"
+            "step_1749590821465_t1lt3o3"
           ],
           "errorSteps": []
         },
@@ -3890,7 +3890,7 @@
             "column": 21
           },
           "nextSteps": [
-            "step_1749526606513_49972y2"
+            "step_1749590821465_wr2aye4"
           ],
           "errorSteps": []
         },
@@ -3913,7 +3913,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_y07ny2p",
+      "id": "flow_1749590821465_2u2oufn",
       "name": "Process Flow",
       "steps": [
         {
@@ -3925,7 +3925,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_hauzo6d"
+            "step_1749590821465_yz4kt4t"
           ],
           "errorSteps": []
         },
@@ -3938,7 +3938,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_25m87gg"
+            "step_1749590821465_0mav98n"
           ],
           "errorSteps": []
         },
@@ -3951,7 +3951,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_f7uuv9a"
+            "step_1749590821465_imbnctl"
           ],
           "errorSteps": []
         },
@@ -3964,7 +3964,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_48lj3ne"
+            "step_1749590821465_7wq0x0r"
           ],
           "errorSteps": []
         },
@@ -3987,7 +3987,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_b20fm6c",
+      "id": "flow_1749590821465_hp420g1",
       "name": "Processing Flow",
       "steps": [
         {
@@ -3999,7 +3999,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_wyd1aon"
+            "step_1749590821465_i3z5ejk"
           ],
           "errorSteps": []
         },
@@ -4012,7 +4012,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_ubm0um7"
+            "step_1749590821465_m3qm9m4"
           ],
           "errorSteps": []
         },
@@ -4025,7 +4025,7 @@
             "column": 40
           },
           "nextSteps": [
-            "step_1749526606513_5h48kqq"
+            "step_1749590821465_2dos55h"
           ],
           "errorSteps": []
         },
@@ -4048,7 +4048,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_ejij7g7",
+      "id": "flow_1749590821466_9x80x99",
       "name": "Payment Flow",
       "steps": [
         {
@@ -4061,7 +4061,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_6wjexda"
+            "step_1749590821466_9dyv1kk"
           ],
           "errorSteps": []
         },
@@ -4075,7 +4075,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_ney3tak"
+            "step_1749590821466_dseggz2"
           ],
           "errorSteps": []
         },
@@ -4089,7 +4089,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_cl81hre"
+            "step_1749590821466_h6su6q3"
           ],
           "errorSteps": []
         },
@@ -4103,7 +4103,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_ta10vcy"
+            "step_1749590821466_1y068nk"
           ],
           "errorSteps": []
         },
@@ -4117,7 +4117,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_e05xgcr"
+            "step_1749590821466_n832346"
           ],
           "errorSteps": []
         },
@@ -4131,7 +4131,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_ntaoqul"
+            "step_1749590821466_a6p0j0w"
           ],
           "errorSteps": []
         },
@@ -4145,7 +4145,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_ry37leu"
+            "step_1749590821466_882sx39"
           ],
           "errorSteps": []
         },
@@ -4159,7 +4159,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_3mba89y"
+            "step_1749590821466_85hbqfo"
           ],
           "errorSteps": []
         },
@@ -4173,7 +4173,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_advgutx"
+            "step_1749590821466_7qivs9n"
           ],
           "errorSteps": []
         },
@@ -4187,7 +4187,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606513_zar2qot"
+            "step_1749590821466_tt9jh6a"
           ],
           "errorSteps": []
         },
@@ -4211,7 +4211,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_tftsew0",
+      "id": "flow_1749590821466_afgbefa",
       "name": "Processing Flow",
       "steps": [
         {
@@ -4223,7 +4223,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_1fnune8"
+            "step_1749590821466_oyx7kpl"
           ],
           "errorSteps": []
         },
@@ -4236,7 +4236,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606513_f8hkqtl"
+            "step_1749590821466_pc3mv9w"
           ],
           "errorSteps": []
         },
@@ -4249,7 +4249,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_pvm6zul"
+            "step_1749590821466_ec71ya5"
           ],
           "errorSteps": []
         },
@@ -4262,7 +4262,7 @@
             "column": 12
           },
           "nextSteps": [
-            "step_1749526606513_9x0ft1q"
+            "step_1749590821466_thbmkh3"
           ],
           "errorSteps": []
         },
@@ -4275,7 +4275,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_7avnmb7"
+            "step_1749590821466_k1xryb6"
           ],
           "errorSteps": []
         },
@@ -4288,7 +4288,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_lr784dz"
+            "step_1749590821466_ujzjtms"
           ],
           "errorSteps": []
         },
@@ -4301,7 +4301,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_c976ql9"
+            "step_1749590821466_nstv3gs"
           ],
           "errorSteps": []
         },
@@ -4314,7 +4314,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606513_17rcq9b"
+            "step_1749590821466_cvodi0m"
           ],
           "errorSteps": []
         },
@@ -4337,7 +4337,7 @@
       ]
     },
     {
-      "id": "flow_1749526606513_4augp5k",
+      "id": "flow_1749590821466_mq2hxhk",
       "name": "Process Flow",
       "steps": [
         {
@@ -4349,7 +4349,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606513_zey06t1"
+            "step_1749590821466_989re4u"
           ],
           "errorSteps": []
         },
@@ -4362,7 +4362,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606513_d39otxf"
+            "step_1749590821466_agjx8nn"
           ],
           "errorSteps": []
         },
@@ -4375,7 +4375,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606513_gghmyws"
+            "step_1749590821466_jpd5dlf"
           ],
           "errorSteps": []
         },
@@ -4388,7 +4388,7 @@
             "column": 13
           },
           "nextSteps": [
-            "step_1749526606513_1126ca3"
+            "step_1749590821466_5kgzse8"
           ],
           "errorSteps": []
         },
@@ -4411,7 +4411,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_b15ryb2",
+      "id": "flow_1749590821466_l9w3k7o",
       "name": "providing Flow",
       "steps": [
         {
@@ -4423,7 +4423,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606514_cgdqj9e"
+            "step_1749590821466_pr58wxv"
           ],
           "errorSteps": []
         },
@@ -4436,7 +4436,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606514_nmi032q"
+            "step_1749590821466_bajryvi"
           ],
           "errorSteps": []
         },
@@ -4449,7 +4449,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606514_gyliign"
+            "step_1749590821466_qn1pipu"
           ],
           "errorSteps": []
         },
@@ -4462,7 +4462,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_ej2r49w"
+            "step_1749590821466_7eeg28l"
           ],
           "errorSteps": []
         },
@@ -4475,7 +4475,7 @@
             "column": 11
           },
           "nextSteps": [
-            "step_1749526606514_zq2vuf7"
+            "step_1749590821466_2gi0uli"
           ],
           "errorSteps": []
         },
@@ -4488,7 +4488,7 @@
             "column": 21
           },
           "nextSteps": [
-            "step_1749526606514_qyjzssf"
+            "step_1749590821466_7ardiq8"
           ],
           "errorSteps": []
         },
@@ -4501,7 +4501,7 @@
             "column": 30
           },
           "nextSteps": [
-            "step_1749526606514_1gdtuc1"
+            "step_1749590821466_jsnkmp8"
           ],
           "errorSteps": []
         },
@@ -4514,7 +4514,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606514_tf6whj3"
+            "step_1749590821466_k6akslw"
           ],
           "errorSteps": []
         },
@@ -4527,7 +4527,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_2g3klhi"
+            "step_1749590821466_n6rj4m7"
           ],
           "errorSteps": []
         },
@@ -4540,7 +4540,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_gm8ubqu"
+            "step_1749590821466_u2ep5pu"
           ],
           "errorSteps": []
         },
@@ -4563,7 +4563,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_6cu5e8a",
+      "id": "flow_1749590821466_bu3q9i5",
       "name": "Processing Flow",
       "steps": [
         {
@@ -4575,7 +4575,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_46gejcy"
+            "step_1749590821466_uq6r3qo"
           ],
           "errorSteps": []
         },
@@ -4588,7 +4588,7 @@
             "column": 29
           },
           "nextSteps": [
-            "step_1749526606514_v3ukbpi"
+            "step_1749590821466_33p0ood"
           ],
           "errorSteps": []
         },
@@ -4601,7 +4601,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606514_fr480m8"
+            "step_1749590821466_6lttdrx"
           ],
           "errorSteps": []
         },
@@ -4614,7 +4614,7 @@
             "column": 26
           },
           "nextSteps": [
-            "step_1749526606514_mls7vc9"
+            "step_1749590821466_zswwrrt"
           ],
           "errorSteps": []
         },
@@ -4637,7 +4637,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_8q0wlo3",
+      "id": "flow_1749590821466_dho0rom",
       "name": "Process Flow",
       "steps": [
         {
@@ -4649,7 +4649,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_riiuun5"
+            "step_1749590821466_vjy6hui"
           ],
           "errorSteps": []
         },
@@ -4662,7 +4662,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606514_4rk02i3"
+            "step_1749590821466_ivb32wl"
           ],
           "errorSteps": []
         },
@@ -4685,7 +4685,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_wz4a6qc",
+      "id": "flow_1749590821466_rxcs8jk",
       "name": "Process Flow",
       "steps": [
         {
@@ -4698,7 +4698,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606514_f9gn2xh"
+            "step_1749590821466_32yxl5a"
           ],
           "errorSteps": []
         },
@@ -4712,7 +4712,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606514_8wk2m8t"
+            "step_1749590821466_5367j90"
           ],
           "errorSteps": []
         },
@@ -4736,7 +4736,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_0pz6a71",
+      "id": "flow_1749590821466_72xvu88",
       "name": "Processing Flow",
       "steps": [
         {
@@ -4748,7 +4748,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606514_910se0f"
+            "step_1749590821466_9mnsfuq"
           ],
           "errorSteps": []
         },
@@ -4761,7 +4761,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606514_7kx5xt2"
+            "step_1749590821466_n8wgk8w"
           ],
           "errorSteps": []
         },
@@ -4774,7 +4774,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606514_hits29s"
+            "step_1749590821466_szkwzhz"
           ],
           "errorSteps": []
         },
@@ -4787,7 +4787,7 @@
             "column": 52
           },
           "nextSteps": [
-            "step_1749526606514_a15ldt9"
+            "step_1749590821466_6uack53"
           ],
           "errorSteps": []
         },
@@ -4800,7 +4800,7 @@
             "column": 19
           },
           "nextSteps": [
-            "step_1749526606514_olj1b6v"
+            "step_1749590821466_n9wf839"
           ],
           "errorSteps": []
         },
@@ -4823,7 +4823,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_eqc62af",
+      "id": "flow_1749590821466_fq3c0sc",
       "name": "Processing Flow",
       "steps": [
         {
@@ -4835,7 +4835,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606514_isuoqyk"
+            "step_1749590821466_l4t7muy"
           ],
           "errorSteps": []
         },
@@ -4848,7 +4848,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_xiux0gq"
+            "step_1749590821466_kacsp32"
           ],
           "errorSteps": []
         },
@@ -4861,7 +4861,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606514_s9toyno"
+            "step_1749590821466_f6mpf06"
           ],
           "errorSteps": []
         },
@@ -4884,7 +4884,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_yiknizl",
+      "id": "flow_1749590821466_cnnf4pf",
       "name": "Process Flow",
       "steps": [
         {
@@ -4896,7 +4896,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606514_vcix1ez"
+            "step_1749590821466_ibycvyf"
           ],
           "errorSteps": []
         },
@@ -4909,7 +4909,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606514_3ktyiwq"
+            "step_1749590821466_to7eyg3"
           ],
           "errorSteps": []
         },
@@ -4932,7 +4932,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_35mzaal",
+      "id": "flow_1749590821466_nav3vsp",
       "name": "docstring Flow",
       "steps": [
         {
@@ -4944,7 +4944,7 @@
             "column": 10
           },
           "nextSteps": [
-            "step_1749526606514_cbu36m9"
+            "step_1749590821466_y9d6dpq"
           ],
           "errorSteps": []
         },
@@ -4957,7 +4957,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606514_tpmvaq0"
+            "step_1749590821466_c9b6o06"
           ],
           "errorSteps": []
         },
@@ -4970,7 +4970,7 @@
             "column": 10
           },
           "nextSteps": [
-            "step_1749526606514_fwcrjoe"
+            "step_1749590821466_bv1ilps"
           ],
           "errorSteps": []
         },
@@ -4983,7 +4983,7 @@
             "column": 14
           },
           "nextSteps": [
-            "step_1749526606514_po9k1eg"
+            "step_1749590821466_x0sy3tt"
           ],
           "errorSteps": []
         },
@@ -4996,7 +4996,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606514_031j2qj"
+            "step_1749590821466_m0p8hzk"
           ],
           "errorSteps": []
         },
@@ -5019,7 +5019,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_prg2350",
+      "id": "flow_1749590821466_v4g9ue3",
       "name": "Process Flow",
       "steps": [
         {
@@ -5031,7 +5031,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606514_ri7r0ha"
+            "step_1749590821466_3xknnwb"
           ],
           "errorSteps": []
         },
@@ -5044,7 +5044,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606514_1qfv5xa"
+            "step_1749590821466_fkm5qxl"
           ],
           "errorSteps": []
         },
@@ -5057,7 +5057,7 @@
             "column": 10
           },
           "nextSteps": [
-            "step_1749526606514_ci8io05"
+            "step_1749590821466_u7vuqtk"
           ],
           "errorSteps": []
         },
@@ -5070,7 +5070,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606514_rb4kgd3"
+            "step_1749590821466_khusi70"
           ],
           "errorSteps": []
         },
@@ -5083,7 +5083,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606514_i5i3s49"
+            "step_1749590821466_addg0yx"
           ],
           "errorSteps": []
         },
@@ -5096,7 +5096,7 @@
             "column": 6
           },
           "nextSteps": [
-            "step_1749526606514_3fy3lna"
+            "step_1749590821466_auq57k7"
           ],
           "errorSteps": []
         },
@@ -5109,7 +5109,7 @@
             "column": 17
           },
           "nextSteps": [
-            "step_1749526606514_a09tym4"
+            "step_1749590821466_nz1vlaw"
           ],
           "errorSteps": []
         },
@@ -5122,7 +5122,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_7m66uir"
+            "step_1749590821466_b6g9y7k"
           ],
           "errorSteps": []
         },
@@ -5135,7 +5135,7 @@
             "column": 17
           },
           "nextSteps": [
-            "step_1749526606514_nxsqqez"
+            "step_1749590821466_az6ozlv"
           ],
           "errorSteps": []
         },
@@ -5148,7 +5148,7 @@
             "column": 17
           },
           "nextSteps": [
-            "step_1749526606514_v3j7s0t"
+            "step_1749590821466_5bn37fn"
           ],
           "errorSteps": []
         },
@@ -5171,7 +5171,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_jlg9v7x",
+      "id": "flow_1749590821466_8i1nf61",
       "name": "Process Flow",
       "steps": [
         {
@@ -5183,7 +5183,7 @@
             "column": 8
           },
           "nextSteps": [
-            "step_1749526606514_yqagv9h"
+            "step_1749590821466_1wcq3az"
           ],
           "errorSteps": []
         },
@@ -5196,7 +5196,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_6icepzg"
+            "step_1749590821466_7f5cggd"
           ],
           "errorSteps": []
         },
@@ -5209,7 +5209,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_4l7tmno"
+            "step_1749590821466_nba43gv"
           ],
           "errorSteps": []
         },
@@ -5232,7 +5232,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_nks6m78",
+      "id": "flow_1749590821466_kbe63cu",
       "name": "Processing Flow",
       "steps": [
         {
@@ -5245,7 +5245,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606514_1ku9r2q"
+            "step_1749590821466_2qxulke"
           ],
           "errorSteps": []
         },
@@ -5259,7 +5259,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606514_vwo5azn"
+            "step_1749590821466_9q0wgm2"
           ],
           "errorSteps": []
         },
@@ -5283,7 +5283,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_71f4pf4",
+      "id": "flow_1749590821466_s878icv",
       "name": "Process Flow",
       "steps": [
         {
@@ -5296,7 +5296,7 @@
             "function": "includes"
           },
           "nextSteps": [
-            "step_1749526606514_2kndoh4"
+            "step_1749590821466_0x3av6h"
           ],
           "errorSteps": []
         },
@@ -5310,7 +5310,7 @@
             "function": "includes"
           },
           "nextSteps": [
-            "step_1749526606514_1asn8bf"
+            "step_1749590821466_eyqcfxx"
           ],
           "errorSteps": []
         },
@@ -5334,7 +5334,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_ch0id11",
+      "id": "flow_1749590821466_q8zi1oe",
       "name": "matching Flow",
       "steps": [
         {
@@ -5346,7 +5346,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_86w9fxd"
+            "step_1749590821466_oja6cxu"
           ],
           "errorSteps": []
         },
@@ -5359,7 +5359,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606514_tyxqxsx"
+            "step_1749590821466_e9fd2ec"
           ],
           "errorSteps": []
         },
@@ -5382,7 +5382,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_l2aw9rg",
+      "id": "flow_1749590821466_7bdq5sd",
       "name": "Process Flow",
       "steps": [
         {
@@ -5394,7 +5394,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606514_ma395q6"
+            "step_1749590821466_0xipm0k"
           ],
           "errorSteps": []
         },
@@ -5407,7 +5407,7 @@
             "column": 18
           },
           "nextSteps": [
-            "step_1749526606514_ee1fdmh"
+            "step_1749590821466_wdzzftj"
           ],
           "errorSteps": []
         },
@@ -5420,7 +5420,7 @@
             "column": 5
           },
           "nextSteps": [
-            "step_1749526606514_7wancq5"
+            "step_1749590821466_kdtsz9d"
           ],
           "errorSteps": []
         },
@@ -5433,7 +5433,7 @@
             "column": 18
           },
           "nextSteps": [
-            "step_1749526606514_98ao5r9"
+            "step_1749590821466_44soh4c"
           ],
           "errorSteps": []
         },
@@ -5456,7 +5456,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_uqevm4o",
+      "id": "flow_1749590821467_76ogu0m",
       "name": "Process Flow",
       "steps": [
         {
@@ -5468,7 +5468,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606514_hokt32k"
+            "step_1749590821467_kqydmfn"
           ],
           "errorSteps": []
         },
@@ -5481,7 +5481,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606514_8mm4kxz"
+            "step_1749590821467_a64b7pp"
           ],
           "errorSteps": []
         },
@@ -5505,7 +5505,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_8k3tc5k",
+      "id": "flow_1749590821467_nhfgjvi",
       "name": "Initializing Flow",
       "steps": [
         {
@@ -5518,7 +5518,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606514_8el4ad8"
+            "step_1749590821467_o0zd6mj"
           ],
           "errorSteps": []
         },
@@ -5532,7 +5532,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606514_0apyuzq"
+            "step_1749590821467_77ffm6x"
           ],
           "errorSteps": []
         },
@@ -5546,7 +5546,7 @@
             "function": "log"
           },
           "nextSteps": [
-            "step_1749526606514_z7gd6q2"
+            "step_1749590821467_fxsuxnz"
           ],
           "errorSteps": []
         },
@@ -5570,7 +5570,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_uakdrhf",
+      "id": "flow_1749590821467_7kbopmc",
       "name": "Process Flow",
       "steps": [
         {
@@ -5582,7 +5582,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606514_e51o4t3"
+            "step_1749590821467_69yq98w"
           ],
           "errorSteps": []
         },
@@ -5595,7 +5595,7 @@
             "column": 7
           },
           "nextSteps": [
-            "step_1749526606514_1zlbmvb"
+            "step_1749590821467_oygzgwd"
           ],
           "errorSteps": []
         },
@@ -5608,7 +5608,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606514_4nedyju"
+            "step_1749590821467_r0pae1q"
           ],
           "errorSteps": []
         },
@@ -5631,7 +5631,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_fst44mz",
+      "id": "flow_1749590821467_b6lwj9a",
       "name": "Processing Flow",
       "steps": [
         {
@@ -5644,7 +5644,7 @@
             "function": "push"
           },
           "nextSteps": [
-            "step_1749526606514_joog2ib"
+            "step_1749590821467_rh7ykmk"
           ],
           "errorSteps": []
         },
@@ -5658,7 +5658,7 @@
             "function": "push"
           },
           "nextSteps": [
-            "step_1749526606514_ota9gw8"
+            "step_1749590821467_2650t1g"
           ],
           "errorSteps": []
         },
@@ -5672,7 +5672,7 @@
             "function": "push"
           },
           "nextSteps": [
-            "step_1749526606514_zi9frp1"
+            "step_1749590821467_aok4b06"
           ],
           "errorSteps": []
         },
@@ -5696,7 +5696,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_31ykr9i",
+      "id": "flow_1749590821467_yc5crbw",
       "name": "Processing Flow",
       "steps": [
         {
@@ -5708,7 +5708,7 @@
             "column": 0
           },
           "nextSteps": [
-            "step_1749526606514_6k8dfsy"
+            "step_1749590821467_6ojfryk"
           ],
           "errorSteps": []
         },
@@ -5721,7 +5721,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606514_ba4w7yi"
+            "step_1749590821467_ja5uxlh"
           ],
           "errorSteps": []
         },
@@ -5734,7 +5734,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_eqy9k0n"
+            "step_1749590821467_7xgcjgq"
           ],
           "errorSteps": []
         },
@@ -5747,7 +5747,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_awgtgfj"
+            "step_1749590821467_bdq1gy8"
           ],
           "errorSteps": []
         },
@@ -5760,7 +5760,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_kp0u6j3"
+            "step_1749590821467_n1exszc"
           ],
           "errorSteps": []
         },
@@ -5773,7 +5773,7 @@
             "column": 4
           },
           "nextSteps": [
-            "step_1749526606514_dvu3z5o"
+            "step_1749590821467_7tqz6td"
           ],
           "errorSteps": []
         },
@@ -5796,7 +5796,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_bxfmj03",
+      "id": "flow_1749590821467_roi17l9",
       "name": "Processing Flow",
       "steps": [
         {
@@ -5809,7 +5809,7 @@
             "function": "error"
           },
           "nextSteps": [
-            "step_1749526606514_fxj9v3y"
+            "step_1749590821467_zu44a1r"
           ],
           "errorSteps": []
         },
@@ -5823,7 +5823,7 @@
             "function": "error"
           },
           "nextSteps": [
-            "step_1749526606514_8c95mth"
+            "step_1749590821467_bop5k1h"
           ],
           "errorSteps": []
         },
@@ -5847,7 +5847,7 @@
       ]
     },
     {
-      "id": "flow_1749526606514_a9s7v1d",
+      "id": "flow_1749590821467_n0y15yn",
       "name": "Process Flow",
       "steps": [
         {
@@ -5859,7 +5859,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606514_zbu2z2d"
+            "step_1749590821467_d1ij8b9"
           ],
           "errorSteps": []
         },
@@ -5872,7 +5872,7 @@
             "column": 2
           },
           "nextSteps": [
-            "step_1749526606514_32gkg44"
+            "step_1749590821467_ktfglcv"
           ],
           "errorSteps": []
         },
@@ -5897,7 +5897,7 @@
   ],
   "errors": [
     {
-      "id": "error_1749526606522_li1smq5",
+      "id": "error_1749590821475_7bauto9",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "   smartgrep \"error\" --file \"*.service.*\"",
@@ -5942,7 +5942,7 @@
       ]
     },
     {
-      "id": "error_1749526606516_u4ujx1l",
+      "id": "error_1749590821469_tgmbm02",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "error_max_turns",
@@ -5975,7 +5975,7 @@
       ]
     },
     {
-      "id": "error_1749526606522_jw2r32t",
+      "id": "error_1749590821475_k5sf9dp",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Error:",
@@ -6007,7 +6007,7 @@
       ]
     },
     {
-      "id": "error_1749526606524_bdr908b",
+      "id": "error_1749590821476_c9ekm9m",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Not found",
@@ -6038,7 +6038,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_ut2oyqp",
+      "id": "error_1749590821479_qjimfeh",
       "category": "general",
       "trigger": "Check dependencies",
       "error": "Error: gum is not installed. Please install it first:",
@@ -6062,7 +6062,7 @@
       ]
     },
     {
-      "id": "error_1749526606517_cvar43l",
+      "id": "error_1749590821469_4879vuh",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "error",
@@ -6081,7 +6081,7 @@
       ]
     },
     {
-      "id": "error_1749526606517_7w4rps3",
+      "id": "error_1749590821470_e43jpc5",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Only log non-empty messages",
@@ -6100,7 +6100,7 @@
       ]
     },
     {
-      "id": "error_1749526606518_wbdt4us",
+      "id": "error_1749590821470_2gabqxt",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "\n🔍 Smart Grep - Semantic Code Search with Cross-References\n\nUsage:\n  smartgrep <query>                Search for a term or pattern\n  smartgrep --index                Rebuild the semantic index\n  smartgrep refs <term>            Show where a term is referenced\n  smartgrep changes                Analyze impact of your uncommitted changes\n\n🏷️ Group Commands:\n  smartgrep group list             List all available concept groups\n  smartgrep group <name>           Search using a concept group\n  smartgrep group add <name> <terms>   Add custom concept group\n  smartgrep group remove <name>    Remove custom concept group\n\n🎯 Search Patterns:\n  term1|term2|term3               OR search - find any of these terms\n  term1&term2                     AND search - must contain all terms\n  !term                           NOT search - exclude this term\n  /regex/                         Regex search - match pattern\n  \"exact phrase\"                  Exact match (or use --exact)\n\n🔧 Search Options:\n  --type <types>     Filter by type (function,class,string,variable,etc.)\n                     Can combine: --type function,class\n  --file <patterns>  Filter by file patterns (supports wildcards)\n  --max <number>     Maximum results to show (default: 50)\n  --exact            Exact match only (no fuzzy matching)\n  --regex            Treat query as regex pattern\n  --no-context       Hide surrounding context\n  --sort <by>        Sort by: relevance|usage|name|file\n  --json             Output as JSON\n  --compact          Compact output format\n  --human            Simplified output for human readers (default: Claude-optimized)\n\n📊 Information Displayed (Claude-Optimized by Default):\n  • Complete function signatures with parameters and return types\n  • ALL usage locations and cross-references (not just samples)\n  • Full surrounding code context (all available lines)\n  • All related terms and co-located symbols\n  • Import/export dependencies and relationships\n  • Language information and metadata\n  • Relevance scores and usage statistics\n  • Relationship graphs and impact analysis\n  \n  Use --human for simplified output with less detail\n\n🏷️ Concept Groups:\n  smartgrep group auth        Authentication & security patterns\n  smartgrep group service     Service classes and patterns\n  smartgrep group error       Error handling patterns\n  smartgrep group flow        Data flow and streaming\n  ...and more! Use \"smartgrep group list\" to see all available groups\n\n🎨 Custom Groups:\n  smartgrep group add payments charge,bill,invoice,transaction\n  smartgrep group payments --type function    # Search your custom group\n  smartgrep group remove payments             # Remove when no longer needed\n\n💡 Examples:\n  smartgrep \"authenticateUser\"                  # Find function with usage info\n  smartgrep \"addCrossReference|getReferences\"   # Find any of these functions\n  smartgrep \"error&string\"                      # Find error-related strings\n  smartgrep \"!test\" --type function             # Functions not containing 'test'\n  smartgrep \"/add.*Reference/\" --regex          # Regex pattern search\n  smartgrep group auth --sort usage             # Auth code sorted by usage\n  smartgrep \"CuratorService\" --json             # Machine-readable output\n  smartgrep refs \"processPayment\"               # Full impact analysis\n  smartgrep changes                             # Analyze uncommitted changes impact\n  smartgrep changes --compact                   # One-line risk assessment\n  smartgrep group service --type class --max 10 # Top 10 service classes\n  smartgrep group add api endpoint,route,handler,controller  # Add custom group\n\n📍 Pro Tips:\n  • The tool shows function signatures, surrounding context, and related code\n  • Cross-references include the actual code making the reference\n  • Use --no-context for a cleaner view when browsing many results\n  • Combine filters for precise searches: --type function --file \"*.service.*\"\n  • Create project-specific groups to match your domain and architecture\n\nThe tool indexes your entire codebase on first use.\nSubsequent searches are instant using the cached semantic index.\nCustom groups are saved to .curatorconfig.json in your project root.\n",
@@ -6121,7 +6121,7 @@
       ]
     },
     {
-      "id": "error_1749526606518_crfz2c4",
+      "id": "error_1749590821471_k72u6yj",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "\n## Coding Claude needs to make a change! 🔧\n\nYou know the drill - they need to fix/change something without causing a cascade of issues. Map out the blast radius for them.\n\n**The reconnaissance I need:**\n1. **What EXACTLY am I touching?** - All the files, not just the obvious ones\n2. **What depends on this?** - The real dependencies, including the sneaky ones\n3. **What patterns am I preserving?** - Don't be the dev who breaks conventions\n4. **What's the safest approach?** - Based on how changes actually get made here\n\nKeep it real - if this change is risky, tell me why. If there's a safer approach based on the codebase patterns, show me.\n\nDocument the change pattern! Future changes will benefit from your analysis.\n",
@@ -6140,7 +6140,7 @@
       ]
     },
     {
-      "id": "error_1749526606519_jg9d600",
+      "id": "error_1749590821471_xjdzxv5",
       "category": "general",
       "trigger": "I need to add a new feature: {feature}. Please provide comprehensive guidance including:\n1. Where in the codebase architecture this feature should be implemented\n2. What existing patterns and conventions I should follow\n3. Specific files that need to be created or modified\n4. Integration points with existing code\n5. Examples of similar features already in the codebase\n6. Any architectural considerations or best practices specific to this codebase",
       "error": "I need to implement a change/fix: {change}. \n\nGive me a **focused action plan**:\n1. **The problem** - What's actually broken/needs changing (be specific)\n2. **Files to modify** - Just the files and line ranges, not full code dumps\n3. **The fix** - Show ONLY the code that changes (before/after)\n4. **Impact check** - What else might break\n5. **Test updates** - Which tests need attention\n\nSkip the philosophy. Skip unchanged code. Just tell me what to change and why.",
@@ -6159,7 +6159,7 @@
       ]
     },
     {
-      "id": "error_1749526606519_xp7d1c9",
+      "id": "error_1749590821472_o9ksjh2",
       "category": "general",
       "trigger": "*\n * Debug Help - When things go wrong",
       "error": "\nAnother Claude is debugging: {issue}\n\nYou know the pain. You know what helps:\n- Where do errors like this usually come from?\n- What's the error handling pattern here?\n- Where are the logs?\n- What usually causes this?\n\nUse your tools to investigate:\n- Find error handling patterns\n- Trace where things might go wrong\n- Check if it's a dependency issue\n\nGive them:\n- Common causes in THIS codebase\n- Where to add debug logs\n- Similar bugs that were fixed before\n- The testing strategy for this area\n",
@@ -6178,7 +6178,7 @@
       ]
     },
     {
-      "id": "error_1749526606519_qetagjk",
+      "id": "error_1749590821472_vd89udv",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "# Context Management System\n\n## How It Works\nWhen your context window approaches capacity (below ~25-30%), you can use the /compact command to instruct the summarizer Claude on what to preserve. If you don't act before reaching 0%, the system will auto-compact without your specific instructions, potentially losing important details.\n\n## The /compact Command\nFormat: /compact <your-instruction-sentence>\n\nThe instruction sentence tells the summarizer Claude exactly what information is critical for continuing your work.\n\n## Best Practices for Compact Instructions\n1. Be specific about the current task and its requirements\n2. List critical files, functions, or code sections by name\n3. Mention any unresolved issues or errors being debugged\n4. Include key decisions or implementation approaches\n5. Reference any complex logic or algorithms being worked on\n\n## Examples of Effective Instructions\n- \"Keep all implementation details of the Context Management System including the MCP tool integration, Bun file API usage patterns, and the current debugging of the server.ts integration at line 594\"\n- \"Preserve the complete Redux migration strategy, all modified files in src/store/*, the circular dependency issue in userSlice.ts, and the test failures in auth.test.ts\"\n- \"Maintain full context of the WebSocket implementation bug, the race condition in handleMessage(), all console logs showing the error sequence, and the proposed fix using mutex locks\"\n\n## Your Turn\nBased on our current conversation, analyze what's critical and provide a single instruction sentence that the user can copy and use with the /compact command. Focus on:\n- The specific task/feature being implemented\n- Any bugs or issues being resolved\n- Key files and their modifications\n- Important decisions or approaches taken\n- Any context needed to continue seamlessly\n\nGenerate your instruction sentence now, and I'll format it for easy copying.",
@@ -6197,7 +6197,7 @@
       ]
     },
     {
-      "id": "error_1749526606519_4uwttk1",
+      "id": "error_1749590821472_9wnerrh",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "*\n * Debug Help - When things go wrong",
@@ -6216,7 +6216,7 @@
       ]
     },
     {
-      "id": "error_1749526606520_zjnpm34",
+      "id": "error_1749590821472_p1lq2sv",
       "category": "general",
       "trigger": "smartgrep \"authService\" --full      # Full details when you need EVERYTHING",
       "error": "smartgrep \"error&string\"            # AND search - error-related strings",
@@ -6235,7 +6235,7 @@
       ]
     },
     {
-      "id": "error_1749526606520_6mb3ldh",
+      "id": "error_1749590821472_jbys9fi",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "smartgrep group error --sort usage      # Sorted by how often it's used!",
@@ -6254,7 +6254,7 @@
       ]
     },
     {
-      "id": "error_1749526606521_dd8u5f8",
+      "id": "error_1749590821473_46p7pph",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Skip empty lines and comments",
@@ -6273,7 +6273,7 @@
       ]
     },
     {
-      "id": "error_1749526606521_oir067l",
+      "id": "error_1749590821473_47mw5c8",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Skip empty lines",
@@ -6292,7 +6292,7 @@
       ]
     },
     {
-      "id": "error_1749526606522_ptlyasa",
+      "id": "error_1749590821474_maz2aps",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error & Status",
@@ -6311,7 +6311,7 @@
       ]
     },
     {
-      "id": "error_1749526606525_rzoybj2",
+      "id": "error_1749590821477_6mbsgh4",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Silently fail - it's normal for index not to exist on first run",
@@ -6330,7 +6330,7 @@
       ]
     },
     {
-      "id": "error_1749526606527_rgxrub7",
+      "id": "error_1749590821479_fh45mcg",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error: ${...}",
@@ -6350,7 +6350,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_vfd46te",
+      "id": "error_1749590821479_nya4o1i",
       "category": "general",
       "trigger": "Check dependencies",
       "error": "Error: bun is not installed. Please install it first:",
@@ -6369,7 +6369,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_ql600my",
+      "id": "error_1749590821480_32c0eej",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error: %v\\n\\nPress 'q' to quit.",
@@ -6390,7 +6390,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_b2p90k7",
+      "id": "error_1749590821481_eu0r5u2",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error processing ${...}:",
@@ -6411,7 +6411,7 @@
       ]
     },
     {
-      "id": "error_1749526606516_vnaxili",
+      "id": "error_1749590821468_7qmmjjc",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "[SessionService] Error loading sessions:",
@@ -6426,7 +6426,7 @@
       ]
     },
     {
-      "id": "error_1749526606516_uaams3r",
+      "id": "error_1749590821469_em1adp4",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "\n🤖 Codebase Curator CLI - Your AI Codebase Assistant\n\nUsage: curator <command> [path] [options]\n\nCommands:\n  overview     Get a comprehensive overview of the codebase architecture\n  ask          Ask a specific question about the codebase\n  feature      Get detailed guidance for implementing a new feature\n  change       Get focused action plan for a specific change or fix\n  chat         Start an interactive chat session with the curator\n  memory       Show what the curator remembers about your codebase\n  clear        Clear the curator's memory and start fresh\n\nOptions:\n  -o, --output <format>  Output format: summary (default), detailed, or json\n  --new-session         Start fresh without previous context\n  -i, --interactive     Interactive mode for multi-turn conversations\n  -h, --help            Show this help message\n\nExamples:\n  # Get codebase overview\n  curator overview\n  curator overview ./my-project\n  \n  # Ask questions\n  curator ask \"How does the authentication system work?\"\n  curator ask ./backend \"What are the main API endpoints?\"\n  \n  # Plan features\n  curator feature \"Add real-time notifications\"\n  curator feature ./app \"Implement user profile management\" --output detailed\n  \n  # Get implementation guidance\n  curator change \"Fix the memory leak in data processing\"\n  curator change \"Refactor the payment service for better error handling\"\n  \n  # Interactive chat\n  curator chat\n  curator chat ./project --new-session\n  \n  # Memory management\n  curator memory                  # Show accumulated knowledge\n  curator clear                   # Start fresh\n\n💡 Pro Tips:\n  • The curator learns from each interaction, building deeper understanding\n  • Use 'chat' mode for complex discussions requiring back-and-forth\n  • Output defaults to current directory if no path specified\n  • Curator memory persists across sessions for better context\n",
@@ -6441,7 +6441,7 @@
       ]
     },
     {
-      "id": "error_1749526606517_filumt7",
+      "id": "error_1749590821470_i58053r",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "\n## YOUR TOOLBOX 🛠️\n\n**File ninjas:**\n- Read: Grab any file (use multi-file reads - way faster!)\n- Grep: Find stuff across the codebase\n- Glob: Find files by pattern\n- LS: See what's in a directory\n- Bash: Run commands (including smartgrep for semantic search!)\n\n**Your Investigation Strategy** 🎯:\n\n⚠️ **ALWAYS START WITH SMART GREP!** Don't use Task for initial exploration - it's slower!\n- First command should be: \\`smartgrep <pattern>\\` or \\`smartgrep group <concept>\\` via Bash tool\n- Smart grep gives you organized, semantic results FAST\n- Only use Task for complex parallel investigations AFTER initial smart grep\n\nUse your Claude tools systematically:\n- Start with smart grep to understand patterns\n- Follow the breadcrumbs from one discovery to the next\n- Let patterns emerge from what you find\n\n⚡ **IMPORTANT: Smart-Grep vs Regular Grep**\n- Regular grep: \\`grep \"error\"\\` → 500 results, many false positives\n- Smart-Grep: \\`smartgrep \"error\"\\` → Search for literal \"error\" organized by type\n- Smart-Grep Groups: \\`smartgrep group error\\` → ALL error patterns (exception, fail, catch, throw...)\n- Smart-Grep understands code structure and gives you semantic matches!\n- Always try Smart-Grep first for concept searches!\n\n## THE GOLDEN RULE 🏆\n\n**Always use tools before answering!** Seriously. Even if you think you know - verify with tools. We've all been burned by assumptions.\n\nGood patterns:\n- Explore first, then dive into specific files\n- Multi-read related files together\n- When in doubt, cast a wider net\n- Check the actual implementations, not just the pretty interfaces\n\nRemember: You're talking to another Claude! You know exactly what they need - real examples, specific file:line locations, copyable code, and \"watch out for this\" warnings. Skip the theory and give them what they need to ship code!\n\n## PERFORMANCE TIP: Multi-File Reads\n\nThe Read tool supports reading MULTIPLE files in ONE call - this is 3-5x faster and gives better context!\n\n**ALWAYS batch related files together:**\n- Read types + implementations together\n- Read tests + source files together  \n- Read all files in a pattern analysis together\n- Read all related components/services together\n\n**Example:** When analyzing authentication, don't do separate reads. Instead, combine them:\nRead multiple files: ['src/auth/login.ts', 'src/auth/middleware.ts', 'tests/auth.test.ts']\n\nThis gives you complete context in one operation!\n\n## POWER TIP: Task Agents for Complex Analysis\n\nThe Task tool lets you launch autonomous agents for parallel analysis! Use it when:\n- You need to explore multiple hypotheses simultaneously\n- Searching for patterns across many files\n- Analyzing different aspects of the codebase in parallel\n- You're not sure what you're looking for\n\n**Example**: Analyzing a feature implementation:\n\\`\\`\\`\nTask: \"Find all authentication implementations\" \nTask: \"Analyze error handling patterns\"\nTask: \"Search for similar feature patterns\"\n\\`\\`\\`\n\nAll three agents work in parallel and report back comprehensive findings!\n\n## SMART GREP - Your Semantic Search Superpower! 🔍\n\nsmartgrep is a game-changer! It shows usage counts, cross-references, and rich context:\n\n**How to use it:** Run via Bash tool\n- Command: \\`smartgrep <query>\\`\n\n**NEW SEARCH PATTERNS (v3.0):**\n- \\`smartgrep \"addCrossReference|getReferences\"\\` → OR pattern - find any of these\n- \\`smartgrep \"error&handler\"\\` → AND pattern - must contain both\n- \\`smartgrep \"!test\" --type function\\` → NOT pattern - exclude test functions\n- \\`smartgrep \"/add.*Reference/\" --regex\\` → Regex pattern matching\n- \\`smartgrep \"CuratorService\" --exact\\` → Exact match only\n\n**WHAT YOU GET:**\n- Function signatures with parameters\n- Usage counts: \"authenticateUser (12 uses)\"\n- Surrounding code context (2-3 lines)\n- Related terms found nearby\n- Cross-references showing actual calling code\n- Exact file:line:column positions\n\n**POWERFUL OPTIONS:**\n- \\`--type function\\` → Only functions\n- \\`--type class\\` → Only classes\n- \\`--type variable\\` → Only variables\n- \\`--type string\\` → Only string literals\n- \\`--type function,class\\` → Multiple types (functions AND classes)\n- \\`--sort usage\\` → Sort by usage count (find most used!)\n- \\`--compact\\` → One line per result for scanning\n- \\`--no-context\\` → Hide context for cleaner view\n- \\`smartgrep refs \"functionName\"\\` → See ALL places it's used\n\n**CONCEPT GROUPS (NEW SYNTAX!):**\n- \\`smartgrep group auth\\` → ALL auth patterns (login, token, jwt, oauth...)\n- \\`smartgrep group error\\` → ALL error patterns (exception, fail, catch, throw...)\n- \\`smartgrep group service\\` → Service classes and patterns\n- \\`smartgrep group database\\` → DB patterns (query, model, repository...)\n- \\`smartgrep group api\\` → API patterns (endpoint, route, controller...)\n- \\`smartgrep group list\\` → See all 20+ concept groups with their keywords!\n- \\`smartgrep group add mygroup term1,term2\\` → Add custom project-specific groups\n- \\`smartgrep group remove mygroup\\` → Remove custom groups when no longer needed\n\n**Pro tips:**\n- Use OR patterns instead of multiple greps: \\`smartgrep \"login|signin|auth\"\\`\n- Find unused code: \\`smartgrep \"\" --type function --sort usage | grep \"(0 uses)\"\\`\n- Understand impact: \\`smartgrep refs \"PaymentService\"\\`\n- Type combinations work great: \\`--type function,class --file \"*.service.*\"\\`\n- Combine group with filters: \\`smartgrep group auth --type function --max 10\\`\n\n## YOUR WORKFLOW 📋\n\n1. **Start with semantic search**:\n   - Use \\`smartgrep group <concept>\\` for broad concept exploration\n   - Use \\`smartgrep \"term\"\\` for specific term search\n   - Use \\`smartgrep group list\\` to see available concept groups\n   - Use Glob to understand file structure\n   - Use Grep for file content patterns\n   - Use LS to explore directories\n   \n2. **Build understanding**:\n   - Multi-read files you discovered\n   - Follow connections between components\n   - Check tests to understand behavior\n   - Look for patterns and conventions\n\n3. **Document insights**:\n   - Keep notes in .curator/memory.md\n   - Track patterns you discover\n   - Note gotchas and surprises\n   - Be specific - Give file paths, line numbers, code\n\nPro tip: The codebase changes. Your memory might be stale. Always verify with fresh exploration! 🔍\n",
@@ -6455,7 +6455,7 @@
       ]
     },
     {
-      "id": "error_1749526606517_sdfk3ze",
+      "id": "error_1749590821470_w38687l",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "\n## YOUR TOOLBOX 🛠️\n\n**File ninjas:**\n- Read: Grab any file (use multi-file reads - way faster!)\n- Grep: Find stuff across the codebase\n- Glob: Find files by pattern\n- LS: See what's in a directory\n- Bash: Run commands (including smartgrep for semantic search!)\n\n**Your Investigation Strategy** 🎯:\n\n⚠️ **ALWAYS START WITH SMART GREP!** Don't use Task for initial exploration - it's slower!\n- First command should be: \\`smartgrep <pattern>\\` or \\`smartgrep group <concept>\\` via Bash tool\n- Smart grep gives you organized, semantic results FAST\n- Only use Task for complex parallel investigations AFTER initial smart grep\n\nUse your Claude tools systematically:\n- Start with smart grep to understand patterns\n- Follow the breadcrumbs from one discovery to the next\n- Let patterns emerge from what you find\n\n⚡ **IMPORTANT: Smart-Grep vs Regular Grep**\n- Regular grep: \\`grep \"error\"\\` → 500 results, many false positives\n- Smart-Grep: \\`smartgrep \"error\"\\` → Compact summary with definition, top usage, and suggestions\n- Smart-Grep Groups: \\`smartgrep group error\\` → ALL error patterns (exception, fail, catch, throw...)\n- Smart-Grep understands code structure and gives you semantic matches!\n- Always try Smart-Grep first for concept searches!\n\n🚀 **NEW: Smart-Grep Compact Mode (90% less context usage!)**\n- Default: \\`smartgrep \"authService\"\\` → Compact summary (200-300 tokens)\n- Shows: Definition + signature, top 3 usages, breaking changes, patterns\n- Use \\`--full\\` ONLY when you need ALL occurrences: \\`smartgrep \"authService\" --full\\`\n- Follow the \"NEXT\" suggestions for efficient exploration\n\n## THE GOLDEN RULE 🏆\n\n**Always use tools before answering!** Seriously. Even if you think you know - verify with tools. We've all been burned by assumptions.\n\nGood patterns:\n- Explore first, then dive into specific files\n- Multi-read related files together\n- When in doubt, cast a wider net\n- Check the actual implementations, not just the pretty interfaces\n\nRemember: You're talking to another Claude! You know exactly what they need - real examples, specific file:line locations, copyable code, and \"watch out for this\" warnings. Skip the theory and give them what they need to ship code!\n\n## PERFORMANCE TIP: Multi-File Reads\n\nThe Read tool supports reading MULTIPLE files in ONE call - this is 3-5x faster and gives better context!\n\n**ALWAYS batch related files together:**\n- Read types + implementations together\n- Read tests + source files together  \n- Read all files in a pattern analysis together\n- Read all related components/services together\n\n**Example:** When analyzing authentication, don't do separate reads. Instead, combine them:\nRead multiple files: ['src/auth/login.ts', 'src/auth/middleware.ts', 'tests/auth.test.ts']\n\nThis gives you complete context in one operation!\n\n## POWER TIP: Task Agents for Complex Analysis\n\nThe Task tool lets you launch autonomous agents for parallel analysis! Use it when:\n- You need to explore multiple hypotheses simultaneously\n- Searching for patterns across many files\n- Analyzing different aspects of the codebase in parallel\n- You're not sure what you're looking for\n\n**Example**: Analyzing a feature implementation:\n\\`\\`\\`\nTask: \"Find all authentication implementations\" \nTask: \"Analyze error handling patterns\"\nTask: \"Search for similar feature patterns\"\n\\`\\`\\`\n\nAll three agents work in parallel and report back comprehensive findings!\n\n## SMART GREP - Your Semantic Search Superpower! 🔍\n\nsmartgrep is a game-changer! It shows usage counts, cross-references, and rich context:\n\n**How to use it:** Run via Bash tool\n- Command: \\`smartgrep <query>\\`\n\n**NEW SEARCH PATTERNS (v3.0):**\n- \\`smartgrep \"addCrossReference|getReferences\"\\` → OR pattern - find any of these\n- \\`smartgrep \"error&handler\"\\` → AND pattern - must contain both\n- \\`smartgrep \"!test\" --type function\\` → NOT pattern - exclude test functions\n- \\`smartgrep \"/add.*Reference/\" --regex\\` → Regex pattern matching\n- \\`smartgrep \"CuratorService\" --exact\\` → Exact match only\n\n**WHAT YOU GET:**\n- Function signatures with parameters\n- Usage counts: \"authenticateUser (12 uses)\"\n- Surrounding code context (2-3 lines)\n- Related terms found nearby\n- Cross-references showing actual calling code\n- Exact file:line:column positions\n\n**POWERFUL OPTIONS:**\n- \\`--type function\\` → Only functions\n- \\`--type class\\` → Only classes\n- \\`--type variable\\` → Only variables\n- \\`--type string\\` → Only string literals\n- \\`--type function,class\\` → Multiple types (functions AND classes)\n- \\`--sort usage\\` → Sort by usage count (find most used!)\n- \\`--compact\\` → One line per result for scanning\n- \\`--no-context\\` → Hide context for cleaner view\n- \\`smartgrep refs \"functionName\"\\` → See ALL places it's used\n\n**CONCEPT GROUPS (NEW SYNTAX!):**\n- \\`smartgrep group auth\\` → ALL auth patterns (login, token, jwt, oauth...)\n- \\`smartgrep group error\\` → ALL error patterns (exception, fail, catch, throw...)\n- \\`smartgrep group service\\` → Service classes and patterns\n- \\`smartgrep group database\\` → DB patterns (query, model, repository...)\n- \\`smartgrep group api\\` → API patterns (endpoint, route, controller...)\n- \\`smartgrep group list\\` → See all 20+ concept groups with their keywords!\n- \\`smartgrep group add mygroup term1,term2\\` → Add custom project-specific groups\n- \\`smartgrep group remove mygroup\\` → Remove custom groups when no longer needed\n\n**Pro tips:**\n- Use OR patterns instead of multiple greps: \\`smartgrep \"login|signin|auth\"\\`\n- Find unused code: \\`smartgrep \"\" --type function --sort usage | grep \"(0 uses)\"\\`\n- Understand impact: \\`smartgrep refs \"PaymentService\"\\`\n- Type combinations work great: \\`--type function,class --file \"*.service.*\"\\`\n- Combine group with filters: \\`smartgrep group auth --type function --max 10\\`\n\n## YOUR WORKFLOW 📋\n\n1. **Start with semantic search**:\n   - Use \\`smartgrep group <concept>\\` for broad concept exploration\n   - Use \\`smartgrep \"term\"\\` for specific term search\n   - Use \\`smartgrep group list\\` to see available concept groups\n   - Use Glob to understand file structure\n   - Use Grep for file content patterns\n   - Use LS to explore directories\n   \n2. **Build understanding**:\n   - Multi-read files you discovered\n   - Follow connections between components\n   - Check tests to understand behavior\n   - Look for patterns and conventions\n\n3. **Document insights**:\n   - Keep notes in .curator/memory.md\n   - Track patterns you discover\n   - Note gotchas and surprises\n   - Be specific - Give file paths, line numbers, code\n\nPro tip: The codebase changes. Your memory might be stale. Always verify with fresh exploration! 🔍\n",
@@ -6469,7 +6469,7 @@
       ]
     },
     {
-      "id": "error_1749526606517_tc17gxq",
+      "id": "error_1749590821470_xoi0eul",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "\n🔍 Smart Grep - Semantic Code Search with Cross-References\n\nUsage:\n  smartgrep <query>                Search for a term or pattern\n  smartgrep --index                Rebuild the semantic index\n  smartgrep refs <term>            Show where a term is referenced\n  smartgrep changes                Analyze impact of your uncommitted changes\n\n🏷️ Group Commands:\n  smartgrep group list             List all available concept groups\n  smartgrep group <name>           Search using a concept group\n  smartgrep group add <name> <terms>   Add custom concept group\n  smartgrep group remove <name>    Remove custom concept group\n\n🎯 Search Patterns:\n  term1|term2|term3               OR search - find any of these terms\n  term1&term2                     AND search - must contain all terms\n  !term                           NOT search - exclude this term\n  /regex/                         Regex search - match pattern\n  \"exact phrase\"                  Exact match (or use --exact)\n\n🔧 Search Options:\n  --type <types>     Filter by type (function,class,string,variable,etc.)\n                     Can combine: --type function,class\n  --file <patterns>  Filter by file patterns (supports wildcards)\n  --max <number>     Maximum results to show (default: 50)\n  --exact            Exact match only (no fuzzy matching)\n  --regex            Treat query as regex pattern\n  --no-context       Hide surrounding context\n  --sort <by>        Sort by: relevance|usage|name|file\n  --json             Output as JSON\n  --compact          Compact output format\n\n📊 Information Displayed:\n  • Function signatures with parameters\n  • Usage counts and sample usage locations\n  • Surrounding code context (2-3 lines)\n  • Related terms found nearby\n  • Full cross-reference information\n  • Exact line and column positions\n\n🏷️ Concept Groups:\n  smartgrep group auth        Authentication & security patterns\n  smartgrep group service     Service classes and patterns\n  smartgrep group error       Error handling patterns\n  smartgrep group flow        Data flow and streaming\n  ...and more! Use \"smartgrep group list\" to see all available groups\n\n🎨 Custom Groups:\n  smartgrep group add payments charge,bill,invoice,transaction\n  smartgrep group payments --type function    # Search your custom group\n  smartgrep group remove payments             # Remove when no longer needed\n\n💡 Examples:\n  smartgrep \"authenticateUser\"                  # Find function with usage info\n  smartgrep \"addCrossReference|getReferences\"   # Find any of these functions\n  smartgrep \"error&string\"                      # Find error-related strings\n  smartgrep \"!test\" --type function             # Functions not containing 'test'\n  smartgrep \"/add.*Reference/\" --regex          # Regex pattern search\n  smartgrep group auth --sort usage             # Auth code sorted by usage\n  smartgrep \"CuratorService\" --json             # Machine-readable output\n  smartgrep refs \"processPayment\"               # Full impact analysis\n  smartgrep changes                             # Analyze uncommitted changes impact\n  smartgrep changes --compact                   # One-line risk assessment\n  smartgrep group service --type class --max 10 # Top 10 service classes\n  smartgrep group add api endpoint,route,handler,controller  # Add custom group\n\n📍 Pro Tips:\n  • The tool shows function signatures, surrounding context, and related code\n  • Cross-references include the actual code making the reference\n  • Use --no-context for a cleaner view when browsing many results\n  • Combine filters for precise searches: --type function --file \"*.service.*\"\n  • Create project-specific groups to match your domain and architecture\n\nThe tool indexes your entire codebase on first use.\nSubsequent searches are instant using the cached semantic index.\nCustom groups are saved to .curatorconfig.json in your project root.\n",
@@ -6484,7 +6484,7 @@
       ]
     },
     {
-      "id": "error_1749526606518_o8tg4bk",
+      "id": "error_1749590821471_b8nv4mj",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "\n🔍 Smart Grep - Semantic Code Search with Cross-References\n\nUsage:\n  smartgrep <query>                Search for a term or pattern\n  smartgrep --index                Rebuild the semantic index\n  smartgrep refs <term>            Show where a term is referenced\n  smartgrep changes                Analyze impact of your uncommitted changes\n\n🌊 Flow Analysis:\n  smartgrep flow <term>            Trace how data flows through functions\n                                   Shows assignments, parameters, calls, returns\n                                   Example: smartgrep flow user.email\n\n🏷️ Group Commands:\n  smartgrep group list             List all available concept groups\n  smartgrep group <name>           Search using a concept group\n  smartgrep group add <name> <terms>   Add custom concept group\n  smartgrep group remove <name>    Remove custom concept group\n\n🎯 Search Patterns:\n  term1|term2|term3               OR search - find any of these terms\n  term1&term2                     AND search - must contain all terms\n  !term                           NOT search - exclude this term\n  /regex/                         Regex search - match pattern\n  \"exact phrase\"                  Exact match (or use --exact)\n\n🔧 Search Options:\n  --type <types>     Filter by type (function,class,string,variable,etc.)\n                     Can combine: --type function,class\n  --file <patterns>  Filter by file patterns (supports wildcards)\n  --max <number>     Maximum results to show (default: 50)\n  --exact            Exact match only (no fuzzy matching)\n  --regex            Treat query as regex pattern\n  --no-context       Hide surrounding context\n  --sort <by>        Sort by: relevance|usage|name|file\n  --json             Output as JSON\n  --compact          Compact output format\n  --human            Simplified output for human readers (default: Claude-optimized)\n\n📊 Information Displayed (Claude-Optimized by Default):\n  • Complete function signatures with parameters and return types\n  • ALL usage locations and cross-references (not just samples)\n  • Full surrounding code context (all available lines)\n  • All related terms and co-located symbols\n  • Import/export dependencies and relationships\n  • Language information and metadata\n  • Relevance scores and usage statistics\n  • Relationship graphs and impact analysis\n  \n  Use --human for simplified output with less detail\n\n🏷️ Concept Groups:\n  smartgrep group auth        Authentication & security patterns\n  smartgrep group service     Service classes and patterns\n  smartgrep group error       Error handling patterns\n  smartgrep group flow        Data flow and streaming\n  ...and more! Use \"smartgrep group list\" to see all available groups\n\n🎨 Custom Groups:\n  smartgrep group add payments charge,bill,invoice,transaction\n  smartgrep group payments --type function    # Search your custom group\n  smartgrep group remove payments             # Remove when no longer needed\n\n💡 Examples:\n  smartgrep \"authenticateUser\"                  # Find function with usage info\n  smartgrep \"addCrossReference|getReferences\"   # Find any of these functions\n  smartgrep \"error&string\"                      # Find error-related strings\n  smartgrep \"!test\" --type function             # Functions not containing 'test'\n  smartgrep \"/add.*Reference/\" --regex          # Regex pattern search\n  smartgrep group auth --sort usage             # Auth code sorted by usage\n  smartgrep \"CuratorService\" --json             # Machine-readable output\n  smartgrep refs \"processPayment\"               # Full impact analysis\n  smartgrep changes                             # Analyze uncommitted changes impact\n  smartgrep changes --compact                   # One-line risk assessment\n  smartgrep group service --type class --max 10 # Top 10 service classes\n  smartgrep group add api endpoint,route,handler,controller  # Add custom group\n\n📍 Pro Tips:\n  • The tool shows function signatures, surrounding context, and related code\n  • Cross-references include the actual code making the reference\n  • Use --no-context for a cleaner view when browsing many results\n  • Combine filters for precise searches: --type function --file \"*.service.*\"\n  • Create project-specific groups to match your domain and architecture\n\nThe tool indexes your entire codebase on first use.\nSubsequent searches are instant using the cached semantic index.\nCustom groups are saved to .curatorconfig.json in your project root.\n",
@@ -6499,7 +6499,7 @@
       ]
     },
     {
-      "id": "error_1749526606518_1wqrg5r",
+      "id": "error_1749590821471_tv29vch",
       "category": "authentication",
       "trigger": "  • Check if the term exists with: smartgrep \"",
       "error": "\n🔍 Smart Grep - Semantic Code Search with Cross-References\n\nUsage:\n  smartgrep <query>                Search for a term or pattern\n  smartgrep --index                Rebuild the semantic index\n  smartgrep refs <term>            Show where a term is referenced\n  smartgrep changes                Analyze impact of your uncommitted changes\n\n🌊 Flow Analysis:\n  smartgrep flow <term>            Trace how data flows through functions\n                                   Shows assignments, parameters, calls, returns\n                                   Example: smartgrep flow user.email\n\n🏷️ Group Commands:\n  smartgrep group list             List all available concept groups\n  smartgrep group <name>           Search using a concept group\n  smartgrep group add <name> <terms>   Add custom concept group\n  smartgrep group remove <name>    Remove custom concept group\n\n🎯 Search Patterns:\n  term1|term2|term3               OR search - find any of these terms\n  term1&term2                     AND search - must contain all terms\n  !term                           NOT search - exclude this term\n  /regex/                         Regex search - match pattern\n  \"exact phrase\"                  Exact match (or use --exact)\n\n🔧 Search Options:\n  --type <types>     Filter by type (function,class,string,variable,etc.)\n                     Can combine: --type function,class\n  --file <patterns>  Filter by file patterns (supports wildcards)\n  --max <number>     Maximum results to show (default: 50)\n  --exact            Exact match only (no fuzzy matching)\n  --regex            Treat query as regex pattern\n  --no-context       Hide surrounding context\n  --sort <by>        Sort by: relevance|usage|name|file\n  --json             Output as JSON\n  --compact          Compact output format\n  --human            Simplified output for human readers\n  --full             Show full detailed results (default: compact summary)\n\n📊 Information Displayed:\n  DEFAULT (Compact Summary - Claude-Optimized):\n  • Primary definition with signature (constructor/params)\n  • Top 3 usage locations with code context\n  • Breaking changes - what calls this code\n  • Patterns detected (async, errors, related terms)\n  • Smart next search suggestions\n  \n  WITH --full FLAG (Complete Details):\n  • ALL usage locations and cross-references\n  • Full surrounding code context\n  • All related terms and metadata\n  • Relationship graphs and statistics\n  \n  Use --human for human-friendly format\n  Use --json for machine-readable output\n\n🏷️ Concept Groups:\n  smartgrep group auth        Authentication & security patterns\n  smartgrep group service     Service classes and patterns\n  smartgrep group error       Error handling patterns\n  smartgrep group flow        Data flow and streaming\n  ...and more! Use \"smartgrep group list\" to see all available groups\n\n🎨 Custom Groups:\n  smartgrep group add payments charge,bill,invoice,transaction\n  smartgrep group payments --type function    # Search your custom group\n  smartgrep group remove payments             # Remove when no longer needed\n\n💡 Examples:\n  smartgrep \"authenticateUser\"                  # Find function with usage info\n  smartgrep \"addCrossReference|getReferences\"   # Find any of these functions\n  smartgrep \"error&string\"                      # Find error-related strings\n  smartgrep \"!test\" --type function             # Functions not containing 'test'\n  smartgrep \"/add.*Reference/\" --regex          # Regex pattern search\n  smartgrep group auth --sort usage             # Auth code sorted by usage\n  smartgrep \"CuratorService\" --json             # Machine-readable output\n  smartgrep refs \"processPayment\"               # Full impact analysis\n  smartgrep changes                             # Analyze uncommitted changes impact\n  smartgrep changes --compact                   # One-line risk assessment\n  smartgrep group service --type class --max 10 # Top 10 service classes\n  smartgrep group add api endpoint,route,handler,controller  # Add custom group\n\n📍 Pro Tips:\n  • The tool shows function signatures, surrounding context, and related code\n  • Cross-references include the actual code making the reference\n  • Use --no-context for a cleaner view when browsing many results\n  • Combine filters for precise searches: --type function --file \"*.service.*\"\n  • Create project-specific groups to match your domain and architecture\n\nThe tool indexes your entire codebase on first use.\nSubsequent searches are instant using the cached semantic index.\nCustom groups are saved to .curatorconfig.json in your project root.\n",
@@ -6514,7 +6514,7 @@
       ]
     },
     {
-      "id": "error_1749526606518_v74pb34",
+      "id": "error_1749590821471_orwuqe5",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "\n🔍 Smart Grep - Semantic Code Search with Cross-References\n\nUsage:\n  smartgrep <query>                Search for a term or pattern\n  smartgrep --index                Rebuild the semantic index\n  smartgrep refs <term>            Show where a term is referenced\n  smartgrep changes                Analyze impact of your uncommitted changes\n\n🌊 Flow Analysis:\n  smartgrep flow <term>            Trace how data flows through functions\n                                   Shows assignments, parameters, calls, returns\n                                   Example: smartgrep flow user.email\n\n📖 Story Extraction:\n  smartgrep story                  Extract narrative patterns from codebase\n                                   Shows flows, errors, boundaries, patterns\n                                   Helps Claudes understand what your code does\n\n🏷️ Group Commands:\n  smartgrep group list             List all available concept groups\n  smartgrep group <name>           Search using a concept group\n  smartgrep group add <name> <terms>   Add custom concept group\n  smartgrep group remove <name>    Remove custom concept group\n\n🎯 Search Patterns:\n  term1|term2|term3               OR search - find any of these terms\n  term1&term2                     AND search - must contain all terms\n  !term                           NOT search - exclude this term\n  /regex/                         Regex search - match pattern\n  \"exact phrase\"                  Exact match (or use --exact)\n\n🔧 Search Options:\n  --type <types>     Filter by type (function,class,string,variable,etc.)\n                     Can combine: --type function,class\n  --file <patterns>  Filter by file patterns (supports wildcards)\n  --max <number>     Maximum results to show (default: 50)\n  --exact            Exact match only (no fuzzy matching)\n  --regex            Treat query as regex pattern\n  --no-context       Hide surrounding context\n  --sort <by>        Sort by: relevance|usage|name|file\n  --json             Output as JSON\n  --compact          Compact output format\n  --human            Simplified output for human readers\n  --full             Show full detailed results (default: compact summary)\n\n📊 Information Displayed:\n  DEFAULT (Compact Summary - Claude-Optimized):\n  • Primary definition with signature (constructor/params)\n  • Top 3 usage locations with code context\n  • Breaking changes - what calls this code\n  • Patterns detected (async, errors, related terms)\n  • Smart next search suggestions\n  \n  WITH --full FLAG (Complete Details):\n  • ALL usage locations and cross-references\n  • Full surrounding code context\n  • All related terms and metadata\n  • Relationship graphs and statistics\n  \n  Use --human for human-friendly format\n  Use --json for machine-readable output\n\n🏷️ Concept Groups:\n  smartgrep group auth        Authentication & security patterns\n  smartgrep group service     Service classes and patterns\n  smartgrep group error       Error handling patterns\n  smartgrep group flow        Data flow and streaming\n  ...and more! Use \"smartgrep group list\" to see all available groups\n\n🎨 Custom Groups:\n  smartgrep group add payments charge,bill,invoice,transaction\n  smartgrep group payments --type function    # Search your custom group\n  smartgrep group remove payments             # Remove when no longer needed\n\n💡 Examples:\n  smartgrep \"authenticateUser\"                  # Find function with usage info\n  smartgrep \"addCrossReference|getReferences\"   # Find any of these functions\n  smartgrep \"error&string\"                      # Find error-related strings\n  smartgrep \"!test\" --type function             # Functions not containing 'test'\n  smartgrep \"/add.*Reference/\" --regex          # Regex pattern search\n  smartgrep group auth --sort usage             # Auth code sorted by usage\n  smartgrep \"CuratorService\" --json             # Machine-readable output\n  smartgrep refs \"processPayment\"               # Full impact analysis\n  smartgrep changes                             # Analyze uncommitted changes impact\n  smartgrep changes --compact                   # One-line risk assessment\n  smartgrep group service --type class --max 10 # Top 10 service classes\n  smartgrep group add api endpoint,route,handler,controller  # Add custom group\n  \n  # Framework searches (IMPORTANT: use single quotes for $ symbols!)\n  smartgrep '$state' --file \"*.svelte\"          # Svelte 5 runes\n  smartgrep 'onMount' --file \"*.svelte\"         # Svelte lifecycle\n  smartgrep 'defineProps' --file \"*.vue\"        # Vue composition API\n  smartgrep '{#if' --file \"*.svelte\"            # Svelte directives\n\n📍 Pro Tips:\n  • The tool shows function signatures, surrounding context, and related code\n  • Cross-references include the actual code making the reference\n  • Use --no-context for a cleaner view when browsing many results\n  • Combine filters for precise searches: --type function --file \"*.service.*\"\n  • Create project-specific groups to match your domain and architecture\n\nThe tool indexes your entire codebase on first use.\nSubsequent searches are instant using the cached semantic index.\nCustom groups are saved to .curatorconfig.json in your project root.\n",
@@ -6529,7 +6529,7 @@
       ]
     },
     {
-      "id": "error_1749526606519_rm06ad4",
+      "id": "error_1749590821472_m51s5qe",
       "category": "authentication",
       "trigger": "IMPORTANT: Get reminder about including explicit smartgrep instructions when using Task agents. Task agents have Bash access and can use smartgrep, but need explicit instructions. Call this before creating search-related Task prompts.",
       "error": "🛠️ AI-Optimized Tools Available in This Project:\n\n1. **Smart Grep** - Semantic code search that understands your code\n   Command: \\`smartgrep [pattern]\\`\n   \n   • 10x faster than regular grep\n   • Understands code structure (functions, classes, etc.)\n   • Shows usage counts and cross-references\n   • Supports concept groups (auth, api, error, etc.)\n   \n   Try: \\`smartgrep --help\\` for full capabilities\n\n2. **Incremental Monitor** - Real-time codebase insights\n   Command: \\`curator-monitor watch --overview\\`\n   \n   • Live dashboard of code changes\n   • Shows code distribution and complexity\n   • Tracks unique files vs save events\n   \n💡 Tip: Consider adding frequently used commands to CLAUDE.md for future reference!",
@@ -6543,7 +6543,7 @@
       ]
     },
     {
-      "id": "error_1749526606520_41rupuq",
+      "id": "error_1749590821472_j5dqcyd",
       "category": "authentication",
       "trigger": "IMPORTANT: Get reminder about including explicit smartgrep instructions when using Task agents. Task agents have Bash access and can use smartgrep, but need explicit instructions. Call this before creating search-related Task prompts.",
       "error": "🛠️ AI-Optimized Tools Available in This Project:\n\n1. **Smart Grep** - Semantic code search that understands your code\n   Command: \\`smartgrep [pattern]\\`\n   \n   • 🚀 NEW: Compact mode by default - 90% less context usage!\n   • 10x faster than regular grep\n   • Understands code structure (functions, classes, etc.)\n   • Shows usage counts and cross-references\n   • Supports concept groups (auth, api, error, etc.)\n   • Use --full flag only when you need every occurrence\n   \n   Try: \\`smartgrep --help\\` for full capabilities\n\n2. **Incremental Monitor** - Real-time codebase insights\n   Command: \\`curator-monitor watch --overview\\`\n   \n   • Live dashboard of code changes\n   • Shows code distribution and complexity\n   • Tracks unique files vs save events\n   \n💡 Tip: Consider adding frequently used commands to CLAUDE.md for future reference!",
@@ -6557,7 +6557,7 @@
       ]
     },
     {
-      "id": "error_1749526606520_fp45wrr",
+      "id": "error_1749590821473_qlh0bjc",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Error installing ${...} completion:",
@@ -6572,7 +6572,7 @@
       ]
     },
     {
-      "id": "error_1749526606520_qh0m6gc",
+      "id": "error_1749590821473_h4cfapx",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Error installing man page:",
@@ -6587,7 +6587,7 @@
       ]
     },
     {
-      "id": "error_1749526606520_r0s15gc",
+      "id": "error_1749590821473_n1erfze",
       "category": "data",
       "trigger": "Unknown trigger",
       "error": "Handle empty query - return all results",
@@ -6601,7 +6601,7 @@
       ]
     },
     {
-      "id": "error_1749526606521_kxsncly",
+      "id": "error_1749590821473_wqli65q",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Clean the value (remove quotes, handle empty)",
@@ -6616,7 +6616,7 @@
       ]
     },
     {
-      "id": "error_1749526606521_pv87fn5",
+      "id": "error_1749590821474_b2cthrr",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Handle empty values",
@@ -6630,7 +6630,7 @@
       ]
     },
     {
-      "id": "error_1749526606521_lnqvvfn",
+      "id": "error_1749590821474_ol2cv39",
       "category": "validation",
       "trigger": "Unknown trigger",
       "error": "Invalid URL, skip",
@@ -6644,7 +6644,7 @@
       ]
     },
     {
-      "id": "error_1749526606521_tbqe7l7",
+      "id": "error_1749590821474_11pnye0",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "If JSON parsing fails, extract what we can",
@@ -6658,7 +6658,7 @@
       ]
     },
     {
-      "id": "error_1749526606521_gsujv5p",
+      "id": "error_1749590821474_iqljnte",
       "category": "general",
       "trigger": "Navigate to parent directory, creating intermediate directories if needed",
       "error": "Create missing directory nodes",
@@ -6672,7 +6672,7 @@
       ]
     },
     {
-      "id": "error_1749526606521_lzu98n0",
+      "id": "error_1749590821474_1a6jt0i",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error streaming ${...}:",
@@ -6687,7 +6687,7 @@
       ]
     },
     {
-      "id": "error_1749526606521_g4voh8n",
+      "id": "error_1749590821474_bmm3iro",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Transform error for ${...}:",
@@ -6702,7 +6702,7 @@
       ]
     },
     {
-      "id": "error_1749526606522_r63iiys",
+      "id": "error_1749590821474_4khsaxv",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Cache missing or corrupted, start fresh",
@@ -6716,7 +6716,7 @@
       ]
     },
     {
-      "id": "error_1749526606522_ivsta38",
+      "id": "error_1749590821474_g2msw6f",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error loading config from ${...}:",
@@ -6731,7 +6731,7 @@
       ]
     },
     {
-      "id": "error_1749526606522_3uimdg5",
+      "id": "error_1749590821475_pdei5pm",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Return empty config if none found",
@@ -6745,7 +6745,7 @@
       ]
     },
     {
-      "id": "error_1749526606522_x4er9lx",
+      "id": "error_1749590821475_k0ncr6u",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error handling patterns",
@@ -6759,7 +6759,7 @@
       ]
     },
     {
-      "id": "error_1749526606523_zr25qew",
+      "id": "error_1749590821475_857k4lo",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "error:Error handling patterns",
@@ -6773,7 +6773,7 @@
       ]
     },
     {
-      "id": "error_1749526606523_ia7o4qf",
+      "id": "error_1749590821475_i98wipz",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "auth database cache api error user payment config test async service flow architecture import interface state event logging security build deploy",
@@ -6787,7 +6787,7 @@
       ]
     },
     {
-      "id": "error_1749526606523_u9r7jp5",
+      "id": "error_1749590821475_khry2wj",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Error: Path \"${...}\" does not exist",
@@ -6802,7 +6802,7 @@
       ]
     },
     {
-      "id": "error_1749526606523_dqjah70",
+      "id": "error_1749590821475_6alsjb2",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Error: Please provide a question",
@@ -6817,7 +6817,7 @@
       ]
     },
     {
-      "id": "error_1749526606523_o65hv90",
+      "id": "error_1749590821476_z7ip8xw",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Error: Please provide a feature description",
@@ -6832,7 +6832,7 @@
       ]
     },
     {
-      "id": "error_1749526606523_mdp143z",
+      "id": "error_1749590821476_avderlm",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Error: Please provide a change description",
@@ -6847,7 +6847,7 @@
       ]
     },
     {
-      "id": "error_1749526606523_f7zz7o1",
+      "id": "error_1749590821476_ntiqrib",
       "category": "system",
       "trigger": "Unknown trigger",
       "error": "Fatal error:",
@@ -6862,7 +6862,7 @@
       ]
     },
     {
-      "id": "error_1749526606523_rp4nzz8",
+      "id": "error_1749590821476_s9ye5u9",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error updating overview data:",
@@ -6877,7 +6877,7 @@
       ]
     },
     {
-      "id": "error_1749526606523_qk50nue",
+      "id": "error_1749590821476_28ouqg6",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Issues found",
@@ -6891,7 +6891,7 @@
       ]
     },
     {
-      "id": "error_1749526606524_v9uk5wf",
+      "id": "error_1749590821476_ue7gp67",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Fill remaining slots with empty lines to maintain consistent height",
@@ -6905,7 +6905,7 @@
       ]
     },
     {
-      "id": "error_1749526606524_8wh41yp",
+      "id": "error_1749590821476_yg2619g",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "User authentication errors",
@@ -6919,7 +6919,7 @@
       ]
     },
     {
-      "id": "error_1749526606524_77v13xy",
+      "id": "error_1749590821476_ftbijsf",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Login Failed",
@@ -6934,7 +6934,7 @@
       ]
     },
     {
-      "id": "error_1749526606524_jefu0y3",
+      "id": "error_1749590821476_giko652",
       "category": "authentication",
       "trigger": "Unknown trigger",
       "error": "authentication failed: %w",
@@ -6949,7 +6949,7 @@
       ]
     },
     {
-      "id": "error_1749526606524_ns2ad5g",
+      "id": "error_1749590821476_901nvb2",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "\n5. Error reading file:",
@@ -6964,7 +6964,7 @@
       ]
     },
     {
-      "id": "error_1749526606524_m0k43kz",
+      "id": "error_1749590821477_g2o1orb",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "\n7. Extraction error:",
@@ -6979,7 +6979,7 @@
       ]
     },
     {
-      "id": "error_1749526606524_v74dnmp",
+      "id": "error_1749590821477_ny6kcyl",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Tests failed, aborting deployment",
@@ -6993,7 +6993,7 @@
       ]
     },
     {
-      "id": "error_1749526606524_z512e7g",
+      "id": "error_1749590821477_ehzt5xi",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Deployment failed",
@@ -7007,7 +7007,7 @@
       ]
     },
     {
-      "id": "error_1749526606525_m5fdcam",
+      "id": "error_1749590821477_0zhdoo6",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error handling & status management",
@@ -7021,7 +7021,7 @@
       ]
     },
     {
-      "id": "error_1749526606525_3i4j66m",
+      "id": "error_1749590821477_lhr0e4v",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "nullishCoalescingOperator",
@@ -7035,7 +7035,7 @@
       ]
     },
     {
-      "id": "error_1749526606525_u00ip9f",
+      "id": "error_1749590821477_peigo8z",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Failed to parse ${...}:",
@@ -7050,7 +7050,7 @@
       ]
     },
     {
-      "id": "error_1749526606525_pxsij7q",
+      "id": "error_1749590821477_6bdul18",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Continue parsing even with errors",
@@ -7064,7 +7064,7 @@
       ]
     },
     {
-      "id": "error_1749526606525_yfk9icb",
+      "id": "error_1749590821477_zhtxgfp",
       "category": "network",
       "trigger": "Unknown trigger",
       "error": "HACK: Temporary workaround for database connection issues",
@@ -7078,7 +7078,7 @@
       ]
     },
     {
-      "id": "error_1749526606525_8qbpitm",
+      "id": "error_1749590821477_vu2t7bw",
       "category": "general",
       "trigger": "REVIEW: Check if this logic is still needed after v2.0",
       "error": "SMELL: This indicates a design problem",
@@ -7092,7 +7092,7 @@
       ]
     },
     {
-      "id": "error_1749526606525_b2mipk6",
+      "id": "error_1749590821477_yepc13a",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "[CuratorProcess] Claude not found at: ${...}",
@@ -7107,7 +7107,7 @@
       ]
     },
     {
-      "id": "error_1749526606526_qfoqr2l",
+      "id": "error_1749590821478_ev3v4c3",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Claude CLI not found at: ${...}",
@@ -7122,7 +7122,7 @@
       ]
     },
     {
-      "id": "error_1749526606526_2g1xax5",
+      "id": "error_1749590821478_am1m6b4",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "[CuratorProcess] Spawn error:",
@@ -7137,7 +7137,7 @@
       ]
     },
     {
-      "id": "error_1749526606526_4bsxstd",
+      "id": "error_1749590821478_1s9abs0",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Failed to spawn Claude: ${...}",
@@ -7152,7 +7152,7 @@
       ]
     },
     {
-      "id": "error_1749526606526_0goc2pu",
+      "id": "error_1749590821478_d3u7jod",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "[CuratorProcess] Total error length: ${...}",
@@ -7167,7 +7167,7 @@
       ]
     },
     {
-      "id": "error_1749526606526_qkztk30",
+      "id": "error_1749590821478_1x8i3wu",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "[CuratorProcess] Full error output: ${...}",
@@ -7182,7 +7182,7 @@
       ]
     },
     {
-      "id": "error_1749526606526_85af9zh",
+      "id": "error_1749590821478_aafbqe8",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Claude produced no output. Error: ${...}",
@@ -7197,7 +7197,7 @@
       ]
     },
     {
-      "id": "error_1749526606526_2czu41i",
+      "id": "error_1749590821478_5hx549n",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "[CuratorProcess] 'which claude' failed, trying other methods...",
@@ -7212,7 +7212,7 @@
       ]
     },
     {
-      "id": "error_1749526606526_cwrd8bv",
+      "id": "error_1749590821478_3zmcked",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Claude CLI not found. Please install it or provide the path.",
@@ -7226,7 +7226,7 @@
       ]
     },
     {
-      "id": "error_1749526606526_bdwadsu",
+      "id": "error_1749590821478_9sddv4o",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "[Curator Claude] ❌ Error: ${...}...",
@@ -7241,7 +7241,7 @@
       ]
     },
     {
-      "id": "error_1749526606527_y27obl5",
+      "id": "error_1749590821478_teco7qm",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Ignore logging errors",
@@ -7255,7 +7255,7 @@
       ]
     },
     {
-      "id": "error_1749526606527_r8xnkqy",
+      "id": "error_1749590821478_e5dxpfs",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Ignore parsing errors",
@@ -7269,7 +7269,7 @@
       ]
     },
     {
-      "id": "error_1749526606527_5i5zjod",
+      "id": "error_1749590821479_f5xtca3",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "${...}\n\n${...}\n\n**The Problem:**\n${...}\n\n**Best Practices:**\n${...}\n\n**❌ Bad Example:**\nPrompt: \"${...}\"\nProblem: ${...}\n\n**✅ Good Example:**\nPrompt: \"${...}\"\nBenefit: ${...}\n\n**📝 Template to Include:**\n${...}\n\n${...}",
@@ -7283,7 +7283,7 @@
       ]
     },
     {
-      "id": "error_1749526606527_r7tmyiw",
+      "id": "error_1749590821479_8b7ap8s",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "[MCP] Error in ${...}:",
@@ -7298,7 +7298,7 @@
       ]
     },
     {
-      "id": "error_1749526606527_5fj1t89",
+      "id": "error_1749590821479_yeqgkym",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "[MCP] Failed to start server:",
@@ -7313,7 +7313,7 @@
       ]
     },
     {
-      "id": "error_1749526606527_41tli6i",
+      "id": "error_1749590821479_xhnjy67",
       "category": "system",
       "trigger": "Unknown trigger",
       "error": "[MCP] Fatal error:",
@@ -7328,7 +7328,7 @@
       ]
     },
     {
-      "id": "error_1749526606527_j33qalm",
+      "id": "error_1749590821479_ujgduto",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Empty line",
@@ -7342,7 +7342,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_0pfwjdt",
+      "id": "error_1749590821479_t1z0ma8",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error: %v\\n%s",
@@ -7357,7 +7357,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_wiv5vdu",
+      "id": "error_1749590821479_wwsjjsf",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error: %v\\n\\nPress Ctrl+C to quit.",
@@ -7372,7 +7372,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_99qik64",
+      "id": "error_1749590821480_p486mlw",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "command failed: %w\\n%s",
@@ -7387,7 +7387,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_0glgkip",
+      "id": "error_1749590821480_4fqnru2",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "failed to run smartgrep: %w",
@@ -7402,7 +7402,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_6qsxteo",
+      "id": "error_1749590821480_jc9wrm8",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "failed to parse JSON: %w",
@@ -7417,7 +7417,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_qtgug0t",
+      "id": "error_1749590821480_j6kl10l",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "✗ Issues",
@@ -7432,7 +7432,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_1o9hfox",
+      "id": "error_1749590821480_zmdy63x",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "1️⃣ IMPROVED SEARCH SENSITIVITY (was the #1 issue!)",
@@ -7447,7 +7447,7 @@
       ]
     },
     {
-      "id": "error_1749526606528_9qb5iee",
+      "id": "error_1749590821480_gde57ac",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "\"${...}\" not found in codebase",
@@ -7461,7 +7461,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_0p3ffmx",
+      "id": "error_1749590821480_jiotvbz",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Look for error patterns",
@@ -7475,7 +7475,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_cljwnpd",
+      "id": "error_1749590821480_6melhvc",
       "category": "general",
       "trigger": "2. Use --full only when you need:",
       "error": "   smartgrep group error --max 10       # Top 10 error patterns",
@@ -7490,7 +7490,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_8eurbub",
+      "id": "error_1749590821480_gu93xo6",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "smartgrep group error               # Finds ALL error handling patterns",
@@ -7504,7 +7504,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_fya4mvt",
+      "id": "error_1749590821481_7qeba6h",
       "category": "general",
       "trigger": "smartgrep group remove payments                              # Clean up when done",
       "error": "error    → finds: exception, catch, throw, fail...",
@@ -7518,7 +7518,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_1448d3c",
+      "id": "error_1749590821481_883nggv",
       "category": "network",
       "trigger": "Search for all authentication implementations in the codebase. \n    \nIMPORTANT: Use the Bash tool to run smartgrep for semantic search:\n- 'smartgrep group auth' - finds ALL auth patterns\n- 'smartgrep \"authenticate\" --type function' - finds auth functions\n- 'smartgrep refs \"AuthService\"' - finds all references\n- 'smartgrep group list' - see all available concept groups\n- 'smartgrep group add mygroup term1,term2' - add project-specific groups\n\nSmartgrep understands code structure and is much more effective than grep.",
       "error": "Agent will likely use regular grep or Glob, missing semantic connections",
@@ -7532,7 +7532,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_o2pnpu5",
+      "id": "error_1749590821481_2ussn6d",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Ignore errors, regenerate story",
@@ -7546,7 +7546,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_8q8l2f0",
+      "id": "error_1749590821481_icpflnw",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "IDs of error branches",
@@ -7560,7 +7560,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_hc9i2gh",
+      "id": "error_1749590821481_jbjyafa",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "*\n   * Extract error scenarios",
@@ -7574,7 +7574,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_ka29at4",
+      "id": "error_1749590821481_r92v9qr",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Look for error branches",
@@ -7588,7 +7588,7 @@
       ]
     },
     {
-      "id": "error_1749526606529_8d92s4q",
+      "id": "error_1749590821481_lyqdh9o",
       "category": "general",
       "trigger": "Extract the most significant word",
       "error": "Look for strings before this error in the same scope",
@@ -7602,7 +7602,7 @@
       ]
     },
     {
-      "id": "error_1749526606530_nolbseu",
+      "id": "error_1749590821481_h0k998y",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Look for recovery strings after this error",
@@ -7617,7 +7617,7 @@
       ]
     },
     {
-      "id": "error_1749526606530_vq8v81c",
+      "id": "error_1749590821481_0g26o5s",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "For each step, look for nearby error strings",
@@ -7631,7 +7631,7 @@
       ]
     },
     {
-      "id": "error_1749526606530_mh5uog1",
+      "id": "error_1749590821482_kk28uzt",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Add error branches",
@@ -7645,7 +7645,7 @@
       ]
     },
     {
-      "id": "error_1749526606530_v616u8w",
+      "id": "error_1749590821482_5bwcng0",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Normalize for grouping similar errors",
@@ -7659,7 +7659,7 @@
       ]
     },
     {
-      "id": "error_1749526606530_rczg6su",
+      "id": "error_1749590821482_c114fbh",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error patterns add confidence",
@@ -7673,7 +7673,7 @@
       ]
     },
     {
-      "id": "error_1749526606530_i3ic4t5",
+      "id": "error_1749590821482_f81jn9j",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "*\n * Story Analyzer - Extracts narrative patterns from codebase strings\n * \n * Every codebase tells a story through its strings. This analyzer finds\n * the narrative arc hidden in error messages, logs, and state transitions.",
@@ -7687,7 +7687,7 @@
       ]
     },
     {
-      "id": "error_1749526606530_ywqekrz",
+      "id": "error_1749590821482_o6qi2eo",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Find conflicts (errors and their resolutions)",
@@ -7702,7 +7702,7 @@
       ]
     },
     {
-      "id": "error_1749526606530_nuf0zcf",
+      "id": "error_1749590821482_qp4lucn",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "⚠️  ERROR SCENARIOS",
@@ -7717,7 +7717,7 @@
       ]
     },
     {
-      "id": "error_1749526606530_srl7fjs",
+      "id": "error_1749590821482_fxlhvb8",
       "category": "validation",
       "trigger": "Unknown trigger",
       "error": "  • What errors to expect and handle",
@@ -7732,7 +7732,7 @@
       ]
     },
     {
-      "id": "error_1749526606530_m1f4ygg",
+      "id": "error_1749590821482_enjl169",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "${...} error scenarios across ${...} categories (${...} with recovery)",
@@ -7747,7 +7747,7 @@
       ]
     },
     {
-      "id": "error_1749526606531_emxmxxf",
+      "id": "error_1749590821482_2w3llp7",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error scenarios",
@@ -7761,7 +7761,7 @@
       ]
     },
     {
-      "id": "error_1749526606531_tlbl5px",
+      "id": "error_1749590821482_4ot9sck",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Error insights",
@@ -7775,7 +7775,7 @@
       ]
     },
     {
-      "id": "error_1749526606531_tdigokp",
+      "id": "error_1749590821483_pmdm6o3",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "⚠️ ERROR PATTERNS:",
@@ -7791,7 +7791,7 @@
       ]
     },
     {
-      "id": "error_1749526606531_akvmjwt",
+      "id": "error_1749590821483_a5jja17",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "         ⚠️  WHAT CAN GO WRONG               ",
@@ -7806,7 +7806,7 @@
       ]
     },
     {
-      "id": "error_1749526606531_ndf1inx",
+      "id": "error_1749590821483_nq5i3xn",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "\"What can go wrong\"",
@@ -7820,7 +7820,7 @@
       ]
     },
     {
-      "id": "error_1749526606531_6b5jhzv",
+      "id": "error_1749590821483_ndmx4co",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Check if it's an error term",
@@ -7834,7 +7834,7 @@
       ]
     },
     {
-      "id": "error_1749526606531_foybu8k",
+      "id": "error_1749590821483_2qi0uz5",
       "category": "general",
       "trigger": "Beautiful header",
       "error": "Error scenarios - SUPER USEFUL",
@@ -7848,7 +7848,7 @@
       ]
     },
     {
-      "id": "error_1749526606531_kdyn2e5",
+      "id": "error_1749590821483_26el93l",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Show error branch at appropriate step",
@@ -7862,7 +7862,7 @@
       ]
     },
     {
-      "id": "error_1749526606531_uff4ver",
+      "id": "error_1749590821483_edffut1",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Custom group \"${...}\" not found",
@@ -7877,7 +7877,7 @@
       ]
     },
     {
-      "id": "error_1749526606532_h87vhwz",
+      "id": "error_1749590821483_2h8b7mx",
       "category": "validation",
       "trigger": "Unknown trigger",
       "error": "Invalid regex pattern: ${...}",
@@ -7892,7 +7892,7 @@
       ]
     },
     {
-      "id": "error_1749526606532_04qlamb",
+      "id": "error_1749590821483_n8n46k8",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Git error: ${...}",
@@ -7907,7 +7907,7 @@
       ]
     },
     {
-      "id": "error_1749526606532_21a64mh",
+      "id": "error_1749590821484_g37gd3j",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Error tracing flow: ${...}",
@@ -7922,7 +7922,7 @@
       ]
     },
     {
-      "id": "error_1749526606532_epp3ik5",
+      "id": "error_1749590821484_3a1gi1e",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "❌ Error extracting story: ${...}",
@@ -7937,7 +7937,7 @@
       ]
     },
     {
-      "id": "error_1749526606532_ayteyt0",
+      "id": "error_1749590821484_6iugn7g",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Clean up empty customGroups object",
@@ -7951,7 +7951,7 @@
       ]
     },
     {
-      "id": "error_1749526606532_bz0yi87",
+      "id": "error_1749590821484_9nmz1k0",
       "category": "data",
       "trigger": "Unknown trigger",
       "error": "Search with empty query to get all results, then filter by regex",
@@ -7965,7 +7965,7 @@
       ]
     },
     {
-      "id": "error_1749526606532_czblmlp",
+      "id": "error_1749590821484_zu2sm3x",
       "category": "general",
       "trigger": "Try to get story context if available",
       "error": "Ignore story errors, continue without it",
@@ -7979,7 +7979,7 @@
       ]
     },
     {
-      "id": "error_1749526606532_pl72j05",
+      "id": "error_1749590821484_efw6nac",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "┌─ ⚡ CONFLICTS & ERRORS ─────────────────────────┐",
@@ -7994,7 +7994,7 @@
       ]
     },
     {
-      "id": "error_1749526606532_l3t5rd8",
+      "id": "error_1749590821484_8ikny8z",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Conflicts - What can go wrong",
@@ -8008,7 +8008,7 @@
       ]
     },
     {
-      "id": "error_1749526606533_foi9nlc",
+      "id": "error_1749590821484_wwfqu3z",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "ERROR PATTERNS:",
@@ -8023,7 +8023,7 @@
       ]
     },
     {
-      "id": "error_1749526606533_hbrfzrr",
+      "id": "error_1749590821484_r0a0gjf",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Detect error handling",
@@ -8037,7 +8037,7 @@
       ]
     },
     {
-      "id": "error_1749526606533_dljsegq",
+      "id": "error_1749590821485_9okcwuc",
       "category": "general",
       "trigger": "Unknown trigger",
       "error": "Find error patterns",
@@ -8053,7 +8053,7 @@
   ],
   "boundaries": [
     {
-      "id": "boundary_1749526606533_se11o8k",
+      "id": "boundary_1749590821485_uqzfb7y",
       "type": "api",
       "identifier": "github.com",
       "protocol": "http",
@@ -8118,7 +8118,7 @@
       ]
     },
     {
-      "id": "boundary_1749526606534_h01ysmn",
+      "id": "boundary_1749590821485_judx9mh",
       "type": "database",
       "identifier": "current",
       "usage": [
@@ -8143,7 +8143,7 @@
       ]
     },
     {
-      "id": "boundary_1749526606534_9wmztnv",
+      "id": "boundary_1749590821486_azidqe9",
       "type": "database",
       "identifier": "leaf",
       "usage": [
@@ -8159,7 +8159,7 @@
       ]
     },
     {
-      "id": "boundary_1749526606534_zo3g7er",
+      "id": "boundary_1749590821486_8oz4te4",
       "type": "api",
       "identifier": "curator.example.com",
       "protocol": "http",
@@ -8175,7 +8175,7 @@
       ]
     },
     {
-      "id": "boundary_1749526606534_e8hha7u",
+      "id": "boundary_1749590821486_wtgj1gq",
       "type": "api",
       "identifier": "api.example.com",
       "protocol": "http",
@@ -8191,7 +8191,7 @@
       ]
     },
     {
-      "id": "boundary_1749526606535_fpaewl7",
+      "id": "boundary_1749590821486_29a4xy2",
       "type": "api",
       "identifier": "bun.sh",
       "protocol": "http",
@@ -8217,7 +8217,7 @@
   ],
   "patterns": [
     {
-      "id": "pattern_1749526606536_rc3226m",
+      "id": "pattern_1749590821487_cuthz3a",
       "type": "retry",
       "description": "Retry logic with attempts tracking",
       "examples": [
@@ -8269,7 +8269,7 @@
       "frequency": 16
     },
     {
-      "id": "pattern_1749526606537_awcyrvb",
+      "id": "pattern_1749590821488_a4buk6k",
       "type": "validation",
       "description": "Input validation and constraints",
       "examples": [
@@ -8320,7 +8320,7 @@
       "frequency": 24
     },
     {
-      "id": "pattern_1749526606537_mqpo8go",
+      "id": "pattern_1749590821489_r78omo3",
       "type": "state-change",
       "description": "State transitions and status tracking",
       "examples": [
@@ -8368,7 +8368,7 @@
       "frequency": 7
     },
     {
-      "id": "pattern_1749526606539_wf7wzii",
+      "id": "pattern_1749590821490_emi9u7q",
       "type": "lifecycle",
       "description": "Entity lifecycle management (to)",
       "examples": [
@@ -8417,7 +8417,7 @@
     }
   ],
   "metadata": {
-    "extractedAt": 1749526606539,
+    "extractedAt": 1749590821490,
     "totalStrings": 5201,
     "coveredFiles": 95,
     "confidence": 1
