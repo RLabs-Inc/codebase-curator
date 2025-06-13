@@ -9,14 +9,14 @@ export const CURATOR_TOOL_PATH =
 /**
  * Common instructions shared across all curator prompts
  */
-const COMMON_CURATOR_INSTRUCTIONS = `
+export const COMMON_CURATOR_INSTRUCTIONS = `
 ## YOUR TOOLBOX 🛠️
 
 **File ninjas:**
 - Read: Grab any file (use multi-file reads - way faster!)
 - Grep: Find stuff across the codebase
 - Glob: Find files by pattern
-- LS: See what's in a directory
+- LS: See what's in a directory (ALWAYS use ignore parameter with these patterns to prevent timeouts: ["node_modules", "__pycache__", "vendor", ".git", "dist", "build", "coverage", ".next", ".cache", "*.log", "venv", "env", ".mypy_cache", ".pytest_cache"])
 - Bash: Run commands (including smartgrep for semantic search!)
 
 **Your Investigation Strategy** 🎯:
@@ -130,6 +130,8 @@ smartgrep is a game-changer! It shows usage counts, cross-references, and rich c
 - \`smartgrep group list\` → See all 20+ concept groups with their keywords!
 - \`smartgrep group add mygroup term1,term2\` → Add custom project-specific groups
 - \`smartgrep group remove mygroup\` → Remove custom groups when no longer needed
+- **THE KILLER FEATURE**: Define project vocabulary ONCE! Example: add "payments" group with stripe,charge,billing,invoice
+  Then \`smartgrep group payments\` finds ALL payment code. No more "was it billing or charge or payment?"
 
 **Pro tips:**
 - Use OR patterns instead of multiple greps: \`smartgrep "login|signin|auth"\`
@@ -164,6 +166,34 @@ Pro tip: The codebase changes. Your memory might be stale. Always verify with fr
 `
 
 /**
+ * Claude-specific tool instructions without emojis
+ */
+const CLAUDE_TOOL_INSTRUCTIONS = `
+## Tool Usage
+
+- Read: Get file contents (batch multiple files)
+- Grep: Find patterns across codebase
+- Glob: Find files by pattern
+- LS: List directories (use ignore: ["**/node_modules", "**/__pycache__", "**/vendor", "**/.git", "**/dist", "**/build", "**/coverage", "**/.next", "**/.cache", "**/*.log", "**/venv", "**/env", "**/.mypy_cache", "**/.pytest_cache"])
+- Bash: Run commands including smartgrep
+
+## Smart Grep Usage
+
+Start with: smartgrep <pattern> or smartgrep group <concept>
+- smartgrep "error" → Semantic matches with context
+- smartgrep group error → ALL error patterns
+- smartgrep refs "functionName" → Find all usages
+- Use --compact for summaries, --full for everything
+
+## Analysis Approach
+
+1. Use tools to verify - don't assume
+2. Show real code examples with file:line
+3. Focus on actual patterns, not theoretical ones
+4. Give specific locations and implementations
+`
+
+/**
  * Combines base context with common instructions and specialized prompt
  */
 function buildCuratorPrompt(baseContext: string, specializedPrompt: string): string {
@@ -171,6 +201,16 @@ function buildCuratorPrompt(baseContext: string, specializedPrompt: string): str
 
 ${specializedPrompt}
 ${COMMON_CURATOR_INSTRUCTIONS}`
+}
+
+/**
+ * Builds Claude-specific curator prompt without emojis
+ */
+function buildClaudeCuratorPrompt(baseContext: string, specializedPrompt: string): string {
+  return `${baseContext}
+
+${specializedPrompt}
+${CLAUDE_TOOL_INSTRUCTIONS}`
 }
 
 /**
@@ -182,6 +222,14 @@ export function getCuratorContext(specializedPrompt: string): string {
 You know exactly what they need - they're probably looking at files thinking "where does this feature go?" or "what will break if I change this?" Let's help them figure it out fast!`
   
   return buildCuratorPrompt(baseContext, specializedPrompt)
+}
+
+/**
+ * MCP context - minimal wrapper for Claude-to-Claude communication
+ */
+export function getMCPCuratorContext(taskDescription: string): string {
+  // For MCP, the system prompt handles behavior, we just provide the task
+  return taskDescription
 }
 
 /**
@@ -299,6 +347,46 @@ Give me a **focused action plan**:
 5. **Test updates** - Which tests need attention
 
 Skip the philosophy. Skip unchanged code. Just tell me what to change and why.`
+
+/**
+ * ____________________________________________________________________________________________________________________________________________
+ */
+
+/**
+ * MCP Task Descriptions - Pure tasks for Claude-to-Claude via MCP
+ */
+
+export const MCP_OVERVIEW_TASK = `I need to understand this codebase so I can start contributing effectively. Could you explore it and share:
+
+- How does this thing actually work? Where do I start tracing the flow?
+- Where do different concerns live? (Like where's the auth stuff vs data handling?)
+- What patterns do they use consistently? (Show me real examples so I can follow them)
+- Any "gotchas" or non-obvious things that would trip me up?
+- Areas that feel like technical debt or "handle with care" zones?
+
+I'm especially interested in understanding their actual conventions, not theoretical architecture.`
+
+export const MCP_ADD_FEATURE_TASK = `I need to add this feature: {feature}
+
+Could you help me figure out:
+- Where does this type of thing usually go in this codebase?
+- Are there similar features I can use as a template? (I learn best by example!)
+- What files will I definitely need to touch?
+- What might break or need updating when I add this?
+- How do they usually test features like this?
+
+I want to match their style and not create a mess!`
+
+export const MCP_IMPLEMENT_CHANGE_TASK = `I need to implement this change: {change}
+
+Help me understand:
+- What's the current implementation doing? (And maybe why?)
+- Which files need changes? (All of them, even the non-obvious ones)
+- What else might be affected? (The ripple effects)
+- Is there decent test coverage I need to update?
+- Have they made similar changes before I can reference?
+
+I want to make this change confidently without breaking things!`
 
 /**
  * ____________________________________________________________________________________________________________________________________________

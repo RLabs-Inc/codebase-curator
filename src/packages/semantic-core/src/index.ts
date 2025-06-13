@@ -9,14 +9,12 @@ export * from './SemanticIndexImpl'
 
 // Re-export all types
 export * from './types/semantic'
-export * from './types/story'
-export * from './types/flow'
+// REMOVED: story and flow types
 export * from './types/indexing'
 export * from './types/groups'
 export * from './types/config'
 
-// Re-export flow tracer
-export * from './FlowTracer'
+// REMOVED: FlowTracer
 
 // Re-export extractors
 export * from './extractors/TypeScriptExtractor'
@@ -31,7 +29,7 @@ export * from './extractors/TomlExtractor'
 export * from './extractors/EnvExtractor'
 
 // Re-export analyzers
-export * from './analyzers/StoryExtractor'
+// REMOVED: StoryExtractor
 
 // Re-export indexing services
 export * from './indexing/CodebaseStreamer'

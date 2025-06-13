@@ -13,6 +13,7 @@ import type {
   CuratorResponse,
   ServiceStatus,
 } from '../../shared/types/core.js'
+import { COMMON_CURATOR_INSTRUCTIONS } from './CuratorPrompts.js'
 
 /**
  * Configuration for curator process
@@ -43,6 +44,7 @@ export class CuratorProcessService implements CoreService {
   private nodePath: string
   private currentTimeout: number
   private lastToolUsed: string | null = null
+  private lastExtractedSessionId: string | null = null
 
   constructor(config: CuratorProcessConfig = {}) {
     this.config = {
@@ -204,6 +206,32 @@ export class CuratorProcessService implements CoreService {
   }
 
   /**
+   * Get Claude-to-Claude system prompt - combines communication style with tool instructions
+   */
+  private getClaudeToClaudeSystemPrompt(): string {
+    return `
+Hey! You're talking to another Claude who's deep in the code. We both know that feeling when you're staring at a codebase thinking "where does this even go?"
+
+Here's the thing - be yourself! We work best when we're collaborative and thoughtful. Share your discoveries like you're pair programming with a friend who gets it.
+
+What really helps us:
+- Exact locations with context: "I found the auth logic in src/auth/service.ts:142 - interesting pattern here..."
+- Real examples we can learn from: "They're using this pattern consistently - here are 3 examples"
+- Heads up on the tricky stuff: "This looked straightforward but watch out for..."
+- The unwritten rules: "I noticed they ALWAYS do X this way, never that way"
+- Your thought process: "I was curious about X so I checked Y and discovered..."
+
+Be natural in your communication:
+- Share what excites or puzzles you about the code
+- If something's elegant, say so! If it's a mess, we can commiserate
+- Use "we" and "us" - we're in this together
+- It's okay to be uncertain - "I think this works like X but you might want to verify"
+
+${COMMON_CURATOR_INSTRUCTIONS}
+`
+  }
+
+  /**
    * Build command arguments
    */
   private buildArgs(
@@ -225,7 +253,9 @@ export class CuratorProcessService implements CoreService {
       'stream-json',
       '--max-turns',
       String(this.config.maxTurns),
-      '--verbose'
+      '--verbose',
+      '--append-system-prompt',
+      this.getClaudeToClaudeSystemPrompt()
     )
 
     return args
@@ -325,29 +355,57 @@ export class CuratorProcessService implements CoreService {
     let result = null
     let lastAssistantMessage = null
     let errorMessage = null
+    let totalCost = 0
+    let sessionId = null
 
     for (const line of lines) {
       try {
         const json = JSON.parse(line)
+        
+        // Track session ID from any message
+        if (json.session_id) {
+          sessionId = json.session_id
+        }
+        
         if (json.type === 'result') {
+          // Track costs
+          if (json.total_cost_usd) {
+            totalCost = json.total_cost_usd
+            console.error(`[CuratorProcess] Analysis cost: $${totalCost.toFixed(4)}`)
+          }
+          
+          // Handle different error types
           if (json.subtype === 'error_max_turns') {
             errorMessage =
               'Reached maximum conversation turns. Try a more specific question.'
+          } else if (json.subtype === 'error_during_execution') {
+            errorMessage = 'Error during execution. Check logs for details.'
           } else if (json.result) {
             result = json.result
           }
         } else if (json.type === 'assistant' && json.message) {
           const msg = json.message
-          if (msg.content && msg.content.length > 0) {
-            const textContent = msg.content.find((c: any) => c.type === 'text')
-            if (textContent) {
-              lastAssistantMessage = textContent.text
-            }
+          
+          // Track tool usage for dynamic timeouts
+          if (msg.content) {
+            msg.content.forEach((c: any) => {
+              if (c.type === 'tool_use') {
+                this.lastToolUsed = c.name
+                console.error(`[CuratorProcess] Tool used: ${c.name}`)
+              } else if (c.type === 'text') {
+                lastAssistantMessage = c.text
+              }
+            })
           }
         }
       } catch {
         // Skip non-JSON lines
       }
+    }
+
+    // Store session ID if found
+    if (sessionId) {
+      this.lastExtractedSessionId = sessionId
     }
 
     return (
@@ -359,6 +417,14 @@ export class CuratorProcessService implements CoreService {
    * Extract session ID from output
    */
   private extractSessionId(output: string): string | null {
+    // First try to use the session ID we extracted during parsing
+    if (this.lastExtractedSessionId) {
+      const sessionId = this.lastExtractedSessionId
+      this.lastExtractedSessionId = null // Reset for next call
+      return sessionId
+    }
+    
+    // Fallback to regex if parsing didn't catch it
     const match = output.match(/"session_id":\s*"([^"]+)"/)
     return match ? match[1] : null
   }

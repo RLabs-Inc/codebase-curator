@@ -6,9 +6,13 @@ import { CuratorProcessService } from './CuratorProcessService'
 import { SessionService } from '../session/SessionService'
 import {
   getCuratorContext,
+  getMCPCuratorContext,
   OVERVIEW_PROMPT,
+  MCP_OVERVIEW_TASK,
   ADD_FEATURE_PROMPT,
+  MCP_ADD_FEATURE_TASK,
   IMPLEMENT_CHANGE_PROMPT,
+  MCP_IMPLEMENT_CHANGE_TASK,
   INTEGRATION_PROMPT,
   ADD_FEATURE_DIRECT_PROMPT,
   IMPLEMENT_CHANGE_DIRECT_PROMPT,
@@ -355,18 +359,16 @@ export class CuratorService implements CoreService {
    * Get overview prompt
    */
   private getOverviewPrompt(): string {
-    // Use the full curator context with the overview prompt
-    return getCuratorContext(OVERVIEW_PROMPT)
+    // For MCP, use simple task description - system prompt handles behavior
+    return MCP_OVERVIEW_TASK
   }
 
   /**
    * Get feature prompt (direct tool version)
    */
   private getFeaturePrompt(feature: string, analyses: any): string {
-    // Use the direct prompt (simpler version)
-    const directPrompt = ADD_FEATURE_DIRECT_PROMPT.replace('{feature}', feature)
-
-    return getCuratorContext(directPrompt)
+    // For MCP, use simple task description
+    return MCP_ADD_FEATURE_TASK.replace('{feature}', feature)
   }
 
   /**
@@ -377,18 +379,18 @@ export class CuratorService implements CoreService {
     analyses: any,
     scope?: string[]
   ): string {
-    // Use the direct prompt (simpler version)
-    let directPrompt = IMPLEMENT_CHANGE_DIRECT_PROMPT.replace(
+    // For MCP, use simple task description
+    let taskPrompt = MCP_IMPLEMENT_CHANGE_TASK.replace(
       '{change}',
       change
     )
 
     // Add scope if provided
     if (scope && scope.length > 0) {
-      directPrompt = `SCOPE: ${scope.join(', ')}\n\n${directPrompt}`
+      taskPrompt = `SCOPE: ${scope.join(', ')}\n\n${taskPrompt}`
     }
 
-    return getCuratorContext(directPrompt)
+    return taskPrompt
   }
 
   /**

@@ -22,7 +22,7 @@
     "src/packages/*"
   ],
   "bin": {
-    "codebase-curator": "./src/tools/curator-cli/cli.ts",
+    "codebase-curator": "./src/tools/codebase-curator/cli.ts",
     "codebase-curator-mcp": "./src/mcp-servers/codebase-curator/server.ts",
     "smartgrep": "./src/tools/smartgrep/cli.ts",
     "curator-monitor": "./src/tools/monitor/cli.ts"
@@ -30,7 +30,7 @@
   "exports": {
     ".": "./src/mcp-servers/codebase-curator/server.ts",
     "./mcp": "./src/mcp-servers/codebase-curator/server.ts",
-    "./cli": "./src/tools/curator-cli/cli.ts",
+    "./cli": "./src/tools/codebase-curator/cli.ts",
     "./smartgrep": "./src/tools/smartgrep/cli.ts",
     "./monitor": "./src/tools/monitor/cli.ts"
   },

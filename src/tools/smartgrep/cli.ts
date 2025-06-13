@@ -12,7 +12,7 @@ import {
   getGroupTerms,
   groupExists,
   getFormattedGroupList,
-  FlowTracer,
+  // FlowTracer, // REMOVED
   DEFAULT_CONCEPT_GROUPS,
 } from '@codebase-curator/semantic-core'
 import type {
@@ -23,7 +23,7 @@ import type {
 } from '@codebase-curator/semantic-core'
 import { displayResultsForClaude } from './displays/claude-display.js'
 import { CompactSummaryGenerator } from './displays/compactSummary.js'
-import { StoryDisplay } from './commands/story/storyCommand.js'
+// import { StoryDisplay } from './commands/story/storyCommand.js' // REMOVED
 import { execSync } from 'child_process'
 
 async function main() {
@@ -81,22 +81,9 @@ async function main() {
     return
   }
 
-  // Handle flow command for data flow tracing
-  if (command === 'flow') {
-    if (args.length < 2) {
-      console.error('Please provide a term to trace')
-      console.error('Example: smartgrep flow user.email')
-      process.exit(1)
-    }
-    await handleFlow(service, args[1])
-    return
-  }
-
-  // Handle story command for codebase narrative extraction
-  if (command === 'story') {
-    await handleStory(service, projectPath)
-    return
-  }
+  // REMOVED: flow and story commands
+  // These features were removed to keep smartgrep focused on its core strength:
+  // semantic code search with cross-references and pattern matching
 
   // Default: treat everything else as search
   await handleSearch(service, projectPath, args)
@@ -459,7 +446,7 @@ async function handleGroupSearch(
   let fileFilter: string[] | undefined
   let maxResults = 50
   let sortBy: 'relevance' | 'usage' | 'name' | 'file' = 'relevance'
-  let outputFormat: 'pretty' | 'json' | 'compact' | 'human' = 'pretty'
+  let outputFormat: 'pretty' | 'json' | 'compact' | 'human' | 'claude' = 'claude'
   let showContext = true
 
   for (let i = 0; i < args.length; i++) {
@@ -483,6 +470,8 @@ async function handleGroupSearch(
       outputFormat = 'human'
     } else if (arg === '--no-context') {
       showContext = false
+    } else if (arg === '--full') {
+      outputFormat = 'pretty' // Full detailed output
     }
   }
 
@@ -521,8 +510,13 @@ async function handleGroupSearch(
     case 'human':
       displayGroupResults(groupName, conceptGroup, results, showContext)
       break
-    default:
-      // Claude-optimized output by default!
+    case 'claude':
+      // Compact mode for Claudes (default)
+      const compactGen = new CompactSummaryGenerator()
+      console.log(compactGen.generate(`group:${groupName}`, results))
+      break
+    case 'pretty':
+      // Full detailed output (when --full is used)
       displayResultsForClaude(`group:${groupName}`, results, conceptGroup, {
         humanMode: false,
         showContext,
@@ -534,6 +528,11 @@ async function handleGroupSearch(
         typeFilter,
         fileFilter,
       })
+      break
+    default:
+      // Should not reach here, but use compact as fallback
+      const fallbackGen = new CompactSummaryGenerator()
+      console.log(fallbackGen.generate(`group:${groupName}`, results))
   }
 }
 
@@ -1451,9 +1450,9 @@ async function handleChangesImpact(
   }
 }
 
-/**
- * Handle flow command - trace data flow through codebase
- */
+// REMOVED: Flow command handler
+// Kept for potential future use but not exposed in CLI
+/*
 async function handleFlow(service: SemanticService, searchTerm: string) {
   // Load the index first
   const projectPath = process.cwd()
@@ -1504,10 +1503,11 @@ async function handleFlow(service: SemanticService, searchTerm: string) {
     }
   }
 }
+*/
 
-/**
- * Handle story command - extract and display codebase narrative
- */
+// REMOVED: Story command handler
+// Kept for potential future use but not exposed in CLI
+/*
 async function handleStory(service: SemanticService, projectPath: string) {
   console.log('📖 Extracting codebase story...\n')
 
@@ -1529,6 +1529,7 @@ async function handleStory(service: SemanticService, projectPath: string) {
     process.exit(1)
   }
 }
+*/
 
 function showHelp() {
   console.log(`
@@ -1539,16 +1540,6 @@ Usage:
   smartgrep --index                Rebuild the semantic index
   smartgrep refs <term>            Show where a term is referenced
   smartgrep changes                Analyze impact of your uncommitted changes
-
-🌊 Flow Analysis:
-  smartgrep flow <term>            Trace how data flows through functions
-                                   Shows assignments, parameters, calls, returns
-                                   Example: smartgrep flow user.email
-
-📖 Story Extraction:
-  smartgrep story                  Extract narrative patterns from codebase
-                                   Shows flows, errors, boundaries, patterns
-                                   Helps Claudes understand what your code does
 
 🏷️ Group Commands:
   smartgrep group list             List all available concept groups
@@ -1598,13 +1589,16 @@ Usage:
   smartgrep group auth        Authentication & security patterns
   smartgrep group service     Service classes and patterns
   smartgrep group error       Error handling patterns
-  smartgrep group flow        Data flow and streaming
   ...and more! Use "smartgrep group list" to see all available groups
 
 🎨 Custom Groups:
   smartgrep group add payments charge,bill,invoice,transaction
   smartgrep group payments --type function    # Search your custom group
   smartgrep group remove payments             # Remove when no longer needed
+  
+  Why this is AMAZING: Define your project's vocabulary ONCE!
+  After adding "payments" group, just type: smartgrep group payments
+  Finds ALL payment code - no more guessing "was it charge or billing or invoice?"
 
 💡 Examples:
   smartgrep "authenticateUser"                  # Find function with usage info

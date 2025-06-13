@@ -17,7 +17,7 @@ import { YamlExtractor } from './extractors/YamlExtractor'
 import { TomlExtractor } from './extractors/TomlExtractor'
 import { EnvExtractor } from './extractors/EnvExtractor'
 import { FrameworkExtractor } from './extractors/FrameworkExtractor'
-import { StoryExtractor } from './analyzers/StoryExtractor'
+// import { StoryExtractor } from './analyzers/StoryExtractor' // REMOVED
 import type {
   LanguageExtractor,
   SemanticInfo,
@@ -25,7 +25,7 @@ import type {
   SearchResult,
   CrossReference,
 } from './types/semantic'
-import type { CodebaseStory } from './types/story'
+// import type { CodebaseStory } from './types/story' // REMOVED
 import { existsSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'
 import * as fs from 'fs/promises'
@@ -48,8 +48,7 @@ export class SemanticService {
     new TomlExtractor(),
     new EnvExtractor(),
   ]
-  private storyExtractor = new StoryExtractor()
-  private cachedStory: CodebaseStory | null = null
+  // REMOVED: story extraction features
   private projectPath: string
   private silentMode = false
   private isEnsuring = false
@@ -349,10 +348,6 @@ export class SemanticService {
     const statsAfter = await this.getStats()
     const duration = Date.now() - startTime
 
-    // Clear cached story when index updates
-    if (statsBefore.totalEntries !== statsAfter.totalEntries) {
-      this.cachedStory = null
-    }
 
     // Return true if index changed or it took more than 500ms
     return (
@@ -362,9 +357,8 @@ export class SemanticService {
     )
   }
 
-  /**
-   * Extract codebase story from all strings
-   */
+  // REMOVED: Story extraction methods
+  /*
   async extractStory(): Promise<CodebaseStory> {
     // Use cached story if available
     if (this.cachedStory) {
