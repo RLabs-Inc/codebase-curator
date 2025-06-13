@@ -4,21 +4,7 @@ import { watch, type FSWatcher } from 'fs';
 import { Glob } from 'bun';
 import { shouldExclude, loadConfig, mergeExclusions } from '../config/config';
 import { DEFAULT_EXCLUSIONS } from '../types/config';
-
-export interface HashNode {
-  path: string;
-  hash: string;
-  type: 'file' | 'directory';
-  children?: Map<string, HashNode>;
-  lastModified: number;
-  size?: number;
-}
-
-export interface HashTreeDiff {
-  added: string[];
-  modified: string[];
-  deleted: string[];
-}
+import type { HashNode, HashTreeDiff } from '../types/indexing';
 
 export class HashTree {
   private root: HashNode;

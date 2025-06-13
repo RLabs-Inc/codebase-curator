@@ -24,7 +24,7 @@ import type {
   SearchOptions,
   SearchResult,
   CrossReference,
-} from './types'
+} from './types/semantic'
 import type { CodebaseStory } from './types/story'
 import { existsSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'

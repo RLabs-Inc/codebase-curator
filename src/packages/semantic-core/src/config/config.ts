@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 import type { CuratorConfig } from '../types/config'
 import { DEFAULT_EXCLUSIONS } from '../types/config'
-import type { ConceptGroupDefinition } from '../groups/ConceptGroups'
+import type { ConceptGroupDefinition } from '../types/groups'
 
 export function loadConfig(projectPath: string): CuratorConfig {
   // Look for config file in project directory

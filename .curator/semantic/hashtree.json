@@ -1,0 +1,688 @@
+{
+  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator",
+  "hash": "66357e3223b81837",
+  "type": "directory",
+  "lastModified": 0,
+  "children": {
+    "src": {
+      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src",
+      "hash": "36e90e2ce632674a",
+      "type": "directory",
+      "lastModified": 0,
+      "children": {
+        "services": {
+          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/services",
+          "hash": "3598fe2823296373",
+          "type": "directory",
+          "lastModified": 0,
+          "children": {
+            "session": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/services/src/services/session",
+              "hash": "e4fe13eab7af1c0c",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "SessionService.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/services/session/SessionService.ts",
+                  "hash": "1749657395187:6495:72cc71959e0faf01",
+                  "type": "file",
+                  "lastModified": 1749657395187,
+                  "size": 6495
+                }
+              }
+            },
+            "curator": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/services/src/services/curator",
+              "hash": "f4dba41364b5bce0",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "CuratorProcessService.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/services/curator/CuratorProcessService.ts",
+                  "hash": "1749280335150:21758:2057547b1b89a776",
+                  "type": "file",
+                  "lastModified": 1749280335150,
+                  "size": 21758
+                },
+                "CuratorService.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/services/curator/CuratorService.ts",
+                  "hash": "1749065751700:11434:1d922915204ee6e1",
+                  "type": "file",
+                  "lastModified": 1749065751700,
+                  "size": 11434
+                },
+                "CuratorPrompts.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/services/curator/CuratorPrompts.ts",
+                  "hash": "1749403944367:20235:72d982cd3127d847",
+                  "type": "file",
+                  "lastModified": 1749403944367,
+                  "size": 20235
+                }
+              }
+            }
+          }
+        },
+        "mcp-servers": {
+          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/mcp-servers",
+          "hash": "a299a19428fed97e",
+          "type": "directory",
+          "lastModified": 0,
+          "children": {
+            "codebase-curator": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/mcp-servers/src/mcp-servers/codebase-curator",
+              "hash": "b8edead357aa609c",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "tools.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/mcp-servers/codebase-curator/tools.ts",
+                  "hash": "1749487460759:8458:1f1340f3507d80ab",
+                  "type": "file",
+                  "lastModified": 1749487460759,
+                  "size": 8458
+                },
+                "server.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/mcp-servers/codebase-curator/server.ts",
+                  "hash": "1749266360233:15700:cedce2d05c5c9a0f",
+                  "type": "file",
+                  "lastModified": 1749266360233,
+                  "size": 15700
+                }
+              }
+            }
+          }
+        },
+        "packages": {
+          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages",
+          "hash": "a5ed4038ca335d7d",
+          "type": "directory",
+          "lastModified": 0,
+          "children": {
+            "codebase-curator": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/codebase-curator",
+              "hash": "b82c460a37b9f147",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "src": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/codebase-curator/src/packages/codebase-curator/src",
+                  "hash": "97b1970d3a173d4b",
+                  "type": "directory",
+                  "lastModified": 0,
+                  "children": {
+                    "index.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/codebase-curator/src/index.ts",
+                      "hash": "1749659263857:247:73a1926af924e9b6",
+                      "type": "file",
+                      "lastModified": 1749659263857,
+                      "size": 247
+                    },
+                    "packages": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/codebase-curator/src/packages/codebase-curator/src/src/packages/codebase-curator/src/packages",
+                      "hash": "f0ed89178c017d92",
+                      "type": "directory",
+                      "lastModified": 0,
+                      "children": {
+                        "codebase-curator": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/codebase-curator/src/packages/codebase-curator/src/src/packages/codebase-curator/src/packages/src/packages/codebase-curator/src/packages/codebase-curator",
+                          "hash": "50671a36f783dbf4",
+                          "type": "directory",
+                          "lastModified": 0,
+                          "children": {
+                            "scripts": {
+                              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/codebase-curator/src/packages/codebase-curator/src/src/packages/codebase-curator/src/packages/src/packages/codebase-curator/src/packages/codebase-curator/src/packages/codebase-curator/src/packages/codebase-curator/scripts",
+                              "hash": "26fa04fc9d6c9b6d",
+                              "type": "directory",
+                              "lastModified": 0,
+                              "children": {
+                                "install-completions.js": {
+                                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/codebase-curator/src/packages/codebase-curator/scripts/install-completions.js",
+                                  "hash": "1749662699740:0:409638ee2bde459",
+                                  "type": "file",
+                                  "lastModified": 1749662699740,
+                                  "size": 0
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "scripts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/codebase-curator/src/packages/codebase-curator/scripts",
+                  "hash": "16432e8156b7f6d5",
+                  "type": "directory",
+                  "lastModified": 0,
+                  "children": {
+                    "install-completions.js": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/codebase-curator/scripts/install-completions.js",
+                      "hash": "1749662779117:2888:a3a3695f3cee0d7c",
+                      "type": "file",
+                      "lastModified": 1749662779117,
+                      "size": 2888
+                    }
+                  }
+                }
+              }
+            },
+            "smartgrep": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/smartgrep",
+              "hash": "567f3b52530bebfd",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "src": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/smartgrep/src/packages/smartgrep/src",
+                  "hash": "f12570caf3da06a3",
+                  "type": "directory",
+                  "lastModified": 0,
+                  "children": {
+                    "index.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/smartgrep/src/index.ts",
+                      "hash": "1748829873164:233:b58433b1c37c4cf2",
+                      "type": "file",
+                      "lastModified": 1748829873164,
+                      "size": 233
+                    }
+                  }
+                },
+                "scripts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/smartgrep/src/packages/smartgrep/scripts",
+                  "hash": "aaecb1ea6f57e187",
+                  "type": "directory",
+                  "lastModified": 0,
+                  "children": {
+                    "install-completions.js": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/smartgrep/scripts/install-completions.js",
+                      "hash": "1748829873164:4447:c220909fce2743b9",
+                      "type": "file",
+                      "lastModified": 1748829873164,
+                      "size": 4447
+                    }
+                  }
+                }
+              }
+            },
+            "monitor": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/monitor",
+              "hash": "338376f3476dcd9",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "src": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/monitor/src/packages/monitor/src",
+                  "hash": "3bfbe009161985c8",
+                  "type": "directory",
+                  "lastModified": 0,
+                  "children": {
+                    "cli.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/monitor/src/cli.ts",
+                      "hash": "1748830963199:62:d23031fa8c8b1914",
+                      "type": "file",
+                      "lastModified": 1748830963199,
+                      "size": 62
+                    }
+                  }
+                },
+                "scripts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/monitor/src/packages/monitor/scripts",
+                  "hash": "1d707a0d410899c1",
+                  "type": "directory",
+                  "lastModified": 0,
+                  "children": {
+                    "install-completions.js": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/monitor/scripts/install-completions.js",
+                      "hash": "1748830903579:4710:8452428d81fd4460",
+                      "type": "file",
+                      "lastModified": 1748830903579,
+                      "size": 4710
+                    }
+                  }
+                }
+              }
+            },
+            "semantic-core": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/semantic-core",
+              "hash": "c1fbdf1b64271e7d",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "src": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/semantic-core/src/packages/semantic-core/src",
+                  "hash": "47005b2d5b82a03e",
+                  "type": "directory",
+                  "lastModified": 0,
+                  "children": {
+                    "SemanticService.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/SemanticService.ts",
+                      "hash": "1749653675546:12889:19c2844fa0a7d6d1",
+                      "type": "file",
+                      "lastModified": 1749653675546,
+                      "size": 12889
+                    },
+                    "SemanticIndexImpl.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/SemanticIndexImpl.ts",
+                      "hash": "1749653691072:16251:54569897e7330359",
+                      "type": "file",
+                      "lastModified": 1749653691072,
+                      "size": 16251
+                    },
+                    "index.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/index.ts",
+                      "hash": "1749653978550:1297:b56f7ef627fe4fe5",
+                      "type": "file",
+                      "lastModified": 1749653978550,
+                      "size": 1297
+                    },
+                    "FlowTracer.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/FlowTracer.ts",
+                      "hash": "1749653711557:8993:a25f45d69fc3d997",
+                      "type": "file",
+                      "lastModified": 1749653711557,
+                      "size": 8993
+                    },
+                    "extractors": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/semantic-core/src/packages/semantic-core/src/src/packages/semantic-core/src/extractors",
+                      "hash": "9edf75af36e59e64",
+                      "type": "directory",
+                      "lastModified": 0,
+                      "children": {
+                        "RustExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/RustExtractor.ts",
+                          "hash": "1749068828123:15944:1721ee52f55277ef",
+                          "type": "file",
+                          "lastModified": 1749068828123,
+                          "size": 15944
+                        },
+                        "TomlExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/TomlExtractor.ts",
+                          "hash": "1748834746389:13987:790a14a19ae4d5d0",
+                          "type": "file",
+                          "lastModified": 1748834746389,
+                          "size": 13987
+                        },
+                        "SwiftExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/SwiftExtractor.ts",
+                          "hash": "1748834864906:15094:ad89ba61cd4ca47a",
+                          "type": "file",
+                          "lastModified": 1748834864906,
+                          "size": 15094
+                        },
+                        "TypeScriptExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/TypeScriptExtractor.ts",
+                          "hash": "1749068621409:16699:9e7e709206beaf9e",
+                          "type": "file",
+                          "lastModified": 1749068621409,
+                          "size": 16699
+                        },
+                        "YamlExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/YamlExtractor.ts",
+                          "hash": "1748834646488:14102:bafa96a5d825a9ca",
+                          "type": "file",
+                          "lastModified": 1748834646488,
+                          "size": 14102
+                        },
+                        "PythonExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/PythonExtractor.ts",
+                          "hash": "1749068693856:14940:22f8552f7f46a40",
+                          "type": "file",
+                          "lastModified": 1749068693856,
+                          "size": 14940
+                        },
+                        "EnvExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/EnvExtractor.ts",
+                          "hash": "1749596185463:9857:c80ecac8d7f3ca8d",
+                          "type": "file",
+                          "lastModified": 1749596185463,
+                          "size": 9857
+                        },
+                        "JsonExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/JsonExtractor.ts",
+                          "hash": "1748836567549:10819:9334aee71ddd4910",
+                          "type": "file",
+                          "lastModified": 1748836567549,
+                          "size": 10819
+                        },
+                        "FrameworkExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/FrameworkExtractor.ts",
+                          "hash": "1749596245181:29984:b1b7b95ee1f11d71",
+                          "type": "file",
+                          "lastModified": 1749596245181,
+                          "size": 29984
+                        },
+                        "ShellExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/ShellExtractor.ts",
+                          "hash": "1749068878878:15937:367ea3a0d85aaff4",
+                          "type": "file",
+                          "lastModified": 1749068878878,
+                          "size": 15937
+                        },
+                        "GoExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/extractors/GoExtractor.ts",
+                          "hash": "1749068781897:14198:2d3efd315a569531",
+                          "type": "file",
+                          "lastModified": 1749068781897,
+                          "size": 14198
+                        }
+                      }
+                    },
+                    "indexing": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/semantic-core/src/packages/semantic-core/src/src/packages/semantic-core/src/indexing",
+                      "hash": "57bd5265b0da0c32",
+                      "type": "directory",
+                      "lastModified": 0,
+                      "children": {
+                        "HashTree.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/indexing/HashTree.ts",
+                          "hash": "1749653876377:14307:d56b1f32e10bfb51",
+                          "type": "file",
+                          "lastModified": 1749653876377,
+                          "size": 14307
+                        },
+                        "IncrementalIndexer.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/indexing/IncrementalIndexer.ts",
+                          "hash": "1749653891729:4686:c38bd245968bd133",
+                          "type": "file",
+                          "lastModified": 1749653891729,
+                          "size": 4686
+                        },
+                        "CodebaseStreamer.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/indexing/CodebaseStreamer.ts",
+                          "hash": "1749653913172:11572:c033639d6faa95e5",
+                          "type": "file",
+                          "lastModified": 1749653913172,
+                          "size": 11572
+                        }
+                      }
+                    },
+                    "groups": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/semantic-core/src/packages/semantic-core/src/src/packages/semantic-core/src/groups",
+                      "hash": "3b363d1f4e8aaf0d",
+                      "type": "directory",
+                      "lastModified": 0,
+                      "children": {
+                        "ConceptGroups.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/groups/ConceptGroups.ts",
+                          "hash": "1749653948075:9439:c2be5dfa91872cae",
+                          "type": "file",
+                          "lastModified": 1749653948075,
+                          "size": 9439
+                        },
+                        "index.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/groups/index.ts",
+                          "hash": "1748917654457:378:606c1e9e321435a3",
+                          "type": "file",
+                          "lastModified": 1748917654457,
+                          "size": 378
+                        }
+                      }
+                    },
+                    "config": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/semantic-core/src/packages/semantic-core/src/src/packages/semantic-core/src/config",
+                      "hash": "2d8e160cc55bef04",
+                      "type": "directory",
+                      "lastModified": 0,
+                      "children": {
+                        "config.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/config/config.ts",
+                          "hash": "1749672018339:3786:c7455b1471ca9894",
+                          "type": "file",
+                          "lastModified": 1749672018339,
+                          "size": 3786
+                        }
+                      }
+                    },
+                    "types": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/semantic-core/src/packages/semantic-core/src/src/packages/semantic-core/src/types",
+                      "hash": "292ed8dfa211ff7f",
+                      "type": "directory",
+                      "lastModified": 0,
+                      "children": {
+                        "indexing.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/types/indexing.ts",
+                          "hash": "1749653605557:1333:fb41b380f61a2b8d",
+                          "type": "file",
+                          "lastModified": 1749653605557,
+                          "size": 1333
+                        },
+                        "groups.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/types/groups.ts",
+                          "hash": "1749653934621:345:842028e7884489a",
+                          "type": "file",
+                          "lastModified": 1749653934621,
+                          "size": 345
+                        },
+                        "flow.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/types/flow.ts",
+                          "hash": "1749653522866:587:188bc009cb728bf7",
+                          "type": "file",
+                          "lastModified": 1749653522866,
+                          "size": 587
+                        },
+                        "index.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/types/index.ts",
+                          "hash": "1749653991461:365:d5977b4c4c45ebb7",
+                          "type": "file",
+                          "lastModified": 1749653991461,
+                          "size": 365
+                        },
+                        "config.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/types/config.ts",
+                          "hash": "1748917599409:2590:28180e15e872724d",
+                          "type": "file",
+                          "lastModified": 1748917599409,
+                          "size": 2590
+                        },
+                        "semantic.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/types/semantic.ts",
+                          "hash": "1749671898930:2429:d1751d0e721e2fcd",
+                          "type": "file",
+                          "lastModified": 1749671898930,
+                          "size": 2429
+                        },
+                        "story.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/types/story.ts",
+                          "hash": "1749526508920:3288:7bf7c3c8b3225299",
+                          "type": "file",
+                          "lastModified": 1749526508920,
+                          "size": 3288
+                        }
+                      }
+                    },
+                    "analyzers": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/packages/src/packages/semantic-core/src/packages/semantic-core/src/src/packages/semantic-core/src/analyzers",
+                      "hash": "eaec71784dbd412a",
+                      "type": "directory",
+                      "lastModified": 0,
+                      "children": {
+                        "StoryExtractor.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/analyzers/StoryExtractor.ts",
+                          "hash": "1749523506753:17491:59ecba3b2e04e304",
+                          "type": "file",
+                          "lastModified": 1749523506753,
+                          "size": 17491
+                        },
+                        "StoryAnalyzer.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/packages/semantic-core/src/analyzers/StoryAnalyzer.ts",
+                          "hash": "1749521663577:11105:f6714d87a498f69e",
+                          "type": "file",
+                          "lastModified": 1749521663577,
+                          "size": 11105
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "shared": {
+          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/shared",
+          "hash": "f8836837073b26",
+          "type": "directory",
+          "lastModified": 0,
+          "children": {
+            "types": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/shared/src/shared/types",
+              "hash": "a8361125d2818da0",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "core.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/shared/types/core.ts",
+                  "hash": "1748826561684:2222:4c6eaf792d781751",
+                  "type": "file",
+                  "lastModified": 1748826561684,
+                  "size": 2222
+                },
+                "session.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/shared/types/session.ts",
+                  "hash": "1749657381145:779:b00bb8214c52f837",
+                  "type": "file",
+                  "lastModified": 1749657381145,
+                  "size": 779
+                },
+                "activity.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/shared/types/activity.ts",
+                  "hash": "1749321965061:4224:dee23b44a15679ff",
+                  "type": "file",
+                  "lastModified": 1749321965061,
+                  "size": 4224
+                },
+                "index.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/shared/types/index.ts",
+                  "hash": "1749657406380:220:e7eded71609ac666",
+                  "type": "file",
+                  "lastModified": 1749657406380,
+                  "size": 220
+                }
+              }
+            }
+          }
+        },
+        "tools": {
+          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/tools",
+          "hash": "d111cdeb47395496",
+          "type": "directory",
+          "lastModified": 0,
+          "children": {
+            "codebase-curator": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/tools/src/tools/codebase-curator",
+              "hash": "2e540df0ebfafc02",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "cli.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/tools/codebase-curator/cli.ts",
+                  "hash": "1748889306252:12087:7299feee90948c18",
+                  "type": "file",
+                  "lastModified": 1748889306252,
+                  "size": 12087
+                }
+              }
+            },
+            "smartgrep": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/tools/src/tools/smartgrep",
+              "hash": "d7a813ba661e3a6b",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "cli.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/tools/smartgrep/cli.ts",
+                  "hash": "1749595767193:53654:6018686435fdf1e0",
+                  "type": "file",
+                  "lastModified": 1749595767193,
+                  "size": 53654
+                },
+                "commands": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/tools/src/tools/smartgrep/src/tools/smartgrep/commands",
+                  "hash": "59528cc90cef1ef9",
+                  "type": "directory",
+                  "lastModified": 0,
+                  "children": {
+                    "story": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/tools/src/tools/smartgrep/src/tools/smartgrep/commands/src/tools/smartgrep/commands/story",
+                      "hash": "9ed6cf31f1142739",
+                      "type": "directory",
+                      "lastModified": 0,
+                      "children": {
+                        "storyCommand.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/tools/smartgrep/commands/story/storyCommand.ts",
+                          "hash": "1749524955854:9443:c501d582163df063",
+                          "type": "file",
+                          "lastModified": 1749524955854,
+                          "size": 9443
+                        },
+                        "storyIntegration.ts": {
+                          "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/tools/smartgrep/commands/story/storyIntegration.ts",
+                          "hash": "1749522946498:12327:ff72b12e2f1c51fc",
+                          "type": "file",
+                          "lastModified": 1749522946498,
+                          "size": 12327
+                        }
+                      }
+                    }
+                  }
+                },
+                "displays": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/tools/src/tools/smartgrep/src/tools/smartgrep/displays",
+                  "hash": "e48ac22ae4b22d12",
+                  "type": "directory",
+                  "lastModified": 0,
+                  "children": {
+                    "claude-display.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/tools/smartgrep/displays/claude-display.ts",
+                      "hash": "1749595613263:13930:e777b0145d2fa7d6",
+                      "type": "file",
+                      "lastModified": 1749595613263,
+                      "size": 13930
+                    },
+                    "searchSummary.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/tools/smartgrep/displays/searchSummary.ts",
+                      "hash": "1749595650906:16058:87581abfe411da07",
+                      "type": "file",
+                      "lastModified": 1749595650906,
+                      "size": 16058
+                    },
+                    "storyDisplay.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/tools/smartgrep/displays/storyDisplay.ts",
+                      "hash": "1749596031763:8586:c217e8e07a261d82",
+                      "type": "file",
+                      "lastModified": 1749596031763,
+                      "size": 8586
+                    },
+                    "compactSummary.ts": {
+                      "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/tools/smartgrep/displays/compactSummary.ts",
+                      "hash": "1749524822752:35589:b6f8a3141948b1aa",
+                      "type": "file",
+                      "lastModified": 1749524822752,
+                      "size": 35589
+                    }
+                  }
+                }
+              }
+            },
+            "monitor": {
+              "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/src/tools/src/tools/monitor",
+              "hash": "c52823ce24c5e387",
+              "type": "directory",
+              "lastModified": 0,
+              "children": {
+                "cli.ts": {
+                  "path": "/Users/rusty/Documents/Projects/AI/Tools/ClaudeTools/codebase-curator/src/tools/monitor/cli.ts",
+                  "hash": "1748829873165:26655:e0273a89ddf76a39",
+                  "type": "file",
+                  "lastModified": 1748829873165,
+                  "size": 26655
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

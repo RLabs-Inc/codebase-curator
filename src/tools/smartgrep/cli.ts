@@ -19,12 +19,12 @@ import type {
   SearchResult,
   CrossReference,
   ConceptGroupDefinition,
+  SemanticInfo,
 } from '@codebase-curator/semantic-core'
-import { displayResultsForClaude, displayResultsBodyClaude } from './claude-display.js'
-import { CompactSummaryGenerator } from './compactSummary.js'
-import { StoryDisplay } from './storyCommand.js'
+import { displayResultsForClaude } from './displays/claude-display.js'
+import { CompactSummaryGenerator } from './displays/compactSummary.js'
+import { StoryDisplay } from './commands/story/storyCommand.js'
 import { execSync } from 'child_process'
-
 
 async function main() {
   const args = process.argv.slice(2)
@@ -46,11 +46,11 @@ async function main() {
       case '--index':
         await handleIndex(service, projectPath)
         break
-      
+
       case '--list-groups': // Keep this for backward compatibility
         await handleGroupCommand(projectPath, ['list'])
         break
-        
+
       default:
         console.error(`Unknown command: ${command}`)
         showHelp()
@@ -80,7 +80,7 @@ async function main() {
     await handleChangesImpact(service, projectPath, args.slice(1))
     return
   }
-  
+
   // Handle flow command for data flow tracing
   if (command === 'flow') {
     if (args.length < 2) {
@@ -106,12 +106,14 @@ async function main() {
  * Handle all group-related commands
  */
 async function handleGroupCommand(
-  projectPath: string, 
-  args: string[], 
+  projectPath: string,
+  args: string[],
   service?: SemanticService
 ) {
   if (args.length === 0) {
-    console.error('Please specify a group action: list, add, remove, or <group-name>')
+    console.error(
+      'Please specify a group action: list, add, remove, or <group-name>'
+    )
     console.error('\nExamples:')
     console.error('  smartgrep group list')
     console.error('  smartgrep group auth')
@@ -121,28 +123,33 @@ async function handleGroupCommand(
   }
 
   const action = args[0].toLowerCase()
-  
+
   switch (action) {
     case 'list':
       await handleGroupList(projectPath)
       break
-      
+
     case 'add':
       await handleGroupAdd(projectPath, args.slice(1))
       break
-      
+
     case 'remove':
     case 'rm':
       await handleGroupRemove(projectPath, args.slice(1))
       break
-      
+
     default:
       // Treat as group search
       if (!service) {
         console.error('Service not available for group search')
         process.exit(1)
       }
-      await handleGroupSearchCommand(service, projectPath, action, args.slice(1))
+      await handleGroupSearchCommand(
+        service,
+        projectPath,
+        action,
+        args.slice(1)
+      )
   }
 }
 
@@ -155,13 +162,18 @@ async function handleGroupList(projectPath: string) {
 async function handleGroupAdd(projectPath: string, args: string[]) {
   if (args.length < 2) {
     console.error('Usage: smartgrep group add <name> <term1,term2,term3...>')
-    console.error('Example: smartgrep group add payments charge,bill,invoice,transaction')
+    console.error(
+      'Example: smartgrep group add payments charge,bill,invoice,transaction'
+    )
     process.exit(1)
   }
 
   const groupName = args[0].toLowerCase()
   const termsString = args[1]
-  const terms = termsString.split(',').map(t => t.trim()).filter(t => t)
+  const terms = termsString
+    .split(',')
+    .map((t) => t.trim())
+    .filter((t) => t)
 
   if (terms.length === 0) {
     console.error('Please provide at least one term for the group')
@@ -170,7 +182,7 @@ async function handleGroupAdd(projectPath: string, args: string[]) {
 
   // Load existing config
   const config = loadConfig(projectPath)
-  
+
   // Initialize customGroups if not exists
   if (!config.customGroups) {
     config.customGroups = {}
@@ -183,7 +195,9 @@ async function handleGroupAdd(projectPath: string, args: string[]) {
   const configPath = getConfigPath(projectPath)
   await Bun.write(configPath, JSON.stringify(config, null, 2))
 
-  console.log(`✅ Added custom group "${groupName}" with ${terms.length} terms:`)
+  console.log(
+    `✅ Added custom group "${groupName}" with ${terms.length} terms:`
+  )
   console.log(`   Terms: ${terms.join(', ')}`)
   console.log(`   Usage: smartgrep group ${groupName}`)
 }
@@ -196,10 +210,10 @@ async function handleGroupRemove(projectPath: string, args: string[]) {
   }
 
   const groupName = args[0].toLowerCase()
-  
+
   // Load existing config
   const config = loadConfig(projectPath)
-  
+
   if (!config.customGroups || !config.customGroups[groupName]) {
     console.error(`❌ Custom group "${groupName}" not found`)
     console.error('Use "smartgrep group list" to see available groups')
@@ -233,7 +247,7 @@ async function handleGroupSearchCommand(
 ) {
   const config = loadConfig(projectPath)
   const customGroups = parseCustomGroups(config.customGroups || {})
-  
+
   if (!groupExists(groupName, customGroups)) {
     console.error(`Unknown concept group: "${groupName}"`)
     console.error('\nAvailable groups:')
@@ -241,9 +255,9 @@ async function handleGroupSearchCommand(
     console.log(formattedList)
     process.exit(1)
   }
-  
+
   const conceptGroup = getGroupTerms(groupName, customGroups)
-  
+
   // Search using the concept group
   await handleGroupSearch(
     service,
@@ -291,7 +305,7 @@ async function searchWithNot(
   process.stdout.write(`🔍 Searching for all items...`)
   const allResults = await service.search('', { ...options, maxResults: 1000 })
   process.stdout.write(' ✓\n')
-  
+
   process.stdout.write(`🔍 Finding items to exclude ("${excludeTerm}")...`)
   const excludeResults = await service.search(excludeTerm, options)
   process.stdout.write(' ✓\n')
@@ -319,7 +333,10 @@ async function searchWithRegex(
     const regex = new RegExp(pattern)
     // Search with empty query to get all results, then filter by regex
     process.stdout.write(`🔍 Searching for regex pattern /${pattern}/...`)
-    const allResults = await service.search('', { ...options, maxResults: 1000 })
+    const allResults = await service.search('', {
+      ...options,
+      maxResults: 1000,
+    })
     const filtered = allResults.filter((r) => regex.test(r.info.term))
     process.stdout.write(' ✓\n')
     return filtered
@@ -361,21 +378,23 @@ function displayResultsCompact(query: string, results: SearchResult[]) {
 async function handleIndex(service: SemanticService, projectPath: string) {
   // Check if index exists
   const hasExistingIndex = await service.loadIndex(projectPath)
-  
+
   if (!hasExistingIndex) {
     // No index exists - do initial indexing
     console.log(`📂 Building initial index at: ${projectPath}`)
-    
+
     const startTime = Date.now()
     const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
     let spinnerIndex = 0
-    
+
     const interval = setInterval(() => {
       const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
-      process.stdout.write(`\r${spinner[spinnerIndex]} Indexing... (${elapsed}s)`)
+      process.stdout.write(
+        `\r${spinner[spinnerIndex]} Indexing... (${elapsed}s)`
+      )
       spinnerIndex = (spinnerIndex + 1) % spinner.length
     }, 100)
-    
+
     try {
       await service.indexCodebase(projectPath)
       clearInterval(interval)
@@ -390,17 +409,19 @@ async function handleIndex(service: SemanticService, projectPath: string) {
   } else {
     // Index exists - do incremental update
     console.log(`📂 Updating index at: ${projectPath}`)
-    
+
     const startTime = Date.now()
     const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
     let spinnerIndex = 0
-    
+
     const interval = setInterval(() => {
       const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
-      process.stdout.write(`\r${spinner[spinnerIndex]} Checking for changes... (${elapsed}s)`)
+      process.stdout.write(
+        `\r${spinner[spinnerIndex]} Checking for changes... (${elapsed}s)`
+      )
       spinnerIndex = (spinnerIndex + 1) % spinner.length
     }, 100)
-    
+
     try {
       const hadChanges = await service.updateIndex()
       clearInterval(interval)
@@ -434,7 +455,7 @@ async function handleGroupSearch(
   }
 
   // Parse additional options (filters, sorting, etc.)
-  let typeFilter: string[] | undefined
+  let typeFilter: Partial<SemanticInfo['type'][]> | undefined
   let fileFilter: string[] | undefined
   let maxResults = 50
   let sortBy: 'relevance' | 'usage' | 'name' | 'file' = 'relevance'
@@ -445,7 +466,9 @@ async function handleGroupSearch(
     const arg = args[i]
 
     if (arg === '--type' && args[i + 1]) {
-      typeFilter = args[++i].split(',')
+      typeFilter = args[++i].split(',') as unknown as Partial<
+        SemanticInfo['type'][]
+      >
     } else if (arg === '--file' && args[i + 1]) {
       fileFilter = args[++i].split(',')
     } else if (arg === '--max' && args[i + 1]) {
@@ -509,7 +532,7 @@ async function handleGroupSearch(
         showLanguageInfo: true,
         showMetadata: true,
         typeFilter,
-        fileFilter
+        fileFilter,
       })
   }
 }
@@ -588,20 +611,23 @@ async function handleSearch(
 
   // Parse search arguments
   let query = ''
-  let typeFilter: string[] | undefined
+  let typeFilter: Partial<SemanticInfo['type'][]> | undefined
   let fileFilter: string[] | undefined
   let maxResults = 50
   let searchMode: 'fuzzy' | 'exact' | 'regex' = 'fuzzy'
   let showContext = true
   let sortBy: 'relevance' | 'usage' | 'name' | 'file' = 'relevance'
-  let outputFormat: 'pretty' | 'json' | 'compact' | 'human' | 'claude' = 'claude'
+  let outputFormat: 'pretty' | 'json' | 'compact' | 'human' | 'claude' =
+    'claude'
   let fullOutput = false
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i]
 
     if (arg === '--type' && args[i + 1]) {
-      typeFilter = args[++i].split(',')
+      typeFilter = args[++i].split(',') as unknown as Partial<
+        SemanticInfo['type'][]
+      >
     } else if (arg === '--file' && args[i + 1]) {
       fileFilter = args[++i].split(',')
     } else if (arg === '--max' && args[i + 1]) {
@@ -637,41 +663,52 @@ async function handleSearch(
   let results: SearchResult[] = []
 
   // Check for multi-word search (spaces but not special operators)
-  const hasSpaces = query.includes(' ') && !query.includes('|') && !query.includes('&') && !query.startsWith('!') && !query.startsWith('/')
-  
+  const hasSpaces =
+    query.includes(' ') &&
+    !query.includes('|') &&
+    !query.includes('&') &&
+    !query.startsWith('!') &&
+    !query.startsWith('/')
+
   if (hasSpaces) {
     // Multi-word search: Try AND first, then OR
-    const words = query.split(/\s+/).filter(w => w.length > 0)
-    
+    const words = query.split(/\s+/).filter((w) => w.length > 0)
+
     if (words.length > 1) {
-      process.stdout.write(`🔍 Searching for all terms: ${words.join(' AND ')}...`)
-      
+      process.stdout.write(
+        `🔍 Searching for all terms: ${words.join(' AND ')}...`
+      )
+
       // First try AND search (all words must match)
       results = await searchWithAnd(service, words, {
         type: typeFilter,
         files: fileFilter,
         maxResults: maxResults * 2, // Get more results for filtering
       })
-      
+
       process.stdout.write(' ✓\n')
-      
+
       if (results.length === 0) {
         // Fall back to OR search
         console.log(`\n💡 No results with all terms. Searching for any term...`)
         results = await service.searchGroup(words)
-        
+
         if (results.length > 0) {
-          console.log(`✨ Found ${results.length} results with partial matches!\n`)
+          console.log(
+            `✨ Found ${results.length} results with partial matches!\n`
+          )
         }
       } else {
-        console.log(`✅ Found ${results.length} results containing all terms!\n`)
+        console.log(
+          `✅ Found ${results.length} results containing all terms!\n`
+        )
       }
     } else {
       // Single word after trimming - fall through to normal search
       query = words[0]
     }
   }
-  
+
   // Note: Concept groups are now handled by the 'group' command
   if (!hasSpaces && query.includes('|')) {
     // OR pattern: term1|term2|term3
@@ -715,70 +752,90 @@ async function handleSearch(
       exact: searchMode === 'exact',
     })
     process.stdout.write(' ✓\n')
-    
+
     // If no results, try fallback strategies
     if (results.length === 0 && !searchMode) {
       const groups = getAvailableGroups(projectPath)
-      
+
       // Priority 1: Try smart term splitting FIRST (most relevant to original query)
       if (canSmartSplit(query)) {
         console.log(`\n💡 No exact matches. Trying smart term splitting...`)
         const splitTerms = smartSplitTerms(query)
-        
+
         if (splitTerms.length > 1) {
           console.log(`   Searching for: ${splitTerms.join(' OR ')}\n`)
           results = await service.searchGroup(splitTerms)
-          
+
           if (results.length > 0) {
-            console.log(`✨ Found ${results.length} results using split terms!\n`)
-            
+            console.log(
+              `✨ Found ${results.length} results using split terms!\n`
+            )
+
             // Note if any split term is also a concept group (but don't search it yet)
             const matchingGroups: typeof groups = []
             for (const term of splitTerms) {
-              const termGroup = groups.find(g => g.name.toLowerCase() === term.toLowerCase())
+              const termGroup = groups.find(
+                (g) => g.name.toLowerCase() === term.toLowerCase()
+              )
               if (termGroup) {
-                console.log(`   🎯 Note: "${term}" is also a concept group (${termGroup.emoji} ${termGroup.description})`)
+                console.log(
+                  `   🎯 Note: "${term}" is also a concept group (${termGroup.emoji} ${termGroup.description})`
+                )
                 matchingGroups.push(termGroup)
               }
             }
           }
         }
       }
-      
+
       // Priority 2: If still no results, check if query matches a concept group
       if (results.length === 0) {
-        const matchingGroup = groups.find(g => g.name.toLowerCase() === query.toLowerCase())
-        
+        const matchingGroup = groups.find(
+          (g) => g.name.toLowerCase() === query.toLowerCase()
+        )
+
         if (matchingGroup) {
-          console.log(`\n🎯 Still no matches, but "${query}" is a concept group!`)
-          console.log(`   Using group search for: ${matchingGroup.emoji} ${matchingGroup.description}\n`)
+          console.log(
+            `\n🎯 Still no matches, but "${query}" is a concept group!`
+          )
+          console.log(
+            `   Using group search for: ${matchingGroup.emoji} ${matchingGroup.description}\n`
+          )
           results = await service.searchGroup(matchingGroup.terms)
-          
+
           if (results.length > 0) {
-            console.log(`✨ Found ${results.length} results using ${matchingGroup.name} group!\n`)
+            console.log(
+              `✨ Found ${results.length} results using ${matchingGroup.name} group!\n`
+            )
           }
         }
       }
-      
+
       // Priority 3: If STILL no results, try concept groups for split terms
       if (results.length === 0 && canSmartSplit(query)) {
         const splitTerms = smartSplitTerms(query)
         const groupTerms: string[] = []
-        
+
         for (const term of splitTerms) {
-          const termGroup = groups.find(g => g.name.toLowerCase() === term.toLowerCase())
+          const termGroup = groups.find(
+            (g) => g.name.toLowerCase() === term.toLowerCase()
+          )
           if (termGroup) {
-            console.log(`\n🎯 Last resort: "${term}" matches concept group ${termGroup.emoji} ${termGroup.description}`)
+            console.log(
+              `\n🎯 Last resort: "${term}" matches concept group ${termGroup.emoji} ${termGroup.description}`
+            )
             groupTerms.push(...termGroup.terms)
           }
         }
-        
+
         if (groupTerms.length > 0) {
           console.log(`   Searching concept group terms...\n`)
           results = await service.searchGroup([...new Set(groupTerms)]) // Remove duplicates
-          
+
           if (results.length > 0) {
-            console.log(`✨ Found ${results.length} results using concept groups for split terms!\n`)
+            console.log(
+              `✨ Found ${results.length} results using concept groups for split terms!\n`
+            )
           }
         }
       }
@@ -808,7 +865,7 @@ async function handleSearch(
       } catch {
         // Ignore story errors, continue without it
       }
-      
+
       const compactGen = new CompactSummaryGenerator({ story })
       console.log(compactGen.generate(query, results))
       break
@@ -826,9 +883,15 @@ async function handleSearch(
         typeFilter,
         fileFilter,
         // Track if we used a fallback strategy
-        fallbackUsed: results.length > 0 && searchMode === 'fuzzy' && 
-          (canSmartSplit(query) || getAvailableGroups(projectPath).some(g => g.name.toLowerCase() === query.toLowerCase())) 
-          ? 'split' : undefined
+        fallbackUsed:
+          results.length > 0 &&
+          searchMode === 'fuzzy' &&
+          (canSmartSplit(query) ||
+            getAvailableGroups(projectPath).some(
+              (g) => g.name.toLowerCase() === query.toLowerCase()
+            ))
+            ? 'split'
+            : undefined,
       })
       break
   }
@@ -980,7 +1043,7 @@ function displayResultsBody(
             )
             console.log(`│      ${usage.context.trim()}`)
           })
-          if (result.usageCount > 3) {
+          if (result.usageCount && result.usageCount > 3) {
             console.log(`│      ... and ${result.usageCount - 3} more`)
           }
         }
@@ -1022,7 +1085,7 @@ async function handleChangesImpact(
   args: string[]
 ) {
   const isCompact = args.includes('--compact') || args.includes('-c')
-  
+
   // Load index first
   if (!isCompact) {
     process.stdout.write('📚 Loading semantic index...')
@@ -1041,40 +1104,50 @@ async function handleChangesImpact(
   // Get git changes
   try {
     // Get changed files with status
-    const stagedRaw = execSync('git diff --cached --name-status', { 
-      cwd: projectPath, 
-      encoding: 'utf-8' 
-    }).trim().split('\n').filter(f => f.length > 0)
-    
-    const unstagedRaw = execSync('git diff --name-status', { 
-      cwd: projectPath, 
-      encoding: 'utf-8' 
-    }).trim().split('\n').filter(f => f.length > 0)
-    
-    // Parse file changes with their status
-    const parseChanges = (lines: string[]) => lines.map(line => {
-      const [status, ...pathParts] = line.split('\t')
-      return {
-        status: status[0] as 'M' | 'A' | 'D' | 'R',
-        path: pathParts[0]
-      }
+    const stagedRaw = execSync('git diff --cached --name-status', {
+      cwd: projectPath,
+      encoding: 'utf-8',
     })
-    
+      .trim()
+      .split('\n')
+      .filter((f) => f.length > 0)
+
+    const unstagedRaw = execSync('git diff --name-status', {
+      cwd: projectPath,
+      encoding: 'utf-8',
+    })
+      .trim()
+      .split('\n')
+      .filter((f) => f.length > 0)
+
+    // Parse file changes with their status
+    const parseChanges = (lines: string[]) =>
+      lines.map((line) => {
+        const [status, ...pathParts] = line.split('\t')
+        return {
+          status: status[0] as 'M' | 'A' | 'D' | 'R',
+          path: pathParts[0],
+        }
+      })
+
     const staged = parseChanges(stagedRaw)
     const unstaged = parseChanges(unstagedRaw)
-    
+
     // Combine and deduplicate
-    const allChangesMap = new Map<string, { status: 'M' | 'A' | 'D' | 'R', path: string }>()
-    staged.forEach(change => {
+    const allChangesMap = new Map<
+      string,
+      { status: 'M' | 'A' | 'D' | 'R'; path: string }
+    >()
+    staged.forEach((change) => {
       allChangesMap.set(change.path, change)
     })
-    unstaged.forEach(change => {
+    unstaged.forEach((change) => {
       if (!allChangesMap.has(change.path)) {
         allChangesMap.set(change.path, change)
       }
     })
     const allChanged = Array.from(allChangesMap.values())
-    
+
     if (allChanged.length === 0) {
       if (!isCompact) {
         console.log('\n✨ No changes in working directory')
@@ -1085,18 +1158,25 @@ async function handleChangesImpact(
     // Get branch info
     const branch = execSync('git rev-parse --abbrev-ref HEAD', {
       cwd: projectPath,
-      encoding: 'utf-8'
+      encoding: 'utf-8',
     }).trim()
 
     if (!isCompact) {
       console.log(`\n📊 Changes Impact Analysis`)
       console.log(`📍 Branch: ${branch}`)
-      console.log(`📝 Status: ${staged.length} staged, ${unstaged.length} unstaged\n`)
+      console.log(
+        `📝 Status: ${staged.length} staged, ${unstaged.length} unstaged\n`
+      )
     }
 
     // Analyze each changed file
     let totalImpact = 0
-    const highImpactSymbols: { symbol: string, file: string, uses: number, refs?: any[] }[] = []
+    const highImpactSymbols: {
+      symbol: string
+      file: string
+      uses: number
+      refs?: any[]
+    }[] = []
     const impactedFiles = new Set<string>()
 
     for (const change of allChanged) {
@@ -1107,19 +1187,24 @@ async function handleChangesImpact(
         }
         continue
       }
-      
+
       // Get exported symbols from this file
       const symbols = await service.search('', {
         files: [change.path],
-        type: ['function', 'class', 'interface'],  // Skip generic variables
-        maxResults: 100
+        type: ['function', 'class', 'interface'], // Skip generic variables
+        maxResults: 100,
       })
 
       // Filter and deduplicate symbols
-      const symbolMap = new Map<string, typeof symbols[0]>()
-      symbols.forEach(s => {
+      const symbolMap = new Map<string, (typeof symbols)[0]>()
+      symbols.forEach((s) => {
         // Skip generic names and duplicates
-        if (s.info.term.length > 2 && !['file', 'path', 'data', 'value', 'result', 'item'].includes(s.info.term)) {
+        if (
+          s.info.term.length > 2 &&
+          !['file', 'path', 'data', 'value', 'result', 'item'].includes(
+            s.info.term
+          )
+        ) {
           const existing = symbolMap.get(s.info.term)
           if (!existing || (s.usageCount || 0) > (existing.usageCount || 0)) {
             symbolMap.set(s.info.term, s)
@@ -1129,74 +1214,101 @@ async function handleChangesImpact(
 
       // Find high-impact symbols (with usage)
       const impactful = Array.from(symbolMap.values())
-        .filter(s => s.usageCount && s.usageCount > 0)
+        .filter((s) => s.usageCount && s.usageCount > 0)
         .sort((a, b) => (b.usageCount || 0) - (a.usageCount || 0))
 
       if (impactful.length > 0 && !isCompact) {
         const statusIcon = change.status === 'A' ? '✨' : '📝'
-        console.log(`${statusIcon} ${change.path} (${change.status === 'A' ? 'new' : 'modified'})`)
-        
+        console.log(
+          `${statusIcon} ${change.path} (${
+            change.status === 'A' ? 'new' : 'modified'
+          })`
+        )
+
         // Show most-used symbols
         const toShow = impactful.slice(0, 3)
         for (const symbol of toShow) {
           const uses = symbol.usageCount || 0
           totalImpact += uses
-          
+
           // Get sample references to show WHERE it's used
           if (uses >= 2) {
             const refs = await service.getImpactAnalysis(symbol.info.term)
-            const externalRefs = refs.directReferences.filter(ref => ref.fromLocation.file !== change.path)
-            
-            externalRefs.forEach(ref => {
+            const externalRefs = refs.directReferences.filter(
+              (ref) => ref.fromLocation.file !== change.path
+            )
+
+            externalRefs.forEach((ref) => {
               impactedFiles.add(ref.fromLocation.file)
             })
-            
-            console.log(`   ${getTypeIcon(symbol.info.type)} ${symbol.info.term} (${uses} refs)`)
-            
+
+            console.log(
+              `   ${getTypeIcon(symbol.info.type)} ${
+                symbol.info.term
+              } (${uses} refs)`
+            )
+
             // Show EXACTLY where it's used - this is what Claudes need!
             if (uses <= 5) {
               // Show all references if there are few
-              externalRefs.forEach(ref => {
-                const shortPath = ref.fromLocation.file.replace(projectPath + '/', '')
-                console.log(`      ↳ ${shortPath}:${ref.fromLocation.line} (${ref.referenceType})`)
+              externalRefs.forEach((ref) => {
+                const shortPath = ref.fromLocation.file.replace(
+                  projectPath + '/',
+                  ''
+                )
+                console.log(
+                  `      ↳ ${shortPath}:${ref.fromLocation.line} (${ref.referenceType})`
+                )
               })
             } else {
               // Show first 3 for high-use symbols
-              externalRefs.slice(0, 3).forEach(ref => {
-                const shortPath = ref.fromLocation.file.replace(projectPath + '/', '')
-                console.log(`      ↳ ${shortPath}:${ref.fromLocation.line} (${ref.referenceType})`)
+              externalRefs.slice(0, 3).forEach((ref) => {
+                const shortPath = ref.fromLocation.file.replace(
+                  projectPath + '/',
+                  ''
+                )
+                console.log(
+                  `      ↳ ${shortPath}:${ref.fromLocation.line} (${ref.referenceType})`
+                )
               })
               console.log(`      ↳ ... and ${externalRefs.length - 3} more`)
             }
-            
+
             if (uses > 5) {
-              highImpactSymbols.push({ 
-                symbol: symbol.info.term, 
-                file: change.path, 
+              highImpactSymbols.push({
+                symbol: symbol.info.term,
+                file: change.path,
                 uses,
-                refs: externalRefs.slice(0, 5) // Keep some refs for summary
+                refs: externalRefs.slice(0, 5), // Keep some refs for summary
               })
             }
           }
         }
-        
+
         // Add remaining count if significant
-        const remaining = impactful.slice(3).filter(s => (s.usageCount || 0) >= 2)
+        const remaining = impactful
+          .slice(3)
+          .filter((s) => (s.usageCount || 0) >= 2)
         if (remaining.length > 0) {
-          const remainingUses = remaining.reduce((sum, s) => sum + (s.usageCount || 0), 0)
+          const remainingUses = remaining.reduce(
+            (sum, s) => sum + (s.usageCount || 0),
+            0
+          )
           totalImpact += remainingUses
-          console.log(`   ... +${remaining.length} more (${remainingUses} refs)`)
+          console.log(
+            `   ... +${remaining.length} more (${remainingUses} refs)`
+          )
         }
         console.log('')
       } else if (impactful.length > 0 && isCompact) {
         // Still count for compact mode
-        impactful.forEach(s => {
+        impactful.forEach((s) => {
           totalImpact += s.usageCount || 0
           if ((s.usageCount || 0) > 5) {
             highImpactSymbols.push({
               symbol: s.info.term,
               file: change.path,
-              uses: s.usageCount || 0
+              uses: s.usageCount || 0,
             })
           }
         })
@@ -1206,33 +1318,57 @@ async function handleChangesImpact(
     // Compact mode - actionable one-liner risk assessment
     if (isCompact) {
       if (totalImpact === 0) {
-        console.log(`✅ ${branch}: ${allChanged.length} files | No external impact - safe to commit`)
+        console.log(
+          `✅ ${branch}: ${allChanged.length} files | No external impact - safe to commit`
+        )
       } else if (totalImpact < 10) {
-        console.log(`🟡 ${branch}: ${allChanged.length} files → ${totalImpact} refs | Low impact - review: ${highImpactSymbols.map(s => s.symbol).join(', ')}`)
+        console.log(
+          `🟡 ${branch}: ${
+            allChanged.length
+          } files → ${totalImpact} refs | Low impact - review: ${highImpactSymbols
+            .map((s) => s.symbol)
+            .join(', ')}`
+        )
       } else if (totalImpact < 50) {
-        console.log(`🟠 ${branch}: ${allChanged.length} files → ${totalImpact} refs in ${impactedFiles.size} files | Medium impact - test carefully`)
+        console.log(
+          `🟠 ${branch}: ${allChanged.length} files → ${totalImpact} refs in ${impactedFiles.size} files | Medium impact - test carefully`
+        )
       } else {
         const topSymbol = highImpactSymbols[0]
-        console.log(`🔴 ${branch}: ${allChanged.length} files → ${totalImpact} refs | HIGH IMPACT - ${topSymbol?.symbol} has ${topSymbol?.uses} refs!`)
+        console.log(
+          `🔴 ${branch}: ${allChanged.length} files → ${totalImpact} refs | HIGH IMPACT - ${topSymbol?.symbol} has ${topSymbol?.uses} refs!`
+        )
       }
       return
     }
 
     // Regular mode - Claude-optimized output
-    
+
     // Risk assessment
-    const riskLevel = totalImpact === 0 ? 'None' : 
-                      totalImpact < 10 ? 'Low' :
-                      totalImpact < 50 ? 'Medium' : 'High'
-    const riskIcon = totalImpact === 0 ? '✅' :
-                     totalImpact < 10 ? '🟡' :
-                     totalImpact < 50 ? '🟠' : '🔴'
-    
+    const riskLevel =
+      totalImpact === 0
+        ? 'None'
+        : totalImpact < 10
+        ? 'Low'
+        : totalImpact < 50
+        ? 'Medium'
+        : 'High'
+    const riskIcon =
+      totalImpact === 0
+        ? '✅'
+        : totalImpact < 10
+        ? '🟡'
+        : totalImpact < 50
+        ? '🟠'
+        : '🔴'
+
     console.log(`\n${riskIcon} Risk Level: ${riskLevel}`)
-    console.log(`📊 ${allChanged.length} files changed → ${totalImpact} references across ${impactedFiles.size} files`)
+    console.log(
+      `📊 ${allChanged.length} files changed → ${totalImpact} references across ${impactedFiles.size} files`
+    )
 
     // For Claudes: Show CRITICAL breaking changes first
-    const deletedFiles = allChanged.filter(c => c.status === 'D')
+    const deletedFiles = allChanged.filter((c) => c.status === 'D')
     if (deletedFiles.length > 0) {
       console.log(`\n🚨 DELETED FILES - Check these aren't still imported:`)
       deletedFiles.forEach(({ path }) => {
@@ -1241,10 +1377,12 @@ async function handleChangesImpact(
     }
 
     // Show test files that need to run
-    const testFiles = Array.from(impactedFiles).filter(f => f.includes('test') || f.includes('spec'))
+    const testFiles = Array.from(impactedFiles).filter(
+      (f) => f.includes('test') || f.includes('spec')
+    )
     if (testFiles.length > 0) {
       console.log(`\n🧪 Tests to run:`)
-      testFiles.slice(0, 5).forEach(file => {
+      testFiles.slice(0, 5).forEach((file) => {
         const shortPath = file.replace(projectPath + '/', '')
         console.log(`   bun test ${shortPath}`)
       })
@@ -1253,14 +1391,14 @@ async function handleChangesImpact(
     if (impactedFiles.size > 0) {
       // Group affected files by directory
       const filesByDir = new Map<string, string[]>()
-      Array.from(impactedFiles).forEach(file => {
+      Array.from(impactedFiles).forEach((file) => {
         const dir = file.substring(0, file.lastIndexOf('/'))
         if (!filesByDir.has(dir)) {
           filesByDir.set(dir, [])
         }
         filesByDir.get(dir)!.push(file)
       })
-      
+
       console.log(`\n📁 Affected areas:`)
       Array.from(filesByDir.entries())
         .slice(0, 3)
@@ -1268,38 +1406,41 @@ async function handleChangesImpact(
           console.log(`   ${dir}/ (${files.length} files)`)
         })
     }
-    
+
     // What to check before committing - this is what Claudes need!
     console.log(`\n⚡ Before committing, check:`)
-    
+
     if (totalImpact === 0) {
       console.log(`   ✅ No external consumers - commit freely!`)
     } else {
       // Show the most important files to check
       const criticalFiles = Array.from(impactedFiles)
-        .filter(f => !f.includes('test') && !f.includes('spec'))
+        .filter((f) => !f.includes('test') && !f.includes('spec'))
         .slice(0, 3)
-      
+
       if (criticalFiles.length > 0) {
         console.log(`   📍 Key files using your changes:`)
-        criticalFiles.forEach(file => {
+        criticalFiles.forEach((file) => {
           const shortPath = file.replace(projectPath + '/', '')
           console.log(`      ${shortPath}`)
         })
       }
-      
+
       // Specific things to verify
       if (highImpactSymbols.length > 0) {
         const topSymbol = highImpactSymbols[0]
-        console.log(`   🔍 Verify: "${topSymbol.symbol}" still works correctly in its ${topSymbol.uses} usages`)
+        console.log(
+          `   🔍 Verify: "${topSymbol.symbol}" still works correctly in its ${topSymbol.uses} usages`
+        )
       }
-      
+
       // Quick command to see details
       if (totalImpact > 20) {
-        console.log(`   📋 For full details: smartgrep refs "${highImpactSymbols[0]?.symbol}"`)
+        console.log(
+          `   📋 For full details: smartgrep refs "${highImpactSymbols[0]?.symbol}"`
+        )
       }
     }
-
   } catch (error: any) {
     if (error.message.includes('not a git repository')) {
       console.error('❌ Not in a git repository')
@@ -1321,39 +1462,46 @@ async function handleFlow(service: SemanticService, searchTerm: string) {
     console.log('No semantic index found. Building...')
     await service.indexCodebase(projectPath)
   }
-  
+
   console.log(`🌊 Tracing data flow for "${searchTerm}"...\n`)
-  
+
   try {
     // Create flow tracer with the service's index
     const tracer = new FlowTracer(service.getIndex())
-    
+
     // Trace the flow
     const flowPath = await tracer.traceFlow(searchTerm)
-    
+
     if (flowPath.nodes.length === 0) {
       console.log(`❌ No occurrences of "${searchTerm}" found`)
       console.log('\n💡 Tips:')
-      console.log('  • Try a more specific term (e.g., "user.email" instead of "email")')
-      console.log('  • Check if the term exists with: smartgrep "' + searchTerm + '"')
+      console.log(
+        '  • Try a more specific term (e.g., "user.email" instead of "email")'
+      )
+      console.log(
+        '  • Check if the term exists with: smartgrep "' + searchTerm + '"'
+      )
       return
     }
-    
+
     // Display the flow path
     console.log(tracer.formatFlowPath(flowPath))
-    
+
     // Suggest related searches
     if (flowPath.summary.functionsInvolved.length > 0) {
       console.log('\n💡 Related searches:')
       const topFunctions = flowPath.summary.functionsInvolved.slice(0, 3)
-      topFunctions.forEach(func => {
-        console.log(`  smartgrep refs "${func}"  # See all references to this function`)
+      topFunctions.forEach((func) => {
+        console.log(
+          `  smartgrep refs "${func}"  # See all references to this function`
+        )
       })
     }
-    
   } catch (error) {
-    console.error(`❌ Error tracing flow: ${error.message}`)
-    process.exit(1)
+    if (error instanceof Error) {
+      console.error(`❌ Error tracing flow: ${error.message}`)
+      process.exit(1)
+    }
   }
 }
 
@@ -1362,21 +1510,20 @@ async function handleFlow(service: SemanticService, searchTerm: string) {
  */
 async function handleStory(service: SemanticService, projectPath: string) {
   console.log('📖 Extracting codebase story...\n')
-  
+
   // Ensure index is up to date
   const updated = await service.updateIndex()
   if (updated) {
     console.log('✅ Index updated with latest changes\n')
   }
-  
+
   try {
     // Extract story
     const story = await service.extractStory()
-    
+
     // Display story
     const display = new StoryDisplay()
     display.displayStory(story)
-    
   } catch (error: any) {
     console.error(`❌ Error extracting story: ${error.message}`)
     process.exit(1)
@@ -1492,7 +1639,6 @@ Custom groups are saved to .curatorconfig.json in your project root.
 `)
 }
 
-
 function getReferenceIcon(type: string): string {
   const icons: Record<string, string> = {
     call: '📞',
@@ -1567,23 +1713,23 @@ function canSmartSplit(term: string): boolean {
   if (/[_-]/.test(term)) return true
   // Check for dots (namespaced items)
   if (/\./.test(term) && !term.startsWith('.')) return true
-  
+
   return false
 }
 
 // Smart split terms for camelCase, snake_case, kebab-case
 function smartSplitTerms(term: string): string[] {
   const parts: string[] = []
-  
+
   // Split camelCase
   let camelSplit = term.replace(/([a-z])([A-Z])/g, '$1|$2')
-  
+
   // Split snake_case and kebab-case
   camelSplit = camelSplit.replace(/[_-]/g, '|')
-  
+
   // Split dots (but not file extensions)
   camelSplit = camelSplit.replace(/\.(?![a-z]{2,4}$)/g, '|')
-  
+
   // Split into parts and clean up
   const rawParts = camelSplit.split('|')
   for (const part of rawParts) {
@@ -1592,7 +1738,7 @@ function smartSplitTerms(term: string): string[] {
       parts.push(cleaned)
     }
   }
-  
+
   // Remove duplicates
   return [...new Set(parts)]
 }
@@ -1601,10 +1747,10 @@ function smartSplitTerms(term: string): string[] {
 function getAvailableGroups(projectPath: string): ConceptGroupDefinition[] {
   const config = loadConfig(projectPath)
   const customGroups = parseCustomGroups(config.customGroups || {})
-  
+
   // Combine default and custom groups
   const allGroups = { ...DEFAULT_CONCEPT_GROUPS, ...customGroups }
-  
+
   // Return as array
   return Object.values(allGroups)
 }

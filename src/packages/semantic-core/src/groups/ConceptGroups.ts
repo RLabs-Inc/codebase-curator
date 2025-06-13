@@ -5,17 +5,7 @@
  * meaningful semantic categories that match how developers think about code.
  */
 
-export interface ConceptGroupDefinition {
-  name: string
-  description: string
-  emoji: string
-  terms: string[]
-}
-
-export interface ConceptGroupsConfig {
-  defaultGroups: Record<string, ConceptGroupDefinition>
-  customGroups: Record<string, ConceptGroupDefinition>
-}
+import type { ConceptGroupDefinition, ConceptGroupsConfig } from '../types/groups'
 
 /**
  * Default concept groups - carefully curated for maximum utility across codebases

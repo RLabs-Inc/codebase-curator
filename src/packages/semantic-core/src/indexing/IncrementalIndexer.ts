@@ -1,14 +1,8 @@
-import { HashTree, type HashTreeDiff } from './HashTree.js'
+import { HashTree } from './HashTree.js'
+import type { HashTreeDiff, IndexingStatus } from '../types/indexing'
 import { SemanticService } from '../SemanticService.js'
 import * as path from 'path'
 import * as fs from 'fs/promises'
-
-export interface IndexingStatus {
-  totalFiles: number
-  indexedFiles: number
-  isWatching: boolean
-  lastUpdate: number
-}
 
 export class IncrementalIndexer {
   private hashTree: HashTree

@@ -1,0 +1,49 @@
+{
+  "name": "@codebase-curator/codebase-curator",
+  "version": "1.0.0",
+  "description": "AI-powered codebase analysis CLI - helps AI assistants understand and work with any codebase",
+  "type": "module",
+  "module": "./src/index.ts",
+  "bin": {
+    "curator": "./src/index.ts"
+  },
+  "files": [
+    "dist",
+    "completions",
+    "man",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun",
+    "build:binary": "bun build --compile --minify --sourcemap ./src/index.ts --outfile curator",
+    "build:binary:all": "bun run build:binary:linux && bun run build:binary:macos && bun run build:binary:windows",
+    "build:binary:linux": "bun build --compile --minify --sourcemap ./src/index.ts --target=bun-linux-x64 --outfile curator-linux-amd64",
+    "build:binary:macos": "bun build --compile --minify --sourcemap ./src/index.ts --target=bun-darwin-x64 --outfile curator-macos-amd64 && bun build --compile --minify --sourcemap ./src/index.ts --target=bun-darwin-arm64 --outfile curator-macos-arm64",
+    "build:binary:windows": "bun build --compile --minify --sourcemap ./src/index.ts --target=bun-windows-x64 --outfile curator-windows-amd64.exe",
+    "postinstall": "bun run scripts/install-completions.js 2>/dev/null || true",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@codebase-curator/semantic-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.0.0"
+  },
+  "keywords": [
+    "codebase-analysis",
+    "ai-assistant",
+    "code-understanding",
+    "mcp",
+    "curator",
+    "cli",
+    "claude"
+  ],
+  "author": "RLabs Inc. and Claude",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RLabs-Inc/codebase-curator.git",
+    "directory": "src/packages/codebase-curator"
+  }
+}

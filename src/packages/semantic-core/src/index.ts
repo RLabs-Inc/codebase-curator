@@ -6,8 +6,16 @@
 // Re-export everything from the semantic service
 export * from './SemanticService'
 export * from './SemanticIndexImpl'
-export * from './types'
+
+// Re-export all types
+export * from './types/semantic'
 export * from './types/story'
+export * from './types/flow'
+export * from './types/indexing'
+export * from './types/groups'
+export * from './types/config'
+
+// Re-export flow tracer
 export * from './FlowTracer'
 
 // Re-export extractors
@@ -32,8 +40,6 @@ export * from './indexing/IncrementalIndexer'
 
 // Re-export config utilities
 export * from './config/config'
-export * from './types/config'
-export * from './types/core'
 
 // Re-export concept groups
 export * from './groups'

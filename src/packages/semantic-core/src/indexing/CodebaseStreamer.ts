@@ -7,27 +7,7 @@ import {
   mergeExclusions,
 } from '../config/config'
 import { DEFAULT_EXCLUSIONS } from '../types/config'
-
-export interface StreamBatch {
-  files: Map<string, string>         // Files with content
-  hashes: Map<string, string>        // Content hashes for files
-  metadata: {
-    totalFiles: number
-    currentBatch: number
-    totalBatches: number
-    memoryUsed: number
-    filesInBatch: string[]
-    unchanged?: number               // Count of unchanged files
-  }
-}
-
-export interface StreamOptions {
-  batchSize?: number // Number of files per batch (default: 20)
-  memoryLimit?: number // Max memory per batch in bytes (default: 50MB)
-  priorityPattern?: string // Process these files first (e.g., "*.ts")
-  filePattern?: string // Which files to include (default: "**/*")
-  chunkSize?: number // Size for streaming large files (default: 64KB)
-}
+import type { StreamBatch, StreamOptions } from '../types/indexing'
 
 /**
  * Ultra-memory-efficient file streaming using Bun's native streams! 🚀
